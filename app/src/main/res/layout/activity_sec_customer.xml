@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorFaint"
+    tools:context="gr.cityl.iliadis.Activities.SecCustomerActivity">
+
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="18dp"
+        android:text="Καλώς ήρθατε"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView17"
+        android:choiceMode="singleChoice"
+        android:layout_marginTop="60dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView7"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/textView6"
+        android:layout_marginTop="53dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:text="Δεν υπάρχουν υποκαταστήματα"/>
+
+    <Button
+        android:id="@+id/button8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorGreen"
+        android:gravity="center|right"
+        android:text="Συνέχεια"
+        android:textColor="#ffffff" />
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView6"
+        android:layout_below="@+id/textView6"
+        android:layout_marginTop="11dp"
+        android:textColor="@color/colorGreen"
+        android:textSize="25sp"
+        android:visibility="gone"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView17"
+        android:layout_below="@+id/textView17"
+        android:layout_marginTop="23dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:text="Παρακαλώ επιλέξτε κατάστημα:" />
+
+
+</RelativeLayout>

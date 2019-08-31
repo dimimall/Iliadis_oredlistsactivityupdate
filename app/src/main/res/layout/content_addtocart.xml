@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"
+        android:text="RealCode" />
+
+    <TextView
+        android:id="@+id/textView21"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView20"
+        android:layout_below="@+id/textView20"
+        android:layout_marginTop="39dp"
+        android:textColor="#000"
+        android:textStyle="bold"
+        android:textSize="22sp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView21"
+        android:layout_below="@+id/textView21"
+        android:layout_marginTop="37dp"
+        android:textSize="20sp"
+        android:text="Ποσότητα:" />
+
+    <EditText
+        android:id="@+id/editText4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/textView21"
+        android:layout_marginEnd="29dp"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/textView23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView22"
+        android:layout_below="@+id/editText4"
+        android:layout_marginTop="75dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#c3c3c3"
+        android:text="Τιμή:" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_below="@+id/textView23"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="44dp"
+        android:id="@+id/textInputLayout5">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Σχόλιο:"
+            android:textSize="20sp" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/button12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textInputLayout5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:background="@color/colorGreen"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Προσθηκη στο καλαθι\nκαι συνεχεια" />
+
+    <Button
+        android:id="@+id/button13"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorGreen"
+        android:textColor="#fff"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:gravity="left"
+        android:text="Νεα σαρωση" />
+</RelativeLayout>

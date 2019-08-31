@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/colorGreen"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="80dp"
+        android:id="@+id/textInputLayout4">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter barcode number"
+            android:textColor="@color/colorGreen"
+            android:textSize="20sp"
+            android:inputType="number"
+            android:textColorHint="@color/colorGreen"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textInputLayout4"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="22dp"
+        android:text="Περιγραφή προϊόντος"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView8"
+        android:layout_below="@+id/textView8"
+        android:layout_marginTop="25dp"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorGreen"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView9"
+        android:layout_below="@+id/textView9"
+        android:layout_marginTop="25dp"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="Τιμή:" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView10"
+        android:textSize="20sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="18dp"
+        android:text="Συνολικό υπόλοιπο:" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView11"
+        android:layout_below="@+id/textView11"
+        android:layout_marginTop="18dp"
+        android:textSize="18sp"
+        android:text="Δεσμευμένα:" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView12"
+        android:layout_below="@+id/textView12"
+        android:layout_marginTop="17dp"
+        android:textSize="18sp"
+        android:text="Αναμενώμενα:" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView13"
+        android:layout_below="@+id/textView13"
+        android:layout_marginTop="12dp"
+        android:textSize="18sp"
+        android:text="Διαθέσιμα:" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView14"
+        android:layout_below="@+id/textView14"
+        android:layout_marginTop="18dp"
+        android:textSize="18sp"
+        android:text="Ημ. Παραλαβής:" />
+
+    <Button
+        android:id="@+id/button10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="20dp"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:background="@color/colorGreen"
+        android:layout_marginBottom="7dp"
+        android:text="Νεα Σαρωση" />
+
+    <Button
+        android:id="@+id/button11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/button10"
+        android:layout_alignBottom="@+id/button10"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="18dp"
+        android:background="@color/colorGreen"
+        android:text="Καλαθι"
+        android:textColor="#ffffff"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>
