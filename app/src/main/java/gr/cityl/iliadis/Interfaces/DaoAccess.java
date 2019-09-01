@@ -39,6 +39,24 @@ public interface DaoAccess {
     @Insert
     void insertTask(SecCustomers secCustomers);
 
+    @Insert
+    void insertTaskProducts(List<Products> products);
+
+    @Insert
+    void insertTaskCustomers(List<Customers> customers);
+
+    @Insert
+    void insertTaskShops(List<SecCustomers> secCustomers);
+
+    @Insert
+    void insertTaskCatalog(List<Catalog> catalogs);
+
+    @Insert
+    void insertTaskCountry(List<Country> countries);
+
+    @Insert
+    void insertTaskFpa(List<FPA> fpaList);
+
     @Query("Select * from Products")
     List<Products> getProductsList();
 

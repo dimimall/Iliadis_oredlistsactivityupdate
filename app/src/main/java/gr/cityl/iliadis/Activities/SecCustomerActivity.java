@@ -55,7 +55,7 @@ public class SecCustomerActivity extends AppCompatActivity {
         final String custvatid = getIntent().getStringExtra("custvatid");
 		final int custcatid = getIntent().getIntExtra("catalogueid",0);
         String title = getIntent().getStringExtra("name shop");
-        final List<Order> orders = shopDatabase.daoShop().getListOrder(custid);
+        final List<Order> orders = shopDatabase.daoShop().getListOrderStatus0(custid);
 
         textView2.setText(title);
 
@@ -90,9 +90,8 @@ public class SecCustomerActivity extends AppCompatActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("Dimitra","order size activity_sec_customer: "+orders.size());
                 if (orders.size() <= 0){
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss ");
                     String currentDateandTime = sdf.format(new Date());
                     Intent intent = new Intent(SecCustomerActivity.this, ProductActivity.class);
                     Order order1 = new Order();

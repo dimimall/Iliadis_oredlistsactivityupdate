@@ -158,7 +158,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
     }
 
     private ArrayList<Products> loadJsonProducts() {
-        ArrayList<Products> products = new ArrayList<>();
+        final ArrayList<Products> products = new ArrayList<>();
 
         final ProgressDialog  pDialog = new ProgressDialog(ReloadDbsActivity.this);
         pDialog.setMessage("Αποθήκευση στη βάση προϊόντων");
@@ -194,9 +194,9 @@ public class ReloadDbsActivity extends AppCompatActivity {
                                 product.setMinimumstep(response.getString("minimumstep"));
                                 product.setMinquantity(response.getString("minquantity"));
 
-                                iliadisDatabase.daoAccess().insertTask(product);
+                                products.add(product);
                             }
-
+                            iliadisDatabase.daoAccess().insertTaskProducts(products);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -220,7 +220,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
         return products;
     }
     private ArrayList<Customers> loadJsonCustomers(){
-        ArrayList<Customers> customers = new ArrayList<>();
+        final ArrayList<Customers> customers = new ArrayList<>();
 
         final ProgressDialog  pDialog = new ProgressDialog(ReloadDbsActivity.this);
         pDialog.setMessage("Αποθήκευση στη βάση των πελατών");
@@ -258,9 +258,9 @@ public class ReloadDbsActivity extends AppCompatActivity {
                                 customer.setCustvatid(response.getString("custvatid"));
                                 customer.setCustomerid(response.getString("customerid"));
 
-                                iliadisDatabase.daoAccess().insertTask(customer);
+                                customers.add(customer);
                             }
-
+                            iliadisDatabase.daoAccess().insertTaskCustomers(customers);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -282,7 +282,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
         return customers;
     }
     private ArrayList<Catalog> loadJsonCatalog() {
-        ArrayList<Catalog> catalogs = new ArrayList<>();
+        final ArrayList<Catalog> catalogs = new ArrayList<>();
 
         final ProgressDialog  pDialog = new ProgressDialog(ReloadDbsActivity.this);
         pDialog.setMessage("Αποθήκευση στη βάση των καταλόγων");
@@ -320,9 +320,9 @@ public class ReloadDbsActivity extends AppCompatActivity {
                                 catalog.setDiscount4(response.getInt("discount4"));
                                 catalog.setDiscount5(response.getInt("discount5"));
 
-                                iliadisDatabase.daoAccess().insertTask(catalog);
+                                catalogs.add(catalog);
                             }
-
+                            iliadisDatabase.daoAccess().insertTaskCatalog(catalogs);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -345,7 +345,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
         return catalogs;
     }
     private ArrayList<FPA> loadJsonFPA() {
-        ArrayList<FPA> fpa = new ArrayList<>();
+        final ArrayList<FPA> fpa = new ArrayList<>();
 
         final ProgressDialog  pDialog = new ProgressDialog(ReloadDbsActivity.this);
         pDialog.setMessage("Αποθήκευση στη βάση των ΦΠΑ");
@@ -371,7 +371,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
                                     fpa1.setCustvatid(response.getString("custvatid"));
                                 }
 
-                                iliadisDatabase.daoAccess().insertTask(fpa1);
+                                fpa.add(fpa1);
                             }
 
                         } catch (JSONException e) {
@@ -418,9 +418,9 @@ public class ReloadDbsActivity extends AppCompatActivity {
                                 country.setCountry(response.getString("country"));
                                 Log.d("Dimitra","country: "+response.getString("country"));
 
-                                iliadisDatabase.daoAccess().insertTask(country);
+                                countries.add(country);
                             }
-
+                            iliadisDatabase.daoAccess().insertTaskCountry(countries);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -442,7 +442,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
         return countries;
     }
     private ArrayList<SecCustomers> loadJsonASecCustomers() {
-        ArrayList<SecCustomers> secCustomers = new ArrayList<>();
+        final ArrayList<SecCustomers> secCustomers = new ArrayList<>();
 
         final ProgressDialog  pDialog = new ProgressDialog(ReloadDbsActivity.this);
         pDialog.setMessage("Αποθήκευση στη βάση των καταστημάτων");
@@ -467,9 +467,9 @@ public class ReloadDbsActivity extends AppCompatActivity {
                                 secCustomer.setAddress(response.getString("address"));
                                 secCustomer.setPhone(response.getString("phone"));
 
-                                iliadisDatabase.daoAccess().insertTask(secCustomer);
+                                secCustomers.add(secCustomer);
                             }
-
+                            iliadisDatabase.daoAccess().insertTaskShops(secCustomers);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

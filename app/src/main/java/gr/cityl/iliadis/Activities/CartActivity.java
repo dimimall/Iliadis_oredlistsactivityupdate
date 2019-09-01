@@ -6,18 +6,12 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.pdf.PdfDocument;
-import android.icu.text.LocaleDisplayNames;
 import android.os.Build;
 import android.os.Environment;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -55,24 +49,19 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import gr.cityl.iliadis.Manager.utils;
 import gr.cityl.iliadis.Models.Cart;
-import gr.cityl.iliadis.Models.FPA;
 import gr.cityl.iliadis.Models.IliadisDatabase;
-import gr.cityl.iliadis.Models.Order;
 import gr.cityl.iliadis.Models.ShopDatabase;
 import gr.cityl.iliadis.R;
 
@@ -104,7 +93,7 @@ public class CartActivity extends AppCompatActivity {
 
         try {
             InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(searchText.getEditText().getWindowToken(), 0);
         } catch (Exception e) {
             // TODO: handle exception
         }
@@ -187,7 +176,7 @@ public class CartActivity extends AppCompatActivity {
                 sPriceSum = sPriceSum + (Double.parseDouble(carts.get(i).getPrice().replace(",",".")) * carts.get(i).getQuantity());
                 vTotal = vTotal + (((k * Double.parseDouble(carts.get(i).getPrice().replace(",","."))) / 100) * carts.get(i).getQuantity());
             }
-            subtotal.setText(new DecimalFormat("##.##").format(vTotal) + "€");
+            subtotal.setText(new DecimalFormat("##.##").format(priceSum) + "€");
             vat.setText(new DecimalFormat("##.##").format(vTotal) + "€");
             double total = Double.parseDouble(new DecimalFormat("##.##").format((sPriceSum + vTotal)).replace(",","."));
             grandtotal.setText(""+total+ "€");
@@ -204,6 +193,13 @@ public class CartActivity extends AppCompatActivity {
                     e.printStackTrace();
                 } catch (DocumentException e) {
                     e.printStackTrace();
+                }
+                String result = myutils.createCsvFile(cartsList);
+                if (result.equals("1"))
+                    shopDatabase.daoShop().updateOrderStatus(2,cartsList.get(0).getOrderid());
+                else
+                {
+                    myutils.createDialog("Δε στάλθηκε το αρχείο",CartActivity.this);
                 }
                 finishAffinity();
                 System.exit(0);
@@ -433,12 +429,11 @@ public class CartActivity extends AppCompatActivity {
         del_table.addCell(new Paragraph("DATE: ",urFontName));
         del_table.addCell(new Paragraph("Seller: ",urFontName));
         del_table.addCell(new Paragraph("1",urFontName));
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HHmmss", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
         String currentDateandTime = sdf.format(new Date());
         del_table.addCell(new Paragraph(""+currentDateandTime,urFontName));
         del_table.addCell(new Paragraph("18",urFontName));
         doc.add(del_table);
-
 
         doc.add( Chunk.NEWLINE );
         doc.add( Chunk.NEWLINE );
@@ -681,31 +676,4 @@ public class CartActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        switch (requestCode) {
-//            case 2:
-//                Log.d("cart activity", "External storage2");
-//                if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-//                    Log.v("cart activity","Permission: "+permissions[0]+ "was "+grantResults[0]);
-//                    //resume tasks needing this permission
-//                    downloadPdfFile();
-//                }else{
-//                    progress.dismiss();
-//                }
-//                break;
-//
-//            case 3:
-//                Log.d("cart activity", "External storage1");
-//                if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-//                    Log.v("cart activity","Permission: "+permissions[0]+ "was "+grantResults[0]);
-//                    //resume tasks needing this permission
-//                    SharePdfFile();
-//                }else{
-//                    progress.dismiss();
-//                }
-//                break;
-//        }
-//    }
 }

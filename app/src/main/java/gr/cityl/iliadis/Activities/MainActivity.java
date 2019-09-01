@@ -31,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import gr.cityl.iliadis.Manager.MySingleton;
 import gr.cityl.iliadis.Manager.utils;
@@ -182,16 +183,15 @@ public class MainActivity extends AppCompatActivity
         image.setColorFilter(Color.argb(255, 255, 255, 255));
     }
 
-    private ArrayList<Products> loadJsonProducts() {
-        ArrayList<Products> products = new ArrayList<>();
-        displayLoader("Κατέβασμα αρχείου.. Παρακαλώ περιμένετε...");
+    private void loadJsonProducts() {
+        final ArrayList<Products> products = new ArrayList<>();
+        displayLoader("Κατέβασμα αρχείου προϊόντων.. Παρακαλώ περιμένετε...");
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, "https://pod.iliadis.com.gr/getproducts.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
                         pDialog.dismiss();
                         try {
-                            displayLoader("Αποθήκευση στη βάσης.. Παρακαλώ περιμένετε...");
                             //Parse the JSON response array by iterating over it
                             for (int i = 1; i < responseArray.length(); i++) {
                                 JSONObject response = responseArray.getJSONObject(i);
@@ -212,10 +212,13 @@ public class MainActivity extends AppCompatActivity
                                 product.setAdate(response.getString("adate"));
                                 product.setMinimumstep(response.getString("minimumstep"));
                                 product.setMinquantity(response.getString("minquantity"));
+                                products.add(product);
+                                Log.d("Dimitra",product.getProdescription());
 
-                                iliadisDatabase.daoAccess().insertTask(product);
                             }
-                            pDialog.dismiss();
+                            iliadisDatabase.daoAccess().insertTaskProducts(products);
+                            Log.d("Dimitra","passssss");
+                            loadJsonCustomers();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -226,28 +229,25 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         pDialog.dismiss();
-
                         //Display error message whenever an error occurs
                         Toast.makeText(getApplicationContext(),
                                 error.getMessage(), Toast.LENGTH_SHORT).show();
-
                     }
                 });
 
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsArrayRequest);
 
-        return products;
     }
     private ArrayList<Customers> loadJsonCustomers(){
-        ArrayList<Customers> customers = new ArrayList<>();
+        displayLoader("Κατέβασμα αρχείου πελατών.. Παρακαλώ περιμένετε...");
+        final ArrayList<Customers> customers = new ArrayList<>();
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, "https://pod.iliadis.com.gr/getcustomersx.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
-                        //pDialog.dismiss();
+                        pDialog.dismiss();
                         try {
-                            StringBuilder textViewData = new StringBuilder();
                             //Parse the JSON response array by iterating over it
                             for (int i = 0; i < responseArray.length(); i++) {
                                 JSONObject response = responseArray.getJSONObject(i);
@@ -269,10 +269,14 @@ public class MainActivity extends AppCompatActivity
                                 customer.setPaymentid(response.getString("paymentid"));
                                 customer.setCustvatid(response.getString("custvatid"));
                                 customer.setCustomerid(response.getString("customerid"));
+                                customers.add(customer);
+                                Log.d("Dimitra",customer.getCompanyName());
 
-                                iliadisDatabase.daoAccess().insertTask(customer);
+                                //iliadisDatabase.daoAccess().insertTask(customer);
                             }
-
+                            iliadisDatabase.daoAccess().insertTaskCustomers(customers);
+                            Log.d("Dimitra","passssss2222");
+                            loadJsonASecCustomers();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -281,8 +285,7 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //pDialog.dismiss();
-
+                        pDialog.dismiss();
                         //Display error message whenever an error occurs
                         Toast.makeText(getApplicationContext(),
                                 error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -293,13 +296,65 @@ public class MainActivity extends AppCompatActivity
         MySingleton.getInstance(this).addToRequestQueue(jsArrayRequest);
         return customers;
     }
+
+    private ArrayList<SecCustomers> loadJsonASecCustomers() {
+        displayLoader("Κατέβασμα αρχείου καταστημάτων.. Παρακαλώ περιμένετε...");
+
+        final ArrayList<SecCustomers> secCustomers = new ArrayList<>();
+        JsonArrayRequest jsArrayRequest = new JsonArrayRequest
+                (Request.Method.GET, "https://pod.iliadis.com.gr/getseccustomers.asp", null, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray responseArray) {
+                        pDialog.dismiss();
+                        try {
+                            StringBuilder textViewData = new StringBuilder();
+                            //Parse the JSON response array by iterating over it
+                            for (int i = 0; i < responseArray.length(); i++) {
+                                JSONObject response = responseArray.getJSONObject(i);
+                                SecCustomers secCustomer = new SecCustomers();
+                                secCustomer.setCustid(response.getString("custid"));
+                                secCustomer.setShopid(response.getString("shopid"));
+                                secCustomer.setCompanyName(response.getString("companyName"));
+                                secCustomer.setAddress(response.getString("address"));
+                                secCustomer.setPhone(response.getString("phone"));
+                                secCustomers.add(secCustomer);
+
+                                Log.d("Dimitra",secCustomer.getCompanyName());
+
+                                //iliadisDatabase.daoAccess().insertTask(secCustomer);
+                            }
+                            iliadisDatabase.daoAccess().insertTaskShops(secCustomers);
+                            Log.d("Dimitra","passsss333333");
+                            loadJsonCatalog();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        pDialog.dismiss();
+                        //Display error message whenever an error occurs
+                        Toast.makeText(getApplicationContext(),
+                                error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(this).addToRequestQueue(jsArrayRequest);
+        return secCustomers;
+    }
+
     private ArrayList<Catalog> loadJsonCatalog() {
-        ArrayList<Catalog> catalogs = new ArrayList<>();
+        displayLoader("Κατέβασμα αρχείου καταλόγου.. Παρακαλώ περιμένετε...");
+
+        final ArrayList<Catalog> catalogs = new ArrayList<>();
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, "https://pod.iliadis.com.gr/getcatalogues.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
-                        //pDialog.dismiss();
+                        pDialog.dismiss();
                         try {
                             StringBuilder textViewData = new StringBuilder();
                             //Parse the JSON response array by iterating over it
@@ -323,10 +378,14 @@ public class MainActivity extends AppCompatActivity
                                 catalog.setDiscount3(response.getInt("discount3"));
                                 catalog.setDiscount4(response.getInt("discount4"));
                                 catalog.setDiscount5(response.getInt("discount5"));
+                                catalogs.add(catalog);
+                                Log.d("Dimitra","catalog id "+catalog.getCatid());
 
-                                iliadisDatabase.daoAccess().insertTask(catalog);
+                                //iliadisDatabase.daoAccess().insertTask(catalog);
                             }
-
+                            iliadisDatabase.daoAccess().insertTaskCatalog(catalogs);
+                            Log.d("Dimitra","passssss444444");
+                            loadJsonFPA();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -335,7 +394,7 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //pDialog.dismiss();
+                        pDialog.dismiss();
 
                         //Display error message whenever an error occurs
                         Toast.makeText(getApplicationContext(),
@@ -349,12 +408,14 @@ public class MainActivity extends AppCompatActivity
         return catalogs;
     }
     private ArrayList<FPA> loadJsonFPA() {
-        ArrayList<FPA> fpa = new ArrayList<>();
+        displayLoader("Κατέβασμα αρχείου ΦΠΑ.. Παρακαλώ περιμένετε...");
+
+        final ArrayList<FPA> fpa = new ArrayList<>();
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, "https://pod.iliadis.com.gr/getvats.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
-                        //pDialog.dismiss();
+                        pDialog.dismiss();
                         try {
                             StringBuilder textViewData = new StringBuilder();
                             //Parse the JSON response array by iterating over it
@@ -368,10 +429,13 @@ public class MainActivity extends AppCompatActivity
                                     Log.v("Data ",response.getString("custvatid"));
                                     fpa1.setCustvatid(response.getString("custvatid"));
                                 }
-
-                                iliadisDatabase.daoAccess().insertTask(fpa1);
+                                fpa.add(fpa1);
+                                Log.d("Dimitra","fpa id "+fpa1.getVatid());
+                                //iliadisDatabase.daoAccess().insertTask(fpa1);
                             }
-
+                            iliadisDatabase.daoAccess().insertTaskFpa(fpa);
+                            Log.d("Dimitra","passssss555555");
+                            loadJsonCountry();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -380,7 +444,7 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //pDialog.dismiss();
+                        pDialog.dismiss();
 
                         //Display error message whenever an error occurs
                         Toast.makeText(getApplicationContext(),
@@ -393,12 +457,14 @@ public class MainActivity extends AppCompatActivity
         return fpa;
     }
     private ArrayList<Country> loadJsonCountry() {
+        displayLoader("Κατέβασμα αρχείου χωρών.. Παρακαλώ περιμένετε...");
+
         final ArrayList<Country> countries = new ArrayList<>();
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, "https://pod.iliadis.com.gr/getcountries.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
-                        //pDialog.dismiss();
+                        pDialog.dismiss();
                         try {
                             StringBuilder textViewData = new StringBuilder();
                             //Parse the JSON response array by iterating over it
@@ -407,9 +473,13 @@ public class MainActivity extends AppCompatActivity
                                 Country country = new Country();
                                 country.setCountryid(response.getString("countryid"));
                                 country.setCountry(response.getString("country"));
+                                countries.add(country);
+                                Log.d("Dimitra",country.getCountry());
 
-                                iliadisDatabase.daoAccess().insertTask(country);
+                                //iliadisDatabase.daoAccess().insertTask(country);
                             }
+                            iliadisDatabase.daoAccess().insertTaskCountry(countries);
+                            //loadJsonCatalog();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -419,7 +489,7 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //pDialog.dismiss();
+                        pDialog.dismiss();
 
                         //Display error message whenever an error occurs
                         Toast.makeText(getApplicationContext(),
@@ -430,48 +500,6 @@ public class MainActivity extends AppCompatActivity
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsArrayRequest);
         return countries;
-    }
-    private ArrayList<SecCustomers> loadJsonASecCustomers() {
-        ArrayList<SecCustomers> secCustomers = new ArrayList<>();
-        JsonArrayRequest jsArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, "https://pod.iliadis.com.gr/getseccustomers.asp", null, new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray responseArray) {
-                        //pDialog.dismiss();
-                        try {
-                            StringBuilder textViewData = new StringBuilder();
-                            //Parse the JSON response array by iterating over it
-                            for (int i = 0; i < responseArray.length(); i++) {
-                                JSONObject response = responseArray.getJSONObject(i);
-                                SecCustomers secCustomer = new SecCustomers();
-                                secCustomer.setCustid(response.getString("custid"));
-                                secCustomer.setShopid(response.getString("shopid"));
-                                secCustomer.setCompanyName(response.getString("companyName"));
-                                secCustomer.setAddress(response.getString("address"));
-                                secCustomer.setPhone(response.getString("phone"));
-
-                                iliadisDatabase.daoAccess().insertTask(secCustomer);
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //pDialog.dismiss();
-
-                        //Display error message whenever an error occurs
-                        Toast.makeText(getApplicationContext(),
-                                error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        // Access the RequestQueue through your singleton class.
-        MySingleton.getInstance(this).addToRequestQueue(jsArrayRequest);
-        return secCustomers;
     }
 
     private void displayLoader(String message){
@@ -487,12 +515,11 @@ public class MainActivity extends AppCompatActivity
         if (iliadisDatabase.daoAccess().getProductsList().size() <=0)
         {
             loadJsonProducts();
-            loadJsonCustomers();
-            loadJsonCatalog();
-            loadJsonASecCustomers();
-            loadJsonCountry();
-            loadJsonFPA();
-        }
 
+//            loadJsonASecCustomers();
+//            loadJsonCountry();
+//            loadJsonFPA();
+//            loadJsonCatalog();
+        }
     }
 }
