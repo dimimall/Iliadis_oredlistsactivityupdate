@@ -91,16 +91,8 @@ public class CartActivity extends AppCompatActivity {
         number = myutils.sharedpreferences.getString("numsale", "");
         ipprintpref = myutils.sharedpreferences.getString("ipprint", "");
 
-        try {
-            InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(searchText.getEditText().getWindowToken(), 0);
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-
         isReadStoragePermissionGranted();
         isWriteStoragePermissionGranted();
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -120,6 +112,8 @@ public class CartActivity extends AppCompatActivity {
         subtotal = (TextView)findViewById(R.id.textView27);
         vat = (TextView)findViewById(R.id.textView28);
         grandtotal = (TextView)findViewById(R.id.textView29);
+
+
 
         carts = new ArrayList<>();
 
@@ -189,14 +183,17 @@ public class CartActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     createPdfFile(cartsList);
+                    //shopDatabase.daoShop().updateOrderStatus(1,cartsList.get(0).getOrderid());
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (DocumentException e) {
                     e.printStackTrace();
                 }
                 String result = myutils.createCsvFile(cartsList);
-                if (result.equals("1"))
-                    shopDatabase.daoShop().updateOrderStatus(2,cartsList.get(0).getOrderid());
+                if (result.equals("success")) {
+                    shopDatabase.daoShop().updateOrderStatus(2, cartsList.get(0).getOrderid());
+                    myutils.createDialog("Στάλθηκε το αρχείο",CartActivity.this);
+                }
                 else
                 {
                     myutils.createDialog("Δε στάλθηκε το αρχείο",CartActivity.this);

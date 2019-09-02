@@ -148,9 +148,9 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this,NewOrderActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
-
+            //Intent intent = new Intent(MainActivity.this,)
         } else if (id == R.id.nav_manage) {
-
+            
         } else if (id == R.id.nav_share) {
             Intent intent = new Intent(MainActivity.this,ReloadDbsActivity.class);
             startActivity(intent);

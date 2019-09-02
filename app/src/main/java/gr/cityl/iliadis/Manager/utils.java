@@ -10,12 +10,29 @@ import android.net.NetworkInfo;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.util.Log;
+import android.widget.Toast;
+
+
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Locale;
 
@@ -60,8 +77,6 @@ public class utils {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        String result="";
-
         File fileDir = new File(Environment.getExternalStorageDirectory(),"Csv File");
         if(!fileDir.exists()){
             try{
@@ -104,17 +119,48 @@ public class utils {
             }
         }
 
+        String success="";
+
         String url = "https://pod.iliadis.com.gr/UploadFile.php";
         File filecsv = new File(fileDir,"order.txt");
         if(filecsv.exists()) {
             try {
                 Log.d("Dimitra",filecsv.getAbsolutePath());
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppost = new HttpPost(url);
+
+                try {
+                    FileBody bin = new FileBody(filecsv);
+                    //MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+                    MultipartEntity reqEntity = new MultipartEntity();
+                    reqEntity.addPart("order", bin);
+                    httppost.setEntity(reqEntity);
+
+                    System.out.println("Requesting : " + httppost.getRequestLine());
+                    ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                    String responseBody = httpclient.execute(httppost, responseHandler);
+
+                    System.out.println("responseBody : " + responseBody);
+
+                    JSONArray array = new JSONArray(responseBody);
+                    JSONObject object = array.getJSONObject(0);
+                    success = object.getString("result");
+
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (ClientProtocolException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    httpclient.getConnectionManager().shutdown();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
-        return result;
+        return success;
     }
 
     public void createDialog(String message,Context context)
