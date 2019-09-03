@@ -1,8 +1,10 @@
 package gr.cityl.iliadis.Activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import gr.cityl.iliadis.Manager.utils;
 import gr.cityl.iliadis.Models.Cart;
 import gr.cityl.iliadis.Models.Order;
 import gr.cityl.iliadis.Models.SecCustomers;
@@ -38,10 +41,14 @@ public class SecCustomerActivity extends AppCompatActivity {
     Button send;
     String selectshop;
     ShopDatabase shopDatabase;
+    utils myutils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sec_customer);
+
+        myutils = new utils();
 
         getSupportActionBar().setTitle("Πελάτης");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -54,8 +61,9 @@ public class SecCustomerActivity extends AppCompatActivity {
         final List<SecCustomers> shops = (List<SecCustomers>) getIntent().getSerializableExtra("shops");
         final String custvatid = getIntent().getStringExtra("custvatid");
 		final int custcatid = getIntent().getIntExtra("catalogueid",0);
-        String title = getIntent().getStringExtra("name shop");
         final List<Order> orders = shopDatabase.daoShop().getListOrderStatus0(custid);
+
+        String title = getIntent().getStringExtra("name shop");
 
         textView2.setText(title);
 
@@ -84,6 +92,10 @@ public class SecCustomerActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 selectshop = shops.get(i).getShopid();
+                myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = myutils.sharedpreferences.edit();
+                editor.putString("shopid",selectshop);
+                editor.commit();
             }
         });
 
