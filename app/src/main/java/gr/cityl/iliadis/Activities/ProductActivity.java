@@ -63,8 +63,8 @@ public class ProductActivity extends AppCompatActivity {
         final String custvatid = getIntent().getStringExtra("custvatid");
         final String shopid = getIntent().getStringExtra("shopid");
         final int custcatid = getIntent().getIntExtra("catalogueid",0);
+            Log.d("Dimitra","ProductActivity custcatid id: "+custcatid);
         final int orderid = getIntent().getExtras().getInt("orderid");
-        Log.d("Dimitra","order id activity_product: "+orderid);
 
         cartbutton = (ImageView) toolbar.findViewById(R.id.basket);
         cartbutton.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +76,7 @@ public class ProductActivity extends AppCompatActivity {
                 intent.putExtra("custid",custid);
                 intent.putExtra("shopid",shopid);
                 intent.putExtra("cart", (Serializable) carts);
+                intent.putExtra("catalogueid",custcatid);
                 startActivity(intent);
             }
         });

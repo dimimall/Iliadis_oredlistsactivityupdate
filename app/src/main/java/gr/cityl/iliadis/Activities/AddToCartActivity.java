@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import gr.cityl.iliadis.Models.Cart;
@@ -40,6 +41,7 @@ public class AddToCartActivity extends AppCompatActivity {
     private Catalog catalog;
     private ImageView basket;
     private List<Cart> carts;
+    private double totalprice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class AddToCartActivity extends AppCompatActivity {
                 intent.putExtra("custid",custid);
                 intent.putExtra("cart", (Serializable) carts);
                 intent.putExtra("shopid",shopid);
+                intent.putExtra("catalogueid",custcatid);
                 startActivity(intent);
             }
         });
@@ -85,9 +88,9 @@ public class AddToCartActivity extends AppCompatActivity {
         realProdCodeText.setText(products.getProdcode()+"-"+products.getRealcode());
         descriptionText.setText(products.getProdescription());
         editQuantity.setText(products.getMinimumstep());
-        catalog = iliadisDatabase.daoAccess().getCatalogByCustCatId(String.valueOf(custcatid));
-        final double totalprice = Double.parseDouble(products.getMinimumstep()) * getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
-        priceText.setText("Τιμή: "+totalprice);
+        catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,products.getPriceid());
+        totalprice = Integer.parseInt(products.getMinimumstep()) * getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
+        priceText.setText("Τιμή: "+new DecimalFormat("##.##").format(totalprice));
 
         editQuantity.setOnKeyListener(new View.OnKeyListener() {
 
@@ -121,12 +124,12 @@ public class AddToCartActivity extends AppCompatActivity {
                     }
                     else if (Integer.parseInt(editQuantity.getText().toString()) == Integer.parseInt(products.getMinimumstep()))
                     {
-                        double totalprice = Double.parseDouble(products.getMinimumstep()) * getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
-                        priceText.setText("Τιμή: "+totalprice);
+                        totalprice = Integer.parseInt(products.getMinimumstep()) * getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
+                        priceText.setText("Τιμή: "+new DecimalFormat("##.##").format(totalprice));
                     }else if (Integer.parseInt(editQuantity.getText().toString()) > Integer.parseInt(products.getMinimumstep()))
                     {
-                        double totalprice = Double.parseDouble(editQuantity.getText().toString()) * getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
-                        priceText.setText("Τιμή: "+totalprice);
+                        totalprice = Integer.parseInt(editQuantity.getText().toString()) * getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
+                        priceText.setText("Τιμή: "+new DecimalFormat("##.##").format(totalprice));
                     }
 
                     return true;
@@ -138,13 +141,13 @@ public class AddToCartActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Cart cart = new Cart(orderid,products.getRealcode(),products.getProdcode(),String.valueOf(totalprice),commentText.getEditText().getText().toString(),products.getProdescription(),Integer.parseInt(editQuantity.getText().toString()),String.valueOf(custcatid),products.getPrice());
+                Cart cart = new Cart(orderid,products.getRealcode(),products.getProdcode(),String.valueOf(totalprice),commentText.getEditText().getText().toString(),products.getProdescription(),Integer.parseInt(editQuantity.getText().toString()),products.getVatcode(),products.getPrice());
                 shopDatabase.daoShop().insertTask(cart);
                 Intent intent = new Intent(AddToCartActivity.this,ProductActivity.class);
                 intent.putExtra("custid",custid);
                 intent.putExtra("custvatid",custvatid);
                 intent.putExtra("orderid",orderid);
-                intent.putExtra("custcatid",custcatid);
+                intent.putExtra("catalogueid",custcatid);
                 intent.putExtra("shopid",shopid);
                 startActivity(intent);
             }
@@ -173,15 +176,13 @@ public class AddToCartActivity extends AppCompatActivity {
         scan = (Button)findViewById(R.id.button13);
     }
 	
-	 public double getProductPrice(double flatprice, int discountstep)
-    {
+	 public double getProductPrice(double flatprice, int discount)
+     {
         double price = 0;
-        double discount = 0;
 
-        discount = flatprice * (discountstep/100);
-        price = flatprice - discount;
+        price =flatprice - flatprice * discount/100;
         return price;
-    }
+     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

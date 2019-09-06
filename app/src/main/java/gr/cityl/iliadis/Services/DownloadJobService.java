@@ -33,7 +33,7 @@ public class DownloadJobService extends JobService{
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         updateNewProductsDb(this);
-        return false;
+        return true;
     }
 
     @Override

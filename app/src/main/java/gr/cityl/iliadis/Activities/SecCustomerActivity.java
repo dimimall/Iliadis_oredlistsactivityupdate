@@ -39,7 +39,7 @@ public class SecCustomerActivity extends AppCompatActivity {
     ListView listView;
     ArrayAdapter<String> arrayAdapter;
     Button send;
-    String selectshop;
+    String selectshop="0";
     ShopDatabase shopDatabase;
     utils myutils;
 
@@ -124,10 +124,6 @@ public class SecCustomerActivity extends AppCompatActivity {
                         shopDatabase.daoShop().insertTask(order1);
                     }
                     List<Order> orders = shopDatabase.daoShop().getListOrder(custid);
-                    for (int i=0; i<orders.size(); i++)
-                    {
-                        Log.d("Dimitra","data "+orders.get(i).getOrderid()+" "+orders.get(i).getCustid()+" "+orders.get(i).getDateparsed()+" "+orders.get(i).getShopid());
-                    }
                     intent.putExtra("custvatid",custvatid);
                     intent.putExtra("custid",custid);
 					intent.putExtra("catalogueid",custcatid);
@@ -162,7 +158,7 @@ public class SecCustomerActivity extends AppCompatActivity {
                                     Intent intent = new Intent(SecCustomerActivity.this, ProductActivity.class);
                                     Order order1 = new Order();
 
-                                    if (shops != null) {
+                                    if (shops.size() <=0) {
                                         intent.putExtra("shopid", selectshop);
                                         order1.setCustid(custid);
                                         order1.setStatus(0);
@@ -170,7 +166,7 @@ public class SecCustomerActivity extends AppCompatActivity {
                                         order1.setShopid(selectshop);
                                         shopDatabase.daoShop().insertTask(order1);
                                     }
-                                    else {
+                                    else if (shops.size() > 0){
                                         intent.putExtra("shopid", "0");
                                         order1 = new Order();
                                         order1.setCustid(custid);
@@ -180,10 +176,6 @@ public class SecCustomerActivity extends AppCompatActivity {
                                         shopDatabase.daoShop().insertTask(order1);
                                     }
                                     List<Order> orders = shopDatabase.daoShop().getListOrder(custid);
-                                    for (int i=0; i<orders.size(); i++)
-                                    {
-                                        Log.d("Dimitra","data "+orders.get(i).getOrderid()+" "+orders.get(i).getCustid()+" "+orders.get(i).getDateparsed()+" "+orders.get(i).getShopid());
-                                    }
                                     intent.putExtra("custvatid",custvatid);
                                     intent.putExtra("custid",custid);
                                     intent.putExtra("catalogueid",custcatid);

@@ -2,10 +2,15 @@ package gr.cityl.iliadis.Activities;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,6 +31,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 
+import org.apache.http.Consts;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,9 +46,12 @@ import gr.cityl.iliadis.Models.Country;
 import gr.cityl.iliadis.Models.Customers;
 import gr.cityl.iliadis.Models.FPA;
 import gr.cityl.iliadis.Models.IliadisDatabase;
+import gr.cityl.iliadis.Models.Order;
 import gr.cityl.iliadis.Models.Products;
 import gr.cityl.iliadis.Models.SecCustomers;
+import gr.cityl.iliadis.Models.ShopDatabase;
 import gr.cityl.iliadis.R;
+import gr.cityl.iliadis.Services.DownloadJobService;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -52,6 +61,7 @@ public class MainActivity extends AppCompatActivity
     ImageView image;
     ProgressDialog pDialog;
     IliadisDatabase iliadisDatabase;
+    ShopDatabase shopDatabase;
     utils myutils;
 
     @Override
@@ -62,6 +72,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         iliadisDatabase = IliadisDatabase.getInstance(this);
+        shopDatabase = ShopDatabase.getInstance(this);
 
         initial();
 
@@ -84,6 +95,7 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this,"Disconnected netowrk",Toast.LENGTH_LONG).show();
         }
 
+
         buttonLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,13 +113,12 @@ public class MainActivity extends AppCompatActivity
         } else {
             //super.onBackPressed();
             new AlertDialog.Builder(this)
-                    .setTitle("Really Exit?")
-                    .setMessage("Are you sure you want to exit?")
+                    .setTitle("Iliadis")
+                    .setMessage("Θέλετε να βγείτε από την εφαρμογή?")
                     .setNegativeButton(android.R.string.no, null)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            //MainActivity.super.onBackPressed();
                             quit();
                         }
                     }).create().show();
@@ -142,20 +153,31 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
+        String custid = myutils.sharedpreferences.getString("custid", "");
+        String shopid = myutils.sharedpreferences.getString("shopid","");
+
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
             Intent intent = new Intent(MainActivity.this,NewOrderActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
-            //Intent intent = new Intent(MainActivity.this,)
+            List<Order> orders = shopDatabase.daoShop().getListOrderStatus0(custid);
+            Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
+            Intent intent = new Intent(MainActivity.this,OrderListsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_manage) {
-            
+            List<Order> orders = shopDatabase.daoShop().getListOrderStatus1(custid);
+            Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
+            Intent intent = new Intent(MainActivity.this,ReprintListsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
             Intent intent = new Intent(MainActivity.this,ReloadDbsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_send) {
-
+            Intent intent = new Intent(MainActivity.this,ProductActivity.class);
+            startActivity(intent);
         }
         else if (id == R.id.nav_settings) {
             Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
@@ -460,20 +482,20 @@ public class MainActivity extends AppCompatActivity
         displayLoader("Κατέβασμα αρχείου χωρών.. Παρακαλώ περιμένετε...");
 
         final ArrayList<Country> countries = new ArrayList<>();
-        JsonArrayRequest jsArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, "https://pod.iliadis.com.gr/getcountries.asp", null, new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray responseArray) {
-                        pDialog.dismiss();
-                        try {
-                            StringBuilder textViewData = new StringBuilder();
-                            //Parse the JSON response array by iterating over it
-                            for (int i = 0; i < responseArray.length(); i++) {
-                                JSONObject response = responseArray.getJSONObject(i);
-                                Country country = new Country();
-                                country.setCountryid(response.getString("countryid"));
-                                country.setCountry(response.getString("country"));
-                                countries.add(country);
+                                JsonArrayRequest jsArrayRequest = new JsonArrayRequest
+                                        (Request.Method.GET, "https://pod.iliadis.com.gr/getcountries.asp", null, new Response.Listener<JSONArray>() {
+                                            @Override
+                                            public void onResponse(JSONArray responseArray) {
+                                                pDialog.dismiss();
+                                                try {
+                                                    StringBuilder textViewData = new StringBuilder();
+                                                    //Parse the JSON response array by iterating over it
+                                                    for (int i = 0; i < responseArray.length(); i++) {
+                                                        JSONObject response = responseArray.getJSONObject(i);
+                                                        Country country = new Country();
+                                                        country.setCountryid(response.getString("countryid"));
+                                                        country.setCountry(response.getString("country"));
+                                                        countries.add(country);
                                 Log.d("Dimitra",country.getCountry());
 
                                 //iliadisDatabase.daoAccess().insertTask(country);
@@ -515,11 +537,6 @@ public class MainActivity extends AppCompatActivity
         if (iliadisDatabase.daoAccess().getProductsList().size() <=0)
         {
             loadJsonProducts();
-
-//            loadJsonASecCustomers();
-//            loadJsonCountry();
-//            loadJsonFPA();
-//            loadJsonCatalog();
         }
     }
 }

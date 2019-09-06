@@ -33,10 +33,12 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
 
 import gr.cityl.iliadis.Models.Cart;
+import gr.cityl.iliadis.Models.Customers;
 
 /**
  * Created by dimitra on 21/07/2019.
@@ -72,7 +74,7 @@ public class utils {
 
     }
 
-    public String createCsvFile(List<Cart> carts){
+    public String createCsvFile(List<Cart> carts, String salesid, String custid, int orderid, String customerid, String custvatid, String paymentid, String shopid, Customers customer, int custcatid){
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -85,7 +87,7 @@ public class utils {
                 e.printStackTrace();
             }
         }
-        File txtfile = new File(fileDir,"order.txt");
+        File txtfile = new File(fileDir,"order_iliadis.txt");
         if(!txtfile.exists()) {
             try {
                 txtfile.createNewFile();
@@ -98,20 +100,50 @@ public class utils {
             try {
                 FileWriter fileWriter  = new FileWriter(txtfile);
                 BufferedWriter bfWriter = new BufferedWriter(fileWriter);
+                bfWriter.write(salesid);
+                bfWriter.newLine();
+                bfWriter.write(custid);
+                bfWriter.newLine();
+                bfWriter.write(orderid);
+                bfWriter.newLine();
+                bfWriter.write(customerid);
+                bfWriter.newLine();
+                bfWriter.write(custvatid);
+                bfWriter.newLine();
+                bfWriter.write(paymentid);
+                bfWriter.newLine();
+                bfWriter.write(shopid);
+                bfWriter.newLine();
+                bfWriter.write(customer.getCompanyName());
+                bfWriter.newLine();
+                bfWriter.write(customer.getEmail());
+                bfWriter.newLine();
+                bfWriter.write(customer.getPhone());
+                bfWriter.newLine();
+                bfWriter.write(customer.getAddress());
+                bfWriter.newLine();
+                bfWriter.write(customer.getPostalCode());
+                bfWriter.newLine();
+                bfWriter.write(customer.getCity());
+                bfWriter.newLine();
+                bfWriter.write(customer.getCountry());
+                bfWriter.newLine();
                 for (int i=0; i<carts.size(); i++)
                 {
                     bfWriter.write(carts.get(i).getRealcode());
-                    bfWriter.write("|");
-                    bfWriter.write(carts.get(i).getDescription());
-                    bfWriter.write("|");
-                    bfWriter.write(carts.get(i).getComment());
-                    bfWriter.write("|");
+                    bfWriter.newLine();
                     bfWriter.write(carts.get(i).getQuantity());
-                    bfWriter.write("|");
+                    bfWriter.newLine();
+                    bfWriter.write(carts.get(i).getVatcode());
+                    bfWriter.newLine();
+                    bfWriter.write(custcatid);
+                    bfWriter.newLine();
                     bfWriter.write(carts.get(i).getPriceid());
-                    bfWriter.write("|");
-                    bfWriter.write(carts.get(i).getPrice());
-                    bfWriter.write("||");
+                    bfWriter.newLine();
+                    bfWriter.write(new DecimalFormat("##.##").format( getProductPrice(Double.parseDouble(carts.get(i).getPriceid().replace(",",".")),custcatid)));
+                    bfWriter.newLine();
+                    bfWriter.write(carts.get(i).getComment());
+                    bfWriter.newLine();
                 }
                 bfWriter.close();
             } catch (IOException e) {
@@ -122,10 +154,9 @@ public class utils {
         String success="";
 
         String url = "https://pod.iliadis.com.gr/UploadFile.php";
-        File filecsv = new File(fileDir,"order.txt");
+        File filecsv = new File(fileDir,"order_iliadis.txt");
         if(filecsv.exists()) {
             try {
-                Log.d("Dimitra",filecsv.getAbsolutePath());
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost httppost = new HttpPost(url);
 
@@ -148,9 +179,9 @@ public class utils {
                     success = object.getString("result");
 
                 } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                    Log.e("Error",e.getLocalizedMessage());
                 } catch (ClientProtocolException e) {
-                    e.printStackTrace();
+                    Log.e("Error",e.getLocalizedMessage());
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
@@ -161,6 +192,14 @@ public class utils {
             }
         }
         return success;
+    }
+
+    public double getProductPrice(double flatprice, int discount)
+    {
+        double price = 0;
+
+        price =flatprice - flatprice * discount/100;
+        return price;
     }
 
     public void createDialog(String message,Context context)

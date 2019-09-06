@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -175,6 +176,10 @@ public class NewOrderActivity extends AppCompatActivity {
                 {
                     if (customer != null)
                     {
+                        SharedPreferences.Editor editor = myutils.sharedpreferences.edit();
+                        editor.putString("custid",customer.getCustid());
+                        editor.commit();
+
                         secCustomers = iliadisDatabase.daoAccess().getShopsByCust(customer.getCustid());
                         Intent intent = new Intent(NewOrderActivity.this,SecCustomerActivity.class);
                         intent.putExtra("custid",customer.getCustid());
@@ -182,6 +187,7 @@ public class NewOrderActivity extends AppCompatActivity {
                         intent.putExtra("name shop",customer.getCompanyName());
                         intent.putExtra("shops", (Serializable) secCustomers);
 						intent.putExtra("catalogueid",customer.getCatalogueid());
+                        Log.d("Dimitra","NewOrderActivity custcatid id: "+customer.getCatalogueid());
                         startActivity(intent);
                     }
                 }

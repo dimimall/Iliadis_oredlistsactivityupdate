@@ -106,10 +106,13 @@ public interface DaoAccess {
     Products getProductByRealCode(String realcode);
 
     @Query("Select * from catalog  where custcatid =:custcatid")
-    Catalog getCatalogByCustCatId(String custcatid);
+    Catalog getCatalogByCustCatId(int custcatid);
 
     @Query("Select c2.* from country c2 where c2.countryid =:countryid")
     Country getCountry(String countryid);
+
+    @Query("Select c1.* from catalog c1 where c1.custcatid =:custcatid and c1.catid =:priceid")
+    Catalog getCatalogueDiscount(int custcatid, String priceid);
 
     @Delete
     void deleteProducts(List<Products> products);

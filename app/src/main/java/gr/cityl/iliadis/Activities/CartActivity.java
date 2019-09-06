@@ -2,12 +2,14 @@ package gr.cityl.iliadis.Activities;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Filter;
@@ -48,10 +51,17 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.net.ConnectException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,6 +71,7 @@ import java.util.Locale;
 
 import gr.cityl.iliadis.Manager.utils;
 import gr.cityl.iliadis.Models.Cart;
+import gr.cityl.iliadis.Models.Customers;
 import gr.cityl.iliadis.Models.IliadisDatabase;
 import gr.cityl.iliadis.Models.ShopDatabase;
 import gr.cityl.iliadis.R;
@@ -77,6 +88,7 @@ public class CartActivity extends AppCompatActivity {
     public List<Cart> cartsList,carts;
     private IliadisDatabase iliadisDatabase;
     private String custid,custvatid,shopId;
+    private int custcatid;
     private utils myutils;
     private String number;
     private String ipprintpref;
@@ -113,7 +125,7 @@ public class CartActivity extends AppCompatActivity {
         vat = (TextView)findViewById(R.id.textView28);
         grandtotal = (TextView)findViewById(R.id.textView29);
 
-
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         carts = new ArrayList<>();
 
@@ -123,11 +135,12 @@ public class CartActivity extends AppCompatActivity {
 
         custid = getIntent().getExtras().getString("custid");
         shopId= getIntent().getExtras().getString("shopid");
+        if (shopId==null)
+            shopId="0";
         custvatid = getIntent().getExtras().getString("custvatid");
         cartsList = (List<Cart>) getIntent().getExtras().getSerializable("cart");
-
+        custcatid = getIntent().getExtras().getInt("catalogueid");
         carts.addAll(cartsList);
-
         shopDatabase = ShopDatabase.getInstance(CartActivity.this);
         iliadisDatabase = IliadisDatabase.getInstance(CartActivity.this);
 
@@ -165,14 +178,14 @@ public class CartActivity extends AppCompatActivity {
             }
 
             for(int i = 0; i < carts.size(); i++){
-                prodSum = prodSum + carts.get(i).getQuantity();
-                priceSum = priceSum + (Double.parseDouble(carts.get(i).getPriceid().replace(",",".")) * carts.get(i).getQuantity());
+                //prodSum = prodSum + carts.get(i).getQuantity();
+                priceSum = priceSum + (Double.parseDouble(carts.get(i).getPrice().replace(",",".")));
                 sPriceSum = sPriceSum + (Double.parseDouble(carts.get(i).getPrice().replace(",",".")) * carts.get(i).getQuantity());
-                vTotal = vTotal + (((k * Double.parseDouble(carts.get(i).getPrice().replace(",","."))) / 100) * carts.get(i).getQuantity());
+                vTotal = vTotal + (((k * Double.parseDouble(carts.get(i).getPrice().replace(",","."))) / 100) /** carts.get(i).getQuantity()*/);
             }
             subtotal.setText(new DecimalFormat("##.##").format(priceSum) + "€");
             vat.setText(new DecimalFormat("##.##").format(vTotal) + "€");
-            double total = Double.parseDouble(new DecimalFormat("##.##").format((sPriceSum + vTotal)).replace(",","."));
+            double total = Double.parseDouble(new DecimalFormat("##.##").format((priceSum + vTotal)).replace(",","."));
             grandtotal.setText(""+total+ "€");
         }else {
             Toast.makeText(CartActivity.this,"Δεν Υπάρχουν Προϊόντα",Toast.LENGTH_LONG).show();
@@ -183,23 +196,27 @@ public class CartActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     createPdfFile(cartsList);
-                    //shopDatabase.daoShop().updateOrderStatus(1,cartsList.get(0).getOrderid());
+                    shopDatabase.daoShop().updateOrderStatus(1,cartsList.get(0).getOrderid());
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (DocumentException e) {
                     e.printStackTrace();
                 }
-                String result = myutils.createCsvFile(cartsList);
+                Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
+                String result="";
+                result = myutils.createCsvFile(cartsList,number,custid,carts.get(0).getOrderid(),iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCustomerid(),custvatid,iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPaymentid(),shopId,customer,iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid());
                 if (result.equals("success")) {
                     shopDatabase.daoShop().updateOrderStatus(2, cartsList.get(0).getOrderid());
-                    myutils.createDialog("Στάλθηκε το αρχείο",CartActivity.this);
+                    Toast.makeText(CartActivity.this, "Το αρχειο έχει σταλθεί", Toast.LENGTH_LONG).show();
                 }
                 else
                 {
-                    myutils.createDialog("Δε στάλθηκε το αρχείο",CartActivity.this);
+                    Toast.makeText(CartActivity.this, "Το αρχειο δεν έχει σταλθεί", Toast.LENGTH_LONG).show();
                 }
-                finishAffinity();
-                System.exit(0);
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
 
@@ -318,7 +335,7 @@ public class CartActivity extends AppCompatActivity {
             holder.code.setText(cartList.get(position).getRealcode()+"-"+cartList.get(position).getProdcode());
             holder.description.setText(cartList.get(position).getDescription());
             holder.qty.setText("QTY: "+cartList.get(position).getQuantity());
-            holder.price.setText(cartList.get(position).getPrice());
+            holder.price.setText(new DecimalFormat("##.##").format(Double.parseDouble(cartList.get(position).getPrice())));
 
             holder.optionbuttonmenu.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -394,7 +411,7 @@ public class CartActivity extends AppCompatActivity {
 
         BaseFont bfTimes = null;
         try {
-            bfTimes = BaseFont.createFont("assets/g_ari_i.ttf",BaseFont.IDENTITY_H,BaseFont.EMBEDDED);
+            bfTimes = BaseFont.createFont("assets/arialbd.ttf",BaseFont.IDENTITY_H,BaseFont.EMBEDDED);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -404,9 +421,7 @@ public class CartActivity extends AppCompatActivity {
 
         PdfPTable del_table = new PdfPTable(3);
         del_table.setWidthPercentage(100);
-        //table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
         PdfPCell cell = new PdfPCell();
-
 
         int indentation = 0;
         image = Image.getInstance(stream.toByteArray());
@@ -423,13 +438,13 @@ public class CartActivity extends AppCompatActivity {
 
         //Stoixeia paraggeleias
         del_table.addCell(new Paragraph("Κωδικός παραγγελίας",urFontName));
-        del_table.addCell(new Paragraph("DATE: ",urFontName));
-        del_table.addCell(new Paragraph("Seller: ",urFontName));
-        del_table.addCell(new Paragraph("1",urFontName));
+        del_table.addCell(new Paragraph("ΗΜΕΡΟΜΗΝΙΑ: ",urFontName));
+        del_table.addCell(new Paragraph("ΠΩΛΗΤΗΣ: ",urFontName));
+        del_table.addCell(new Paragraph(""+carts.get(0).getOrderid(),urFontName));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
         String currentDateandTime = sdf.format(new Date());
         del_table.addCell(new Paragraph(""+currentDateandTime,urFontName));
-        del_table.addCell(new Paragraph("18",urFontName));
+        del_table.addCell(new Paragraph(""+number,urFontName));
         doc.add(del_table);
 
         doc.add( Chunk.NEWLINE );
@@ -445,17 +460,17 @@ public class CartActivity extends AppCompatActivity {
         cust_table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
         Paragraph c = new Paragraph("Πελάτης",urFontName);
         cust_table.addCell(c);
-        Paragraph c1 = new Paragraph("CUST ID: " + custid,urFontName);
+        Paragraph c1 = new Paragraph("ΚΩΔΙΚΟΣ ΠΕΛΑΤΗ: " + custid,urFontName);
         cust_table.addCell(c1);
-        Paragraph c2 = new Paragraph("NAME: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCompanyName(),urFontName);
+        Paragraph c2 = new Paragraph("ΟΝΟΜΑ: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCompanyName(),urFontName);
         Log.d("Dimitra",iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCompanyName());
         cust_table.addCell(c2);
-        Paragraph c3 = new Paragraph("VAT.: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getAfm(),urFontName);
+        Paragraph c3 = new Paragraph("ΑΦΜ.: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getAfm(),urFontName);
         cust_table.addCell(c3);
-        Paragraph c4 = new Paragraph("TAX OFFICE: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getTaxOffice(),urFontName);
+        Paragraph c4 = new Paragraph("ΔΟΥ: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getTaxOffice(),urFontName);
         Log.d("Dimitra",iliadisDatabase.daoAccess().getCustomerByCustid(custid).getTaxOffice());
         cust_table.addCell(c4);
-        Paragraph c5 = new Paragraph("COUNTRY: " + iliadisDatabase.daoAccess().getCountry(iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCountry()).getCountry(),urFontName);
+        Paragraph c5 = new Paragraph("ΧΩΡΑ: " + iliadisDatabase.daoAccess().getCountry(iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCountry()).getCountry(),urFontName);
         Log.d("Dimitra",iliadisDatabase.daoAccess().getCountry(iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCountry()).getCountry());
         cust_table.addCell(c5);
 
@@ -467,27 +482,27 @@ public class CartActivity extends AppCompatActivity {
         addr_table.setWidthPercentage(100);
         addr_table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
         if(Integer.parseInt(shopId) == 0) {
-            Paragraph f1 = new Paragraph("CITY: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCity(),urFontName);
+            Paragraph f1 = new Paragraph("ΠΟΛΗ: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCity(),urFontName);
             addr_table.addCell(f1);
         }else{
-            Paragraph f1 = new Paragraph("CITY: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCity(),urFontName);
+            Paragraph f1 = new Paragraph("ΠΟΛΗ: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCity(),urFontName);
             addr_table.addCell(f1);
         }
         if(Integer.parseInt(shopId) == 0) {
-            Paragraph f2 = new Paragraph("ADDRESS: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getAddress(),urFontName);
+            Paragraph f2 = new Paragraph("ΔΙΕΥΘΥΝΣΗ: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getAddress(),urFontName);
             addr_table.addCell(f2);
         }else{
-            Paragraph f2 = new Paragraph("ADDRESS: " + iliadisDatabase.daoAccess().getShopsByShopid(shopId).getAddress(),urFontName);
+            Paragraph f2 = new Paragraph("ΔΙΕΥΘΥΝΣΗ: " + iliadisDatabase.daoAccess().getShopsByShopid(shopId).getAddress(),urFontName);
             addr_table.addCell(f2);
         }
         if(Integer.parseInt(shopId) == 0) {
-            Paragraph f3 = new Paragraph("POST CODE: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPostalCode(),urFontName);
+            Paragraph f3 = new Paragraph("ΚΩΔΙΚΟΣ ΠΟΛΗΣ: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPostalCode(),urFontName);
             addr_table.addCell(f3);
         }else{
-            Paragraph f3 = new Paragraph("POST CODE: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPostalCode(),urFontName);
+            Paragraph f3 = new Paragraph("ΚΩΔΙΚΟΣ ΠΟΛΗΣ: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPostalCode(),urFontName);
             addr_table.addCell(f3);
         }
-        Paragraph f4 = new Paragraph("PHONE: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPhone(),urFontName);
+        Paragraph f4 = new Paragraph("ΤΗΛΕΦΩΝΟ: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPhone(),urFontName);
         addr_table.addCell(f4);
         Paragraph f5 = new Paragraph("EMAIL: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getEmail(),urFontName);
         addr_table.addCell(f5);
@@ -498,33 +513,32 @@ public class CartActivity extends AppCompatActivity {
         doc.add( Chunk.NEWLINE );
         doc.add( Chunk.NEWLINE );
 
-        PdfPTable prod_lb_table = new PdfPTable(new float[] { 150f, 600f, 350f, 150f, 150f, 150f });
-        //PdfPTable prod_lb_table = new PdfPTable(6);
+        PdfPTable prod_lb_table = new PdfPTable(new float[] { 150f, 600f, /*350f,*/ 150f, 150f, 150f });
         prod_lb_table.setWidthPercentage(100);
 
-        Paragraph lb = new Paragraph("CODE",urFontName);
+        Paragraph lb = new Paragraph("ΚΩΔΙΚΟΣ",urFontName);
         prod_lb_table.addCell(lb);
-        Paragraph lb2 = new Paragraph("DESCRIPTION",urFontName);
+        Paragraph lb2 = new Paragraph("ΠΕΡΙΓΡΑΦΗ",urFontName);
         prod_lb_table.addCell(lb2);
-        Paragraph lb3 = new Paragraph("COMMENT",urFontName);
-        prod_lb_table.addCell(lb3);
-        Paragraph lb4 = new Paragraph("QUAN",urFontName);
+//        Paragraph lb3 = new Paragraph("ΣΧΟΛΙΟ",urFontName);
+//        prod_lb_table.addCell(lb3);
+        Paragraph lb4 = new Paragraph("ΠΟΣΟΤΗΤΑ",urFontName);
         prod_lb_table.addCell(lb4);
-        Paragraph lb5 = new Paragraph("PRICE",urFontName);
+        Paragraph lb5 = new Paragraph("ΤΙΜΗ",urFontName);
         prod_lb_table.addCell(lb5);
-        Paragraph lb6 = new Paragraph("TOTAL AMOUNT",urFontName);
+        Paragraph lb6 = new Paragraph("ΣΥΝΟΛΙΚΟ ΠΟΣΟ",urFontName);
         prod_lb_table.addCell(lb6);
 
         doc.add(prod_lb_table);
 
-        PdfPTable prod_table = new PdfPTable(new float[] { 150f, 600f, 350f, 150f, 150f, 150f });
+        PdfPTable prod_table = new PdfPTable(new float[] { 150f, 600f, /*350f,*/ 150f, 150f, 150f });
         prod_table.setWidthPercentage(100);
         prod_table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
 
         for(int i = 0; i < carts.size(); i++){
             prod_table.addCell(new PdfPCell(new Phrase(carts.get(i).getRealcode(),urFontName)));
-            prod_table.addCell(new PdfPCell(new Phrase(carts.get(i).getDescription(),urFontName)));
-            prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getComment(),urFontName)));
+            prod_table.addCell(new PdfPCell(new Phrase(carts.get(i).getDescription()+"\n"+carts.get(i).getComment(),urFontName)));
+            //prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getComment(),urFontName)));
             prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getQuantity(),urFontName)));
             prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getPriceid(),urFontName)));
             prod_table.addCell(new PdfPCell(new Phrase("" + (carts.get(i).getPrice()),urFontName)));
@@ -565,37 +579,37 @@ public class CartActivity extends AppCompatActivity {
             sPriceSum = sPriceSum + (Double.parseDouble(carts.get(i).getPrice().replace(",",".")) * carts.get(i).getQuantity());
             vTotal = vTotal + (((k * Double.parseDouble(carts.get(i).getPrice().replace(",","."))) / 100) * carts.get(i).getQuantity());
         }
-        PdfPCell s = new PdfPCell(new Phrase("Total Quantity: " + new DecimalFormat("##.##").format(prodSum),urFontName));
+        PdfPCell s = new PdfPCell(new Phrase("ΣΥΝΟΛΟ ΠΟΣΟΤΗΤΑΣ: " + new DecimalFormat("##.##").format(prodSum),urFontName));
         s.setBorder(Rectangle.NO_BORDER);
         s.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s);
         //sum_table.addCell("" + new DecimalFormat("##.##").format(prodSum));
 
-        PdfPCell s1 = new PdfPCell(new Phrase("Order amount: " + new DecimalFormat("##.##").format(priceSum)  + "€",urFontName));
+        PdfPCell s1 = new PdfPCell(new Phrase("ΛΟΓΑΡΙΑΣΜΟΣ ΠΑΡΑΓΓΕΛΙΑΣ: " + new DecimalFormat("##.##").format(priceSum)  + "€",urFontName));
         s1.setBorder(Rectangle.NO_BORDER);
         s1.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s1);
         //sum_table.addCell("" + new DecimalFormat("##.##").format(priceSum));
 
-        PdfPCell s2 = new PdfPCell(new Phrase("Discount: " + new DecimalFormat("##.##").format((priceSum - sPriceSum)) + "€",urFontName));
+        PdfPCell s2 = new PdfPCell(new Phrase("ΕΚΠΤΩΣΗ: " + new DecimalFormat("##.##").format((priceSum - sPriceSum)) + "€",urFontName));
         s2.setBorder(Rectangle.NO_BORDER);
         s2.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s2);
         //sum_table.addCell("" + new DecimalFormat("##.##").format((priceSum - sPriceSum)));
 
-        PdfPCell s3 = new PdfPCell(new Phrase("Amount after discount: " + new DecimalFormat("##.##").format(sPriceSum) + "€",urFontName));
+        PdfPCell s3 = new PdfPCell(new Phrase("ΠΟΣΟ ΜΕ ΕΚΠΤΩΣΗ: " + new DecimalFormat("##.##").format(sPriceSum) + "€",urFontName));
         s3.setBorder(Rectangle.NO_BORDER);
         s3.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s3);
         //sum_table.addCell("" + new DecimalFormat("##.##").format(sPriceSum));
 
-        PdfPCell s4 = new PdfPCell(new Phrase("VAT cost.: " + new DecimalFormat("##.##").format(vTotal) + "€",urFontName));
+        PdfPCell s4 = new PdfPCell(new Phrase("ΚΟΣΤΟΣ ΦΠΑ.: " + new DecimalFormat("##.##").format(vTotal) + "€",urFontName));
         s4.setBorder(Rectangle.NO_BORDER);
         s4.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s4);
         //sum_table.addCell("" + new DecimalFormat("##.##").format(vTotal));
 
-        PdfPCell s5 = new PdfPCell(new Phrase("Total amount: " + new DecimalFormat("##.##").format((sPriceSum + vTotal)) + "€",urFontName));
+        PdfPCell s5 = new PdfPCell(new Phrase("ΣΥΝΟΛΙΚΟ ΠΟΣΟ: " + new DecimalFormat("##.##").format((sPriceSum + vTotal)) + "€",urFontName));
         s5.setBorder(Rectangle.NO_BORDER);
         s5.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s5);
@@ -608,10 +622,7 @@ public class CartActivity extends AppCompatActivity {
 
         doc.add( Chunk.NEWLINE );
         doc.add( Chunk.NEWLINE );
-        doc.add( Chunk.NEWLINE );
-        doc.add( Chunk.NEWLINE );
-        doc.add( Chunk.NEWLINE );
-        doc.add( Chunk.NEWLINE );
+
 
         PdfPTable com_table = new PdfPTable(new float[] { 600f, 150f, 150f });
         com_table.setWidthPercentage(100);
@@ -625,16 +636,62 @@ public class CartActivity extends AppCompatActivity {
         PdfPCell com2 = new PdfPCell(new Phrase("Ο παραλαβών",urFontName));
         com2.setBorder(Rectangle.NO_BORDER);
         com_table.addCell(com2);
-        PdfPCell com3 = new PdfPCell(new Phrase(""));
-        com3.setBorder(Rectangle.NO_BORDER);
-        com_table.addCell(com3);
-        com_table.addCell("");
-        com_table.addCell("");
 
         doc.add(com_table);
         doc.close();
+
+//        String success = printPdf();
+//        Log.d("Dimitra",success);
     }
 
+    public String  printPdf() {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        final String SUCCESSFULLY_SENT = "Successfully sent to printer";
+        String result="";
+        DataOutputStream outToServer = null;
+        InputStream is = null;
+        Socket clientSocket;
+        File root =new File(Environment.getExternalStorageDirectory(),"Pdf file");
+        File pdffile = new File(root,"order.pdf");
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream(pdffile.getAbsolutePath());
+            is =fileInputStream;
+            clientSocket = new Socket("192.168.1.3", 9100);
+            outToServer = new DataOutputStream(clientSocket.getOutputStream());
+            //byte[] buffer = new byte[3000];
+            int i;
+            while ((i=is.read()) !=-1){
+                outToServer.write(i);
+            }
+            outToServer.flush();
+            result = SUCCESSFULLY_SENT;
+        }catch (ConnectException connectException){
+            Log.d("Dimitra", connectException.toString(), connectException);
+            result = connectException.toString();
+        }
+        catch (UnknownHostException e1) {
+            Log.e("Dimitra", e1.toString(), e1);
+            result = e1.toString();
+        } catch (IOException e1) {
+            Log.e("Dimitra", e1.toString(), e1);
+            result = e1.toString();
+        }
+        finally{
+            try {
+                if (outToServer!=null){
+                    outToServer.close();
+                }
+                if (is!=null){
+                    is.close();
+                }
+            }catch (IOException ioException){
+                result = ioException.toString();
+            }
+        }
+        return result;
+    }
     public  boolean isReadStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)

@@ -47,7 +47,7 @@ public interface DaoShop {
     @Query("Select * from 'order' where custid =:custid and status=0")
     List<Order> getListOrderStatus0(String custid);
 
-    @Query("Select * from 'order' where custid =:custid and status=1")
+    @Query("Select * from 'order' where custid =:custid and status=1 or status=2")
     List<Order> getListOrderStatus1(String custid);
 
     @Query("Select * from cart where orderid =:orderid")

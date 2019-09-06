@@ -39,12 +39,16 @@ public class OrderListsActivity extends AppCompatActivity {
     private String custvatid;
     private List<Order> orderList;
     private String shopid;
-    private String custcatid;
+    private int custcatid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_lists);
+
+        getSupportActionBar().setTitle("Πελάτης");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         shopDatabase = ShopDatabase.getInstance(OrderListsActivity.this);
         iliadisDatabase = IliadisDatabase.getInstance(OrderListsActivity.this);
@@ -55,7 +59,7 @@ public class OrderListsActivity extends AppCompatActivity {
         custvatid = getIntent().getExtras().getString("custvatid");
         shopid = getIntent().getExtras().getString("shopsid");
         orderList = (List<Order>) getIntent().getExtras().getSerializable("orders");
-        custcatid = getIntent().getExtras().getString("catalogueid");
+        custcatid = getIntent().getExtras().getInt("catalogueid");
 
         for (int i=0; i<orderList.size(); i++)
         {
@@ -153,7 +157,7 @@ public class OrderListsActivity extends AppCompatActivity {
                                     intent.putExtra("custid",custid);
                                     intent.putExtra("custvatid",custvatid);
                                     intent.putExtra("orderid",paramOrdersList.get(position).getOrderid());
-                                    intent.putExtra("custcatid",custcatid);
+                                    intent.putExtra("catalogueid",custcatid);
                                     intent.putExtra("shopid",shopid);
                                     startActivity(intent);
                                     return true;
@@ -172,6 +176,17 @@ public class OrderListsActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return paramOrdersList.size();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }
