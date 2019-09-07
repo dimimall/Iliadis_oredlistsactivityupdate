@@ -54,7 +54,7 @@ public class NewOrderActivity extends AppCompatActivity {
         secCustomers = new ArrayList<>();
         myutils = new utils();
 
-        getSupportActionBar().setTitle("Πελάτης");
+        getSupportActionBar().setTitle(getString(R.string.customer));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         init();

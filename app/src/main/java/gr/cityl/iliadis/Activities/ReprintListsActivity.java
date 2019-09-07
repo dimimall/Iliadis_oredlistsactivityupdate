@@ -56,7 +56,6 @@ public class ReprintListsActivity extends AppCompatActivity {
 
         myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
         number = myutils.sharedpreferences.getString("numsale", "");
-        shopid = myutils.sharedpreferences.getString("shopid","");
 
         shopDatabase = ShopDatabase.getInstance(ReprintListsActivity.this);
         iliadisDatabase = IliadisDatabase.getInstance(ReprintListsActivity.this);
@@ -157,6 +156,7 @@ public class ReprintListsActivity extends AppCompatActivity {
                                     List<Cart> cartsList = shopDatabase.daoShop().getCartList(paramOrders.get(position).getOrderid());
                                     myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
                                     number = myutils.sharedpreferences.getString("numsale", "");
+                                    shopId = myutils.sharedpreferences.getString("shopid","");
                                     try {
                                         myutils.createPdfFile(cartsList,custid,custvatid,number,shopId,iliadisDatabase,ReprintListsActivity.this);
                                     } catch (IOException e) {

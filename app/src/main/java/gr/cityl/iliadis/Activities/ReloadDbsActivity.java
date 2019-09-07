@@ -161,7 +161,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
         final ArrayList<Products> products = new ArrayList<>();
 
         final ProgressDialog  pDialog = new ProgressDialog(ReloadDbsActivity.this);
-        pDialog.setMessage("Αποθήκευση στη βάση προϊόντων");
+        pDialog.setMessage(getString(R.string.downloadfileproduct));
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();
@@ -223,7 +223,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
         final ArrayList<Customers> customers = new ArrayList<>();
 
         final ProgressDialog  pDialog = new ProgressDialog(ReloadDbsActivity.this);
-        pDialog.setMessage("Αποθήκευση στη βάση των πελατών");
+        pDialog.setMessage(getString(R.string.downloadfilecustomer));
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();
@@ -285,7 +285,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
         final ArrayList<Catalog> catalogs = new ArrayList<>();
 
         final ProgressDialog  pDialog = new ProgressDialog(ReloadDbsActivity.this);
-        pDialog.setMessage("Αποθήκευση στη βάση των καταλόγων");
+        pDialog.setMessage(getString(R.string.downloadfilecatalogue));
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();
@@ -348,7 +348,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
         final ArrayList<FPA> fpa = new ArrayList<>();
 
         final ProgressDialog  pDialog = new ProgressDialog(ReloadDbsActivity.this);
-        pDialog.setMessage("Αποθήκευση στη βάση των ΦΠΑ");
+        pDialog.setMessage(getString(R.string.downloadfilevat));
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();
@@ -398,7 +398,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
         final ArrayList<Country> countries = new ArrayList<>();
 
         final ProgressDialog  pDialog = new ProgressDialog(ReloadDbsActivity.this);
-        pDialog.setMessage("Αποθήκευση στη βάση των χωρών");
+        pDialog.setMessage(getString(R.string.downloadfilecountry));
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();
@@ -445,7 +445,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
         final ArrayList<SecCustomers> secCustomers = new ArrayList<>();
 
         final ProgressDialog  pDialog = new ProgressDialog(ReloadDbsActivity.this);
-        pDialog.setMessage("Αποθήκευση στη βάση των καταστημάτων");
+        pDialog.setMessage(getString(R.string.downloadfileshops));
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();

@@ -92,12 +92,9 @@ public class SecCustomerActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 selectshop = shops.get(i).getShopid();
-                myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = myutils.sharedpreferences.edit();
-                editor.putString("shopid",selectshop);
-                editor.commit();
             }
         });
+
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +105,11 @@ public class SecCustomerActivity extends AppCompatActivity {
                     Intent intent = new Intent(SecCustomerActivity.this, ProductActivity.class);
                     Order order1 = new Order();
                     if (shops.size() > 0) {
+                        myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = myutils.sharedpreferences.edit();
+                        editor.putString("shopid",selectshop);
+                        editor.commit();
+
                         intent.putExtra("shopid", selectshop);
                         order1.setCustid(custid);
                         order1.setStatus(0);
@@ -116,6 +118,11 @@ public class SecCustomerActivity extends AppCompatActivity {
                         shopDatabase.daoShop().insertTask(order1);
                     }
                     else {
+                        myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = myutils.sharedpreferences.edit();
+                        editor.putString("shopid","0");
+                        editor.commit();
+
                         intent.putExtra("shopid", "0");
                         order1.setCustid(custid);
                         order1.setStatus(0);
@@ -159,6 +166,11 @@ public class SecCustomerActivity extends AppCompatActivity {
                                     Order order1 = new Order();
 
                                     if (shops.size() <=0) {
+                                        myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = myutils.sharedpreferences.edit();
+                                        editor.putString("shopid",selectshop);
+                                        editor.commit();
+
                                         intent.putExtra("shopid", selectshop);
                                         order1.setCustid(custid);
                                         order1.setStatus(0);
@@ -167,6 +179,11 @@ public class SecCustomerActivity extends AppCompatActivity {
                                         shopDatabase.daoShop().insertTask(order1);
                                     }
                                     else if (shops.size() > 0){
+                                        myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = myutils.sharedpreferences.edit();
+                                        editor.putString("shopid","0");
+                                        editor.commit();
+
                                         intent.putExtra("shopid", "0");
                                         order1 = new Order();
                                         order1.setCustid(custid);

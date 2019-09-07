@@ -7,8 +7,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -35,8 +37,6 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import gr.cityl.iliadis.Manager.MySingleton;
@@ -56,19 +56,20 @@ import gr.cityl.iliadis.Services.UpdateProductDbReceiver;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    TextView textView;
+    TextView textView,neworder,title;
     LinearLayout buttonLayout;
     ImageView image;
     ProgressDialog pDialog;
     IliadisDatabase iliadisDatabase;
     ShopDatabase shopDatabase;
     utils myutils;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         iliadisDatabase = IliadisDatabase.getInstance(this);
@@ -78,12 +79,10 @@ public class MainActivity extends AppCompatActivity
 
         myutils = new utils();
 
-        Calendar calendar = new GregorianCalendar();
         Intent notifyIntent = new Intent(getApplicationContext(),UpdateProductDbReceiver.class);
-        notifyIntent.setAction("android.intent.action.NOTIFY");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),0,notifyIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),101,notifyIntent,0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,  calendar.getTimeInMillis(),1000 * 60 * 3, pendingIntent);
+        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,   SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -102,7 +101,6 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this,"Disconnected netowrk",Toast.LENGTH_LONG).show();
         }
 
-
         buttonLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,11 +115,12 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+//
         } else {
             //super.onBackPressed();
             new AlertDialog.Builder(this)
                     .setTitle("Iliadis")
-                    .setMessage("Θέλετε να βγείτε από την εφαρμογή?")
+                    .setMessage(getString(R.string.closeapp))
                     .setNegativeButton(android.R.string.no, null)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
@@ -222,15 +221,25 @@ public class MainActivity extends AppCompatActivity
 
     public void initial()
     {
+        title = (TextView)toolbar.findViewById(R.id.title);
+        neworder = (TextView)findViewById(R.id.text);
         textView = (TextView)findViewById(R.id.textView);
         image = (ImageView)findViewById(R.id.image);
         buttonLayout = (LinearLayout)findViewById(R.id.buttonlayout);
         image.setColorFilter(Color.argb(255, 255, 255, 255));
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        title.setText(getString(R.string.home));
+        neworder.setText(getString(R.string.neworder));
+        super.onConfigurationChanged(newConfig);
+    }
+
     private void loadJsonProducts() {
         final ArrayList<Products> products = new ArrayList<>();
-        displayLoader("Κατέβασμα αρχείου προϊόντων.. Παρακαλώ περιμένετε...");
+        displayLoader(getString(R.string.downloadfileproduct));
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, "https://pod.iliadis.com.gr/getproducts.asp", null, new Response.Listener<JSONArray>() {
                     @Override
@@ -285,7 +294,7 @@ public class MainActivity extends AppCompatActivity
 
     }
     private ArrayList<Customers> loadJsonCustomers(){
-        displayLoader("Κατέβασμα αρχείου πελατών.. Παρακαλώ περιμένετε...");
+        displayLoader(getString(R.string.downloadfilecustomer));
         final ArrayList<Customers> customers = new ArrayList<>();
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, "https://pod.iliadis.com.gr/getcustomersx.asp", null, new Response.Listener<JSONArray>() {
@@ -343,7 +352,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private ArrayList<SecCustomers> loadJsonASecCustomers() {
-        displayLoader("Κατέβασμα αρχείου καταστημάτων.. Παρακαλώ περιμένετε...");
+        displayLoader(getString(R.string.downloadfileshops));
 
         final ArrayList<SecCustomers> secCustomers = new ArrayList<>();
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
@@ -392,7 +401,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private ArrayList<Catalog> loadJsonCatalog() {
-        displayLoader("Κατέβασμα αρχείου καταλόγου.. Παρακαλώ περιμένετε...");
+        displayLoader(getString(R.string.downloadfilecatalogue));
 
         final ArrayList<Catalog> catalogs = new ArrayList<>();
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
@@ -453,7 +462,7 @@ public class MainActivity extends AppCompatActivity
         return catalogs;
     }
     private ArrayList<FPA> loadJsonFPA() {
-        displayLoader("Κατέβασμα αρχείου ΦΠΑ.. Παρακαλώ περιμένετε...");
+        displayLoader(getString(R.string.downloadfilevat));
 
         final ArrayList<FPA> fpa = new ArrayList<>();
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
@@ -502,7 +511,7 @@ public class MainActivity extends AppCompatActivity
         return fpa;
     }
     private ArrayList<Country> loadJsonCountry() {
-        displayLoader("Κατέβασμα αρχείου χωρών.. Παρακαλώ περιμένετε...");
+        displayLoader(getString(R.string.downloadfilecountry));
 
         final ArrayList<Country> countries = new ArrayList<>();
                                 JsonArrayRequest jsArrayRequest = new JsonArrayRequest
