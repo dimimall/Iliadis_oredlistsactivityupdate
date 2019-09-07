@@ -43,13 +43,13 @@
         <activity
             android:name=".Activities.CartActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Activities.OrderListsActivity" />
-        <activity android:name=".Activities.ReprintListsActivity"></activity>
+        <activity android:name=".Activities.OrderListsActivity" />
+        <activity android:name=".Activities.ReprintListsActivity" />
 
-        <service android:name=".Services.DownloadJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"></service>
+        <receiver
+            android:name=".Services.UpdateProductDbReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
 
 </manifest>

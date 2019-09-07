@@ -33,7 +33,7 @@
         android:layout_below="@+id/textInputLayout4"
         android:layout_marginStart="30dp"
         android:layout_marginTop="22dp"
-        android:text="Περιγραφή προϊόντος"
+        android:text="@string/descproduct"
         android:textColor="#000000"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -60,7 +60,7 @@
         android:textColor="#000000"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:text="Τιμή:" />
+        android:text="@string/price" />
 
     <TextView
         android:id="@+id/textView11"
@@ -70,7 +70,7 @@
         android:textSize="20sp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="18dp"
-        android:text="Συνολικό υπόλοιπο:" />
+        android:text="@string/totalrest" />
 
     <TextView
         android:id="@+id/textView12"
@@ -80,7 +80,7 @@
         android:layout_below="@+id/textView11"
         android:layout_marginTop="18dp"
         android:textSize="18sp"
-        android:text="Δεσμευμένα:" />
+        android:text="@string/reserved" />
 
     <TextView
         android:id="@+id/textView13"
@@ -90,7 +90,7 @@
         android:layout_below="@+id/textView12"
         android:layout_marginTop="17dp"
         android:textSize="18sp"
-        android:text="Αναμενώμενα:" />
+        android:text="@string/renew" />
 
     <TextView
         android:id="@+id/textView14"
@@ -100,7 +100,7 @@
         android:layout_below="@+id/textView13"
         android:layout_marginTop="12dp"
         android:textSize="18sp"
-        android:text="Διαθέσιμα:" />
+        android:text="@string/available" />
 
     <TextView
         android:id="@+id/textView15"
@@ -110,7 +110,7 @@
         android:layout_below="@+id/textView14"
         android:layout_marginTop="18dp"
         android:textSize="18sp"
-        android:text="Ημ. Παραλαβής:" />
+        android:text="@string/datedelivery" />
 
     <Button
         android:id="@+id/button10"
@@ -122,7 +122,7 @@
         android:textStyle="bold"
         android:background="@color/colorGreen"
         android:layout_marginBottom="7dp"
-        android:text="Νεα Σαρωση" />
+        android:text="@string/newscan" />
 
     <Button
         android:id="@+id/button11"
@@ -133,7 +133,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="18dp"
         android:background="@color/colorGreen"
-        android:text="Καλαθι"
+        android:text="@string/basket"
         android:textColor="#ffffff"
         android:textStyle="bold" />
 

@@ -178,6 +178,7 @@ public class NewOrderActivity extends AppCompatActivity {
                     {
                         SharedPreferences.Editor editor = myutils.sharedpreferences.edit();
                         editor.putString("custid",customer.getCustid());
+                        editor.putInt("catalogueid",customer.getCatalogueid());
                         editor.commit();
 
                         secCustomers = iliadisDatabase.daoAccess().getShopsByCust(customer.getCustid());
@@ -187,7 +188,6 @@ public class NewOrderActivity extends AppCompatActivity {
                         intent.putExtra("name shop",customer.getCompanyName());
                         intent.putExtra("shops", (Serializable) secCustomers);
 						intent.putExtra("catalogueid",customer.getCatalogueid());
-                        Log.d("Dimitra","NewOrderActivity custcatid id: "+customer.getCatalogueid());
                         startActivity(intent);
                     }
                 }

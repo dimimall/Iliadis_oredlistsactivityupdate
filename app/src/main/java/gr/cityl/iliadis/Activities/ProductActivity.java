@@ -94,13 +94,13 @@ public class ProductActivity extends AppCompatActivity {
                     {
                         product = iliadisDatabase.daoAccess().getProductByProdCode(barcodetext.getEditText().getText().toString());
                         desctext.setText(product.getProdescription());
-                        pricetext.setText("Τιμή: "+product.getPrice());
-                        balancetext.setText("Συνολικό υπόλοιπο: "+product.getQuantitytotal());
-                        reservedtext.setText("Δεσμευμένα: "+product.getReserved());
-                        renewtext.setText("Αναμενώμενα: "+product.getQuantitywaiting());
-                        availabletext.setText("Διαθέσιμα: "+product.getQuantityav());
+                        pricetext.setText(getString(R.string.price)+":"+product.getPrice());
+                        balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
+                        reservedtext.setText(getString(R.string.reserved)+":"+product.getReserved());
+                        renewtext.setText(getString(R.string.renew)+":"+product.getQuantitywaiting());
+                        availabletext.setText(getString(R.string.available)+":"+product.getQuantityav());
                         if (product.getAdate()!= null)
-                            datereceivetext.setText("Ημ. Παραλαβής: "+product.getAdate());
+                            datereceivetext.setText(getString(R.string.datedelivery)+":"+product.getAdate());
                     }
                     else if (barcodetext.getEditText().getText().toString().length()>=5)
                     {
@@ -108,13 +108,13 @@ public class ProductActivity extends AppCompatActivity {
                         if (product != null)
                         {
                             desctext.setText(product.getProdescription());
-                            pricetext.setText("Τιμή: "+product.getPrice());
-                            balancetext.setText("Συνολικό υπόλοιπο: "+product.getQuantitytotal());
-                            reservedtext.setText("Δεσμευμένα: "+product.getReserved());
-                            renewtext.setText("Αναμενώμενα: "+product.getQuantitywaiting());
-                            availabletext.setText("Διαθέσιμα: "+product.getQuantityav());
+                            pricetext.setText(getString(R.string.price)+":"+product.getPrice());
+                            balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
+                            reservedtext.setText(getString(R.string.reserved)+":"+product.getReserved());
+                            renewtext.setText(getString(R.string.renew)+":"+product.getQuantitywaiting());
+                            availabletext.setText(getString(R.string.available)+":"+product.getQuantityav());
                             if (product.getAdate()!= null)
-                                datereceivetext.setText("Ημ. Παραλαβής: "+product.getAdate());
+                                datereceivetext.setText(getString(R.string.datedelivery)+":"+product.getAdate());
                         }
                     }
                     return true;
@@ -128,12 +128,12 @@ public class ProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 desctext.setText("");
-                pricetext.setText("Τιμή: ");
-                balancetext.setText("Συνολικό υπόλοιπο: ");
-                reservedtext.setText("Δεσμευμένα: ");
-                renewtext.setText("Αναμενώμενα: ");
-                availabletext.setText("Διαθέσιμα: ");
-                datereceivetext.setText("Ημ. Παραλαβής: ");
+                pricetext.setText(getString(R.string.price)+":");
+                balancetext.setText(getString(R.string.totalrest)+":");
+                reservedtext.setText(getString(R.string.reserved)+":");
+                renewtext.setText(getString(R.string.renew)+":");
+                availabletext.setText(getString(R.string.available)+":");
+                datereceivetext.setText(getString(R.string.datedelivery)+":");
             }
         });
 

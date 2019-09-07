@@ -26,7 +26,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        getSupportActionBar().setTitle("Ρυθμίσεις");
+        getSupportActionBar().setTitle(getString(R.string.action_settings));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         init();
@@ -49,7 +49,6 @@ public class SettingsActivity extends AppCompatActivity {
                         event.getAction() == KeyEvent.ACTION_DOWN &&
                                 event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
                 {
-                    Log.d("Dimitra","passs");
                     SharedPreferences.Editor editor = myutils.sharedpreferences.edit();
                     editor.putString("ipprint",ipprint.getText().toString());
                     editor.commit();
@@ -68,7 +67,6 @@ public class SettingsActivity extends AppCompatActivity {
                         event.getAction() == KeyEvent.ACTION_DOWN &&
                                 event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
                 {
-                    Log.d("Dimitra","passs");
                     SharedPreferences.Editor editor = myutils.sharedpreferences.edit();
                     editor.putString("numsale",numsale.getText().toString());
                     editor.commit();
@@ -87,7 +85,6 @@ public class SettingsActivity extends AppCompatActivity {
                         event.getAction() == KeyEvent.ACTION_DOWN &&
                                 event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
                 {
-                    Log.d("Dimitra","passs");
                     SharedPreferences.Editor editor = myutils.sharedpreferences.edit();
                     editor.putString("ipserver",ipserver.getText().toString());
                     editor.commit();

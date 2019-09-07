@@ -37,7 +37,7 @@
         android:layout_below="@+id/textView21"
         android:layout_marginTop="37dp"
         android:textSize="20sp"
-        android:text="Ποσότητα:" />
+        android:text="@string/qty" />
 
     <EditText
         android:id="@+id/editText4"
@@ -60,7 +60,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="#c3c3c3"
-        android:text="Τιμή:" />
+        android:text="@string/price" />
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -75,7 +75,7 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Σχόλιο:"
+            android:hint="@string/comment"
             android:textSize="20sp" />
     </android.support.design.widget.TextInputLayout>
 
@@ -92,7 +92,7 @@
         android:textStyle="bold"
         android:gravity="center"
         android:padding="10dp"
-        android:text="Προσθηκη στο καλαθι\nκαι συνεχεια" />
+        android:text="@string/addtobusket" />
 
     <Button
         android:id="@+id/button13"
@@ -105,5 +105,5 @@
         android:textSize="22sp"
         android:textStyle="bold"
         android:gravity="left"
-        android:text="Νεα σαρωση" />
+        android:text="@string/newscan" />
 </RelativeLayout>

@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">Iliadis</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Ρυθμίσεις</string>
+    <string name="closeapp">Θέλετε να κλείσετε την εφαρμογή</string>
+    <string name="language">Γλώσσα</string>
+    <string name="print">IP    Εκτυπωτή</string>
+    <string name="numsales">Αρ.   Πωλητή</string>
+    <string name="salesman">Πωλητής</string>
+    <string name="afm">ΑΦΜ</string>
+    <string name="codecustomer">Κωδικός Πελάτη</string>
+    <string name="companyname">Επωνυμία</string>
+    <string name="completelogin">Συμπληρώστε ένα από τα παρακάτω πεδία και επιλέξτε συνέχεια</string>
+    <string name="next">Συνέχεια</string>
+    <string name="customer">Πελάτης</string>
+    <string name="wellcome">Καλως ήρθατε</string>
+    <string name="chooseshop">Παρακαλώ επιλέξτε κατάστημα</string>
+    <string name="searchcode">Αναζ.Κωδικού</string>
+    <string name="descproduct">Περιγραφή προϊόντος</string>
+    <string name="price">Τιμή</string>
+    <string name="totalrest">Συνολικό υπόλοιπο</string>
+    <string name="reserved">Δεσμευμένα</string>
+    <string name="renew">Ανανεωμένα</string>
+    <string name="available">Διαθέσιμα</string>
+    <string name="datedelivery">Ημ.Παραλαβής</string>
+    <string name="newscan">Νέα σάρωση</string>
+    <string name="basket">Καλάθι</string>
+    <string name="neworder">Νέα Παραγγελία</string>
+    <string name="initial">Αρχική</string>
+    <string name="product">Προϊόν</string>
+    <string name="comment">Σχόλιο</string>
+    <string name="addtobusket">Προσθήκη στο καλάθι και συνέχεια</string>
+    <string name="printorder">Εκτύπωση Παραγγελίας</string>
+    <string name="reprintagain">Επανέκτυπωση Παραγγελίας</string>
+    <string name="pendingorders">Εκκρεμής Παραγγελίες</string>
+    <string name="printing">Εκτύπωση</string>
+    <string name="nexttoorder">Συνέχεια Παραγγελίας</string>
+    <string name="delete">Διαγραφή</string>
+    <string name="editproduct">Επεξεργασία</string>
+    <string name="noshops">Δεν υπάρχουν υποκαταστήματα</string>
+    <string name="qty">Ποσότητα</string>
+    <string name="havependingorder">Έχετε εκκρεμής παραγγελίες</string>
+    <string name="qtysmaller">Η ποσότητα είναι μικρότερη από την καθορισμένη</string>
+    <string name="noproducts">Δεν υπάρχουν προϊόντα</string>
+    <string name="sendfilecsv">Το αρχείο έχει σταλθεί</string>
+    <string name="nosendfilecsv">Το αρχείο δεν έχει σταλθεί</string>
+    <string name="renewproddb">Ανανέωση Προϊόντων</string>
+    <string name="databaseproduct">Βάση προϊόντων</string>
+    <string name="databasecustomer">Βαση Πελατών</string>
+    <string name="databaseshops">Βάση Καταστημάτων</string>
+    <string name="databasecatalogue">Βάση Καταλόγων</string>
+    <string name="databasevat">Βάση ΦΠΑ</string>
+    <string name="databasecountry">Βάση Χωρών</string>
+</resources>

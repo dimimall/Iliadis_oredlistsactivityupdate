@@ -1,16 +1,14 @@
 package gr.cityl.iliadis.Activities;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -31,12 +29,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 
-import org.apache.http.Consts;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import gr.cityl.iliadis.Manager.MySingleton;
@@ -51,7 +51,7 @@ import gr.cityl.iliadis.Models.Products;
 import gr.cityl.iliadis.Models.SecCustomers;
 import gr.cityl.iliadis.Models.ShopDatabase;
 import gr.cityl.iliadis.R;
-import gr.cityl.iliadis.Services.DownloadJobService;
+import gr.cityl.iliadis.Services.UpdateProductDbReceiver;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -77,6 +77,13 @@ public class MainActivity extends AppCompatActivity
         initial();
 
         myutils = new utils();
+
+        Calendar calendar = new GregorianCalendar();
+        Intent notifyIntent = new Intent(getApplicationContext(),UpdateProductDbReceiver.class);
+        notifyIntent.setAction("android.intent.action.NOTIFY");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),0,notifyIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,  calendar.getTimeInMillis(),1000 * 60 * 3, pendingIntent);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -163,15 +170,31 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this,NewOrderActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
-            List<Order> orders = shopDatabase.daoShop().getListOrderStatus0(custid);
-            Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
-            Intent intent = new Intent(MainActivity.this,OrderListsActivity.class);
-            startActivity(intent);
+            if (custid.length() > 0)
+            {
+                List<Order> orders = shopDatabase.daoShop().getListOrderStatus0(custid);
+                Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
+                Intent intent = new Intent(MainActivity.this,OrderListsActivity.class);
+                intent.putExtra("custid",customer.getCustid());
+                intent.putExtra("custvatid", customer.getCustvatid());
+                intent.putExtra("catalogueid",customer.getCatalogueid());
+                intent.putExtra("orders", (Serializable) orders);
+                intent.putExtra("shopsid",shopid);
+                startActivity(intent);
+            }
         } else if (id == R.id.nav_manage) {
-            List<Order> orders = shopDatabase.daoShop().getListOrderStatus1(custid);
-            Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
-            Intent intent = new Intent(MainActivity.this,ReprintListsActivity.class);
-            startActivity(intent);
+            if (custid.length() > 0)
+            {
+                List<Order> orders = shopDatabase.daoShop().getListOrderStatus1(custid);
+                Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
+                Intent intent = new Intent(MainActivity.this,ReprintListsActivity.class);
+                intent.putExtra("custid",customer.getCustid());
+                intent.putExtra("custvatid", customer.getCustvatid());
+                intent.putExtra("catalogueid",customer.getCatalogueid());
+                intent.putExtra("orders", (Serializable) orders);
+                intent.putExtra("shopsid",shopid);
+                startActivity(intent);
+            }
         } else if (id == R.id.nav_share) {
             Intent intent = new Intent(MainActivity.this,ReloadDbsActivity.class);
             startActivity(intent);

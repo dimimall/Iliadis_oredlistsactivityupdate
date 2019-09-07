@@ -46,7 +46,7 @@ public class OrderListsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_lists);
 
-        getSupportActionBar().setTitle("Πελάτης");
+        getSupportActionBar().setTitle(getString(R.string.pendingorders));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -64,7 +64,6 @@ public class OrderListsActivity extends AppCompatActivity {
         for (int i=0; i<orderList.size(); i++)
         {
             Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(orderList.get(i).getCustid());
-            Log.d("Dimitra","order id  activity_order_lists : "+orderList.get(i).getOrderid());
             ParamOrders paramOrder = new ParamOrders(orderList.get(i).getCustid(),customer.getAfm(),customer.getCompanyName(),orderList.get(i).getDateparsed(),shopid,orderList.get(i).getOrderid());
             paramOrders.add(paramOrder);
         }
@@ -177,6 +176,7 @@ public class OrderListsActivity extends AppCompatActivity {
         public int getItemCount() {
             return paramOrdersList.size();
         }
+
     }
 
     @Override

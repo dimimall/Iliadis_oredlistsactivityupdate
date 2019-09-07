@@ -50,7 +50,7 @@ public class SecCustomerActivity extends AppCompatActivity {
 
         myutils = new utils();
 
-        getSupportActionBar().setTitle("Πελάτης");
+        getSupportActionBar().setTitle(getString(R.string.customer));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         shopDatabase = ShopDatabase.getInstance(this);
@@ -132,11 +132,11 @@ public class SecCustomerActivity extends AppCompatActivity {
                 }
                 else {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(SecCustomerActivity.this);
-                    builder1.setMessage("Έχετε εκκρεμείς παραγγελείες");
+                    builder1.setMessage(getString(R.string.havependingorder));
                     builder1.setCancelable(true);
 
                     builder1.setPositiveButton(
-                            "Συνέχεια",
+                            getString(R.string.next),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     Intent intent = new Intent(SecCustomerActivity.this,OrderListsActivity.class);
@@ -150,7 +150,7 @@ public class SecCustomerActivity extends AppCompatActivity {
                             });
 
                     builder1.setNegativeButton(
-                            "Νέα Παραγγελία",
+                            getString(R.string.neworder),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");

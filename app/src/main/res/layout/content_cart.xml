@@ -98,7 +98,7 @@
         android:textStyle="bold"
         android:gravity="center|right"
         android:textColor="#ffffff"
-        android:text="Εκτύπωση Παραγγελίας" />
+        android:text="@string/printorder" />
 
 
 </RelativeLayout>

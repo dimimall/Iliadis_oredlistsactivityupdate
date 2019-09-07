@@ -18,7 +18,7 @@
         android:layout_marginLeft="90dp"
         android:layout_marginRight="90dp"
         android:background="@color/colorGreen"
-        android:text="Ανανέωση Προϊόντων" />
+        android:text="@string/renewproddb" />
 
     <Button
         android:id="@+id/button3"
@@ -30,7 +30,7 @@
         android:textColor="#ffffff"
         android:layout_marginRight="90dp"
         android:background="@color/colorGreen"
-        android:text="Βάση Προϊόντων" />
+        android:text="@string/databaseproduct" />
 
     <Button
         android:id="@+id/button4"
@@ -42,7 +42,7 @@
         android:textColor="#ffffff"
         android:layout_marginRight="90dp"
         android:background="@color/colorGreen"
-        android:text="Βάση Πελατών" />
+        android:text="@string/databasecustomer" />
 
     <Button
         android:id="@+id/button5"
@@ -54,7 +54,7 @@
         android:layout_marginRight="90dp"
         android:textColor="#ffffff"
         android:background="@color/colorGreen"
-        android:text="Βάση Καταστημάτων" />
+        android:text="@string/databaseshops" />
 
     <Button
         android:id="@+id/button6"
@@ -66,7 +66,7 @@
         android:layout_marginRight="90dp"
         android:textColor="#ffffff"
         android:background="@color/colorGreen"
-        android:text="Βάση Καταλόγων" />
+        android:text="@string/databasecatalogue" />
 
     <Button
         android:id="@+id/button7"
@@ -78,7 +78,7 @@
         android:layout_marginRight="90dp"
         android:textColor="#ffffff"
         android:background="@color/colorGreen"
-        android:text="Βάση ΦΠΑ" />
+        android:text="@string/databasevat" />
 
     <Button
         android:id="@+id/button9"
@@ -90,5 +90,5 @@
         android:layout_marginRight="90dp"
         android:textColor="#ffffff"
         android:background="@color/colorGreen"
-        android:text="Βαση Χωρών" />
+        android:text="@string/databasecountry" />
 </RelativeLayout>

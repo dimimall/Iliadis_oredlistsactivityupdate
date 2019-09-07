@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import gr.cityl.iliadis.Manager.utils;
 import gr.cityl.iliadis.Models.Cart;
 import gr.cityl.iliadis.Models.Catalog;
 import gr.cityl.iliadis.Models.IliadisDatabase;
@@ -42,6 +43,7 @@ public class AddToCartActivity extends AppCompatActivity {
     private ImageView basket;
     private List<Cart> carts;
     private double totalprice;
+    private utils myutlis = new utils();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +91,8 @@ public class AddToCartActivity extends AppCompatActivity {
         descriptionText.setText(products.getProdescription());
         editQuantity.setText(products.getMinimumstep());
         catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,products.getPriceid());
-        totalprice = Integer.parseInt(products.getMinimumstep()) * getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
-        priceText.setText("Τιμή: "+new DecimalFormat("##.##").format(totalprice));
+        totalprice = Integer.parseInt(products.getMinimumstep()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
+        priceText.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(totalprice));
 
         editQuantity.setOnKeyListener(new View.OnKeyListener() {
 
@@ -109,7 +111,7 @@ public class AddToCartActivity extends AppCompatActivity {
                         alertDialogBuilder.setTitle("");
                         // set dialog message
                         alertDialogBuilder
-                                .setMessage("Η ποσότητα είναι μικρότερη από την καθορισμένη.")
+                                .setMessage(getString(R.string.qtysmaller))
                                 .setCancelable(false)
                                 .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {
@@ -124,12 +126,12 @@ public class AddToCartActivity extends AppCompatActivity {
                     }
                     else if (Integer.parseInt(editQuantity.getText().toString()) == Integer.parseInt(products.getMinimumstep()))
                     {
-                        totalprice = Integer.parseInt(products.getMinimumstep()) * getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
-                        priceText.setText("Τιμή: "+new DecimalFormat("##.##").format(totalprice));
+                        totalprice = Integer.parseInt(products.getMinimumstep()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
+                        priceText.setText(getString(R.string.price)+": "+new DecimalFormat("##.##").format(totalprice));
                     }else if (Integer.parseInt(editQuantity.getText().toString()) > Integer.parseInt(products.getMinimumstep()))
                     {
-                        totalprice = Integer.parseInt(editQuantity.getText().toString()) * getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
-                        priceText.setText("Τιμή: "+new DecimalFormat("##.##").format(totalprice));
+                        totalprice = Integer.parseInt(editQuantity.getText().toString()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
+                        priceText.setText(getString(R.string.price)+": "+new DecimalFormat("##.##").format(totalprice));
                     }
 
                     return true;
@@ -176,13 +178,6 @@ public class AddToCartActivity extends AppCompatActivity {
         scan = (Button)findViewById(R.id.button13);
     }
 	
-	 public double getProductPrice(double flatprice, int discount)
-     {
-        double price = 0;
-
-        price =flatprice - flatprice * discount/100;
-        return price;
-     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

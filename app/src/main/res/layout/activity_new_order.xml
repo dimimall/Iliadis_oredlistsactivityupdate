@@ -18,7 +18,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:textSize="16sp"
-        android:text="Συμπληρώστε ένα από τα παρακάτω πεδία και επιλέξτε συνέχεια"
+        android:text="@string/completelogin"
         android:textColor="#000000"/>
 
     <android.support.design.widget.TextInputLayout
@@ -39,7 +39,7 @@
             android:textColorHint="@color/colorGreen"
             android:ems="10"
             android:backgroundTint="@color/colorGreen"
-            android:hint="ΑΦΜ" />
+            android:hint="@string/afm" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -61,7 +61,7 @@
             android:textColorHint="@color/colorGreen"
             android:ems="10"
             android:backgroundTint="@color/colorGreen"
-            android:hint="Κωδικός Πελάτη" />
+            android:hint="@string/codecustomer" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -82,7 +82,7 @@
             android:textColorHint="@color/colorGreen"
             android:ems="10"
             android:backgroundTint="@color/colorGreen"
-            android:hint="Επωνυμία" />
+            android:hint="@string/companyname" />
     </android.support.design.widget.TextInputLayout>
 
     <Button
@@ -95,7 +95,7 @@
         android:background="@color/colorGreen"
         android:gravity="center|right"
         android:textColor="#ffffff"
-        android:text="Συνέχεια" />
+        android:text="@string/next" />
 
 
 </RelativeLayout>
