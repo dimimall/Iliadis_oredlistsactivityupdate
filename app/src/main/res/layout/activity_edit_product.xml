@@ -16,21 +16,28 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
+            app:navigationIcon="?attr/homeAsUpIndicator"
             app:popupTheme="@style/AppTheme.PopupOverlay" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/title"
+                android:textColor="#ffffff"
                 android:textStyle="bold"
                 android:textSize="20dp"
-                android:textColor="#fff"
-                android:text="@string/home"/>
+                android:text="@string/product"/>
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/basket"
+                android:layout_marginLeft="170dp"
+                android:src="@drawable/basket"/>
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <include layout="@layout/content_edit_product" />
 
 
 </android.support.design.widget.CoordinatorLayout>

@@ -45,7 +45,7 @@ public class UpdateProductDbReceiver extends BroadcastReceiver {
                             //Parse the JSON response array by iterating over it
                             for (int i = 0; i < responseArray.length(); i++) {
                                 JSONObject response = responseArray.getJSONObject(i);
-                                Log.d("Dimitra",response.toString());
+                                Log.d("Receiver",response.toString());
                                 Products product = new Products();
                                 product.setProdcode(response.getString("prodcode"));
                                 product.setRealcode(response.getString("realcode"));
@@ -65,7 +65,10 @@ public class UpdateProductDbReceiver extends BroadcastReceiver {
                                 product.setMinquantity(response.getString("minquantity"));
                                 products1.add(product);
                             }
-                            updateDbProduct(products,products1);
+                            if (products.size() > 0)
+                            {
+                                updateDbProduct(products,products1);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -93,13 +96,13 @@ public class UpdateProductDbReceiver extends BroadcastReceiver {
             {
                 if (oldList.get(i).getProdcode().equals(newList.get(j).getProdcode()))
                 {
-                    Log.d("Dimitra","passss111111");
+                    Log.d("Receiver","passss111111");
                     iliadisDatabase.daoAccess().update(newList.get(j));
                 }
-                else {
-                    Log.d("Dimitra","passss222222");
-                    iliadisDatabase.daoAccess().insertTask(newList.get(j));
-                }
+//                else {
+//                    Log.d("Receiver","passss222222");
+//                    iliadisDatabase.daoAccess().insertTask(newList.get(j));
+//                }
             }
         }
     }

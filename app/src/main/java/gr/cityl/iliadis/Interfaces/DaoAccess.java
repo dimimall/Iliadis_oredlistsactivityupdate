@@ -103,6 +103,9 @@ public interface DaoAccess {
     @Query("Select * from products  where prodcode =:prodcode")
     Products getProductByProdCode(String prodcode);
 
+    @Query("Select c1.minimumstep from products c1  where prodcode =:prodcode")
+    String getProductQuantity(String prodcode);
+
     @Query("Select * from products  where realcode =:realcode")
     Products getProductByRealCode(String realcode);
 

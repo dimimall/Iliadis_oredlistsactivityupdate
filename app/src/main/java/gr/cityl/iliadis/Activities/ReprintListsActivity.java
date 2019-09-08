@@ -158,7 +158,7 @@ public class ReprintListsActivity extends AppCompatActivity {
                                     number = myutils.sharedpreferences.getString("numsale", "");
                                     shopId = myutils.sharedpreferences.getString("shopid","");
                                     try {
-                                        myutils.createPdfFile(cartsList,custid,custvatid,number,shopId,iliadisDatabase,ReprintListsActivity.this);
+                                        myutils.createPdfFileGr(cartsList,custid,custvatid,number,shopId,iliadisDatabase,ReprintListsActivity.this);
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     } catch (DocumentException e) {

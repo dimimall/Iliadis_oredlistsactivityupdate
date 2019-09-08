@@ -32,8 +32,8 @@ public interface DaoShop {
     @Update
     void updateOrder(Order order);
 
-    @Update
-    void updateCart(Cart cart);
+    @Query("Update cart set comment =:comment and price=:price and quantity=:qty where cartid=:cartid")
+    void updateCart(String comment,String price,int qty,int cartid);
 
     @Query("Update 'order' set status =:status where orderid =:orderid")
     void updateOrderStatus(int status,int orderid);
@@ -52,4 +52,10 @@ public interface DaoShop {
 
     @Query("Select * from cart where orderid =:orderid")
     List<Cart> getCartList(int orderid);
+
+    @Query("Select c2.prodcode from cart c2 where c2.orderid =:orderid and c2.prodcode =:prodcode")
+    String getCartProdCode(int orderid,String prodcode);
+
+    @Query("Select c2.realcode from cart c2 where c2.orderid =:orderid and c2.realcode =:realcode")
+    String getCartRealCode(int orderid,String realcode);
 }

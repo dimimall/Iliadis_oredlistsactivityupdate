@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Iliadis</string>
 
+    <string name="home">Αρχική</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -32,7 +33,7 @@
     <string name="initial">Αρχική</string>
     <string name="product">Προϊόν</string>
     <string name="comment">Σχόλιο</string>
-    <string name="addtobusket">Προσθήκη στο καλάθι και συνέχεια</string>
+    <string name="addtobusket">Προσθήκη στο καλάθι&lt;brκαι συνέχεια</string>
     <string name="printorder">Εκτύπωση Παραγγελίας</string>
     <string name="reprintagain">Επανέκτυπωση Παραγγελίας</string>
     <string name="pendingorders">Εκκρεμής Παραγγελίες</string>
@@ -54,4 +55,12 @@
     <string name="databasecatalogue">Βάση Καταλόγων</string>
     <string name="databasevat">Βάση ΦΠΑ</string>
     <string name="databasecountry">Βάση Χωρών</string>
+    <string name="downloadfileproduct">Κατέβασμα αρχείου προϊόντων.. Παρακαλώ περιμένετε...</string>
+    <string name="downloadfilecustomer">Κατέβασμα αρχείου πελατών.. Παρακαλώ περιμένετε...</string>
+    <string name="downloadfileshops">Κατέβασμα αρχείου καταστημάτων.. Παρακαλώ περιμένετε...</string>
+    <string name="downloadfilecatalogue">Κατέβασμα αρχείου καταλόγου.. Παρακαλώ περιμένετε...</string>
+    <string name="downloadfilevat">Κατέβασμα αρχείου ΦΠΑ.. Παρακαλώ περιμένετε...</string>
+    <string name="downloadfilecountry">Κατέβασμα αρχείου χωρών.. Παρακαλώ περιμένετε...</string>
+    <string name="updatecart">Ενημέρωση&lt;brπροϊόντος</string>
+    <string name="existproduct">Το προϊόν υπάρχει στο καλάθι</string>
 </resources>

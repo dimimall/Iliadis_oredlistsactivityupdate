@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Iliadis</string>
-
+    <string name="home">Home</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -8,7 +8,7 @@
     <string name="closeapp">Really exit from app?</string>
     <string name="language">Language</string>
     <string name="print">IP    printer</string>
-    <string name="numsales">No.   salesman</string>
+    <string name="numsales">No.   sales</string>
     <string name="salesman">Salesman</string>
     <string name="afm">VAT</string>
     <string name="codecustomer">Code Customer</string>
@@ -32,7 +32,7 @@
     <string name="initial">Home</string>
     <string name="product">Product</string>
     <string name="comment">Comment</string>
-    <string name="addtobusket">Add to busket and continue</string>
+    <string name="addtobusket">Add to busket&lt;brand continue</string>
     <string name="printorder">Print order</string>
     <string name="reprintagain">Reprint order</string>
     <string name="pendingorders">Pending orders</string>
@@ -54,4 +54,12 @@
     <string name="databasecatalogue">DB Catalogue</string>
     <string name="databasevat">DB VAT</string>
     <string name="databasecountry">DB Country</string>
+    <string name="downloadfileproduct">Download file products.. Please wait...</string>
+    <string name="downloadfilecustomer">Download file customers.. Please wait...</string>
+    <string name="downloadfileshops">Download file shops.. Please wait...</string>
+    <string name="downloadfilecatalogue">Download file catalogue.. Please wait...</string>
+    <string name="downloadfilevat">Download file VAT.. Please wait...</string>
+    <string name="downloadfilecountry">Download file countries.. Please wait...</string>
+    <string name="updatecart">Update&lt;brproduct</string>
+    <string name="existproduct">This product exist in cart</string>
 </resources>

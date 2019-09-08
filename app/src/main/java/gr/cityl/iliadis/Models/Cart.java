@@ -14,7 +14,10 @@ import java.io.Serializable;
 public class Cart implements Serializable{
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "cartid")
+    @NonNull
     int cartid;
+    @ColumnInfo(name = "discountid")
+    String discountid;
     @ColumnInfo(name = "orderid")
     int orderid;
     @ColumnInfo(name = "realcode")
@@ -28,10 +31,10 @@ public class Cart implements Serializable{
     String price;
     @ColumnInfo(name = "comment")
     String comment;
-    @ColumnInfo(name = "quantity")
+    @ColumnInfo(name = "description")
     @NonNull
     String description;
-    @ColumnInfo(name = "description")
+    @ColumnInfo(name = "quantity")
     @NonNull
     int quantity;
     @ColumnInfo(name = "vatcode")
@@ -41,7 +44,7 @@ public class Cart implements Serializable{
     @NonNull
     String priceid;
 
-    public Cart(int orderid,String realcode,String prodcode,String price,String comment,String description,int quantity,String vatcode,String priceid)
+    public Cart(int orderid,String realcode,String prodcode,String price,String comment,String description,int quantity,String vatcode,String priceid,String discountid)
     {
         this.orderid=orderid;
         this.realcode=realcode;
@@ -52,6 +55,11 @@ public class Cart implements Serializable{
         this.quantity=quantity;
         this.vatcode=vatcode;
         this.priceid=priceid;
+        this.discountid = discountid;
+    }
+
+    public void setDiscountid(String discountid) {
+        this.discountid = discountid;
     }
 
     public void setDescription(@NonNull String description) {
@@ -92,6 +100,10 @@ public class Cart implements Serializable{
 
     public void setOrderid(@NonNull int orderid) {
         this.orderid = orderid;
+    }
+
+    public String getDiscountid() {
+        return discountid;
     }
 
     @NonNull

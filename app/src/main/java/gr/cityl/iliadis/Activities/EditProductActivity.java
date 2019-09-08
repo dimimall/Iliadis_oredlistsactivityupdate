@@ -9,10 +9,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,39 +24,30 @@ import gr.cityl.iliadis.Manager.utils;
 import gr.cityl.iliadis.Models.Cart;
 import gr.cityl.iliadis.Models.Catalog;
 import gr.cityl.iliadis.Models.IliadisDatabase;
-import gr.cityl.iliadis.Models.Order;
 import gr.cityl.iliadis.Models.Products;
 import gr.cityl.iliadis.Models.ShopDatabase;
 import gr.cityl.iliadis.R;
 
-public class AddToCartActivity extends AppCompatActivity {
+public class EditProductActivity extends AppCompatActivity {
 
     private TextView realProdCodeText,descriptionText,quantityText,priceText;
     private TextInputLayout commentText;
     private EditText editQuantity;
     private Button submit,scan;
-    private Products products;
+    private Cart cart;
     private IliadisDatabase iliadisDatabase;
     private ShopDatabase shopDatabase;
     private Catalog catalog;
     private ImageView basket;
-    private List<Cart> carts;
     private double totalprice;
     private utils myutlis = new utils();
     private String comment="";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_to_cart);
-
-        final String custid = getIntent().getExtras().getString("custid");
-        final String custvatid = getIntent().getExtras().getString("custvatid");
-        final String shopid = getIntent().getExtras().getString("shopid");
-        final int custcatid = getIntent().getExtras().getInt("catalogueid");
-        final int orderid = getIntent().getExtras().getInt("orderid");
-        products = (Products) getIntent().getExtras().getSerializable("prodcode");
-
+        setContentView(R.layout.activity_edit_product);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -69,12 +58,21 @@ public class AddToCartActivity extends AppCompatActivity {
             }
         });
 
+        final String custid = getIntent().getExtras().getString("custid");
+        final String custvatid = getIntent().getExtras().getString("custvatid");
+        final String shopid = getIntent().getExtras().getString("shopid");
+        final int custcatid = getIntent().getExtras().getInt("catalogueid");
+        final int orderid = getIntent().getExtras().getInt("orderid");
+        cart = (Cart) getIntent().getExtras().getSerializable("cart");
+
+
+        basket = (ImageView)toolbar.findViewById(R.id.basket);
         basket = (ImageView)toolbar.findViewById(R.id.basket);
         basket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                carts = shopDatabase.daoShop().getCartList(orderid);
-                Intent intent = new Intent(AddToCartActivity.this,CartActivity.class);
+                List<Cart> carts = shopDatabase.daoShop().getCartList(orderid);
+                Intent intent = new Intent(EditProductActivity.this,CartActivity.class);
                 intent.putExtra("custvatid",custvatid);
                 intent.putExtra("custid",custid);
                 intent.putExtra("cart", (Serializable) carts);
@@ -89,11 +87,11 @@ public class AddToCartActivity extends AppCompatActivity {
         iliadisDatabase = IliadisDatabase.getInstance(this);
         shopDatabase = ShopDatabase.getInstance(this);
 
-        realProdCodeText.setText(products.getProdcode()+"-"+products.getRealcode());
-        descriptionText.setText(products.getProdescription());
-        editQuantity.setText(products.getMinimumstep());
-        catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,products.getPriceid());
-        totalprice = Integer.parseInt(products.getMinimumstep()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
+        realProdCodeText.setText(cart.getProdcode()+"-"+cart.getRealcode());
+        descriptionText.setText(cart.getDescription());
+        editQuantity.setText(""+cart.getQuantity());
+        catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,cart.getDiscountid());
+        totalprice = cart.getQuantity() * myutlis.getProductPrice(Double.parseDouble(cart.getPriceid().replace(",",".")),catalog.getDiscount1());
         priceText.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(totalprice));
 
         editQuantity.setOnKeyListener(new View.OnKeyListener() {
@@ -105,10 +103,10 @@ public class AddToCartActivity extends AppCompatActivity {
                         event.getAction() == KeyEvent.ACTION_DOWN &&
                                 event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
                 {
-                    if (Integer.parseInt(editQuantity.getText().toString()) < Integer.parseInt(products.getMinimumstep()))
+                    if (Integer.parseInt(editQuantity.getText().toString()) < Integer.parseInt(iliadisDatabase.daoAccess().getProductQuantity(cart.getProdcode())))
                     {
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                                AddToCartActivity.this);
+                                EditProductActivity.this);
                         // set title
                         alertDialogBuilder.setTitle("");
                         // set dialog message
@@ -117,7 +115,7 @@ public class AddToCartActivity extends AppCompatActivity {
                                 .setCancelable(false)
                                 .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {
-                                        editQuantity.setText(products.getMinimumstep());
+                                        editQuantity.setText(cart.getQuantity());
                                         dialog.cancel();
                                     }
                                 });
@@ -126,13 +124,13 @@ public class AddToCartActivity extends AppCompatActivity {
                         // show it
                         alertDialog.show();
                     }
-                    else if (Integer.parseInt(editQuantity.getText().toString()) == Integer.parseInt(products.getMinimumstep()))
+                    else if (Integer.parseInt(editQuantity.getText().toString()) == Integer.parseInt(iliadisDatabase.daoAccess().getProductQuantity(cart.getProdcode())))
                     {
-                        totalprice = Integer.parseInt(products.getMinimumstep()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
+                        totalprice = Integer.parseInt(editQuantity.getText().toString()) * myutlis.getProductPrice(Double.parseDouble(cart.getPriceid().replace(",",".")),catalog.getDiscount1());
                         priceText.setText(getString(R.string.price)+": "+new DecimalFormat("##.##").format(totalprice));
-                    }else if (Integer.parseInt(editQuantity.getText().toString()) > Integer.parseInt(products.getMinimumstep()))
+                    }else if (Integer.parseInt(editQuantity.getText().toString()) > Integer.parseInt(iliadisDatabase.daoAccess().getProductQuantity(cart.getProdcode())))
                     {
-                        totalprice = Integer.parseInt(editQuantity.getText().toString()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
+                        totalprice = Integer.parseInt(editQuantity.getText().toString()) * myutlis.getProductPrice(Double.parseDouble(cart.getPriceid().replace(",",".")),catalog.getDiscount1());
                         priceText.setText(getString(R.string.price)+": "+new DecimalFormat("##.##").format(totalprice));
                     }
 
@@ -161,9 +159,10 @@ public class AddToCartActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Cart cart = new Cart(orderid,products.getRealcode(),products.getProdcode(),String.valueOf(totalprice),comment,products.getProdescription(),Integer.parseInt(editQuantity.getText().toString()),products.getVatcode(),products.getPrice(),products.getPriceid());
-                shopDatabase.daoShop().insertTask(cart);
-                Intent intent = new Intent(AddToCartActivity.this,ProductActivity.class);
+                Log.d("Dimitra"," "+cart.getCartid()+"  "+cart.getOrderid()+" "+cart.getRealcode()+" "+cart.getProdcode()+" "+String.valueOf(totalprice)+" "+comment+" "+cart.getDescription()+" "+Integer.parseInt(editQuantity.getText().toString())+" "+cart.getVatcode()+" "+cart.getPriceid());
+                //Cart updatecart = new Cart(cart.getOrderid(),cart.getRealcode(),cart.getProdcode(),String.valueOf(totalprice),comment,cart.getDescription(),Integer.parseInt(editQuantity.getText().toString()),cart.getVatcode(),cart.getPrice(),cart.getPriceid());
+                shopDatabase.daoShop().updateCart(comment,String.valueOf(totalprice),Integer.parseInt(editQuantity.getText().toString()),cart.getCartid());
+                Intent intent = new Intent(EditProductActivity.this,ProductActivity.class);
                 intent.putExtra("custid",custid);
                 intent.putExtra("custvatid",custvatid);
                 intent.putExtra("orderid",orderid);
@@ -172,16 +171,6 @@ public class AddToCartActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-//        scan.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(AddToCartActivity.this,ProductActivity.class);
-//                intent.putExtra("custid",custid);
-//                intent.putExtra("custvatid",custvatid);
-//                startActivity(intent);
-//            }
-//        });
     }
 
     public void init()
@@ -194,17 +183,5 @@ public class AddToCartActivity extends AppCompatActivity {
         editQuantity = (EditText)findViewById(R.id.editText4);
         submit = (Button)findViewById(R.id.button12);
         scan = (Button)findViewById(R.id.button13);
-    }
-	
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }

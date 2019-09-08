@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Activities.MainActivity"
-            android:label="Αρχική"
+            android:label=" "
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.SplashScreen"
@@ -49,7 +49,10 @@
         <receiver
             android:name=".Services.UpdateProductDbReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
+
+        <activity android:name=".Activities.EditProductActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

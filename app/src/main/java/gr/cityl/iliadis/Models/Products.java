@@ -13,10 +13,11 @@ import java.io.Serializable;
 
 @Entity(tableName = "products")
 public class Products implements Serializable{
-
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    int id;
     @ColumnInfo(name = "prodcode")
     String prodcode;
-    @PrimaryKey
     @ColumnInfo(name = "realcode")
     @NonNull
     String realcode;
@@ -52,6 +53,11 @@ public class Products implements Serializable{
     public Products()
     {
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setAdate(String adate) {
         this.adate = adate;
     }
@@ -114,6 +120,10 @@ public class Products implements Serializable{
 
     public void setVatcode(String vatcode) {
         this.vatcode = vatcode;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getPrice() {

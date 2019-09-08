@@ -23,6 +23,7 @@ import android.widget.TextView;
 import java.io.Serializable;
 import java.util.List;
 
+import gr.cityl.iliadis.Manager.utils;
 import gr.cityl.iliadis.Models.Cart;
 import gr.cityl.iliadis.Models.IliadisDatabase;
 import gr.cityl.iliadis.Models.Order;
@@ -40,6 +41,8 @@ public class ProductActivity extends AppCompatActivity {
     ShopDatabase shopDatabase;
     Products product;
     List<Cart> carts;
+    utils myutils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +59,8 @@ public class ProductActivity extends AppCompatActivity {
 
         init();
 
+        myutils = new utils();
+
         iliadisDatabase = IliadisDatabase.getInstance(this);
         shopDatabase = ShopDatabase.getInstance(this);
 
@@ -63,7 +68,6 @@ public class ProductActivity extends AppCompatActivity {
         final String custvatid = getIntent().getStringExtra("custvatid");
         final String shopid = getIntent().getStringExtra("shopid");
         final int custcatid = getIntent().getIntExtra("catalogueid",0);
-            Log.d("Dimitra","ProductActivity custcatid id: "+custcatid);
         final int orderid = getIntent().getExtras().getInt("orderid");
 
         cartbutton = (ImageView) toolbar.findViewById(R.id.basket);
@@ -92,20 +96,11 @@ public class ProductActivity extends AppCompatActivity {
                 {
                     if (barcodetext.getEditText().getText().toString().length()>=13)
                     {
+                        String prodcart = shopDatabase.daoShop().getCartProdCode(orderid,product.getProdcode());
                         product = iliadisDatabase.daoAccess().getProductByProdCode(barcodetext.getEditText().getText().toString());
-                        desctext.setText(product.getProdescription());
-                        pricetext.setText(getString(R.string.price)+":"+product.getPrice());
-                        balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
-                        reservedtext.setText(getString(R.string.reserved)+":"+product.getReserved());
-                        renewtext.setText(getString(R.string.renew)+":"+product.getQuantitywaiting());
-                        availabletext.setText(getString(R.string.available)+":"+product.getQuantityav());
-                        if (product.getAdate()!= null)
-                            datereceivetext.setText(getString(R.string.datedelivery)+":"+product.getAdate());
-                    }
-                    else if (barcodetext.getEditText().getText().toString().length()>=5)
-                    {
-                        product = iliadisDatabase.daoAccess().getProductByRealCode(barcodetext.getEditText().getText().toString());
-                        if (product != null)
+                        if (prodcart == null)
+                            prodcart=" ";
+                        if (!prodcart.equals(product.getProdcode()))
                         {
                             desctext.setText(product.getProdescription());
                             pricetext.setText(getString(R.string.price)+":"+product.getPrice());
@@ -116,6 +111,31 @@ public class ProductActivity extends AppCompatActivity {
                             if (product.getAdate()!= null)
                                 datereceivetext.setText(getString(R.string.datedelivery)+":"+product.getAdate());
                         }
+                        else {
+                            myutils.createDialog(getString(R.string.existproduct),ProductActivity.this);
+                        }
+                    }
+                    else if (barcodetext.getEditText().getText().toString().length()>=5)
+                    {
+                        product = iliadisDatabase.daoAccess().getProductByRealCode(barcodetext.getEditText().getText().toString());
+                        String realcart = shopDatabase.daoShop().getCartRealCode(orderid,product.getRealcode());
+                        if (realcart == null)
+                            realcart = " ";
+                        if (!realcart.equals(product.getRealcode()))
+                        {
+                            desctext.setText(product.getProdescription());
+                            pricetext.setText(getString(R.string.price)+":"+product.getPrice());
+                            balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
+                            reservedtext.setText(getString(R.string.reserved)+":"+product.getReserved());
+                            renewtext.setText(getString(R.string.renew)+":"+product.getQuantitywaiting());
+                            availabletext.setText(getString(R.string.available)+":"+product.getQuantityav());
+                            if (product.getAdate()!= null)
+                                datereceivetext.setText(getString(R.string.datedelivery)+":"+product.getAdate());
+                        }
+                        else {
+                            myutils.createDialog(getString(R.string.existproduct),ProductActivity.this);
+                        }
+
                     }
                     return true;
                 }

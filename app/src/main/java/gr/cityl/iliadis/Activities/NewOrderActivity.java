@@ -78,6 +78,7 @@ public class NewOrderActivity extends AppCompatActivity {
                     }
                     else {
                         afm_textinput.getEditText().setText("");
+                        myutils.createDialog("Δε υπάρχει αυτός ο πελάτης",NewOrderActivity.this);
                     }
                     try {
                         InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
@@ -106,6 +107,7 @@ public class NewOrderActivity extends AppCompatActivity {
                     }
                     else{
                         code_textinput.getEditText().setText("");
+                        myutils.createDialog("Δε υπάρχει αυτός ο πελάτης",NewOrderActivity.this);
                     }
 
                     try {
@@ -147,6 +149,7 @@ public class NewOrderActivity extends AppCompatActivity {
                             }
                             else {
                                 desc_textinput.getEditText().setText("");
+                                myutils.createDialog("Δε υπάρχει αυτός ο πελάτης",NewOrderActivity.this);
                             }
                             dialog.cancel();
                         }
@@ -169,8 +172,6 @@ public class NewOrderActivity extends AppCompatActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                secCustomers = iliadisDatabase.daoAccess().getShopsByJoin(customer.getCustid());
 
                 if (desc_textinput.getEditText().getText().toString() != null || code_textinput.getEditText().getText().toString() != null || afm_textinput.getEditText().getText().toString() != null)
                 {

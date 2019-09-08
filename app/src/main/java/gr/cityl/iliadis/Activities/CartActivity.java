@@ -1,6 +1,7 @@
 package gr.cityl.iliadis.Activities;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,16 +21,21 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.PopupMenu;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +65,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -194,30 +201,8 @@ public class CartActivity extends AppCompatActivity {
         print.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    myutils.createPdfFile(cartsList,custid,custvatid,number,shopId,iliadisDatabase,CartActivity.this);
-                    shopDatabase.daoShop().updateOrderStatus(1,cartsList.get(0).getOrderid());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (DocumentException e) {
-                    e.printStackTrace();
-                }
-                Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
-                String result="";
-                result = myutils.createCsvFile(cartsList,number,custid,carts.get(0).getOrderid(),iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCustomerid(),custvatid,iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPaymentid(),shopId,customer,iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid());
-                if (result.equals("success")) {
-                    shopDatabase.daoShop().updateOrderStatus(2, cartsList.get(0).getOrderid());
-                    Toast.makeText(CartActivity.this, getString(R.string.sendfilecsv), Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    Toast.makeText(CartActivity.this, getString(R.string.nosendfilecsv), Toast.LENGTH_LONG).show();
-                }
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_HOME);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                dialogBox();
+
             }
         });
 
@@ -330,7 +315,7 @@ public class CartActivity extends AppCompatActivity {
 
         // Replace the contents of a view (invoked by the layout manager)
         @Override
-        public void onBindViewHolder(final MyViewHolder holder, int position) {
+        public void onBindViewHolder(final MyViewHolder holder, final int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
             holder.code.setText(cartList.get(position).getRealcode()+"-"+cartList.get(position).getProdcode());
@@ -359,6 +344,14 @@ public class CartActivity extends AppCompatActivity {
                                     return true;
                                 case R.id.menu2:
                                     //handle menu2 click
+                                    Intent intent = new Intent(CartActivity.this,EditProductActivity.class);
+                                    intent.putExtra("cart",(Serializable) cartList.get(position));
+                                    intent.putExtra("custid",custid);
+                                    intent.putExtra("custvatid",custvatid);
+                                    intent.putExtra("orderid",cartList.get(position).getOrderid());
+                                    intent.putExtra("catalogueid",custcatid);
+                                    intent.putExtra("shopid",shopId);
+                                    startActivity(intent);
                                     return true;
                                 default:
                                     return false;
@@ -418,4 +411,110 @@ public class CartActivity extends AppCompatActivity {
         }
     }
 
+    public void dialogBox()
+    {
+        final String[] text = {"",""};
+
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
+
+        LayoutInflater inflater = (LayoutInflater) this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.dialog_box, null);
+        alertDialogBuilder.setView(view);
+        alertDialogBuilder.setCancelable(false);
+        final AlertDialog dialog = alertDialogBuilder.create();
+        dialog.show();
+
+        Spinner spinner = view.findViewById(R.id.spinner2);
+        final TextInputLayout comment = view.findViewById(R.id.textInputLayout7);
+        Button ok = view.findViewById(R.id.button15);
+
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line);
+        adapter.add("Ελληνικά");
+        adapter.add("English");
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                text[0] = adapterView.getItemAtPosition(i).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        comment.getEditText().setOnKeyListener(new View.OnKeyListener() {
+
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
+                        keyCode == EditorInfo.IME_ACTION_DONE ||
+                        event.getAction() == KeyEvent.ACTION_DOWN &&
+                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+                {
+                    text[1] = comment.getEditText().getText().toString();
+                    return true;
+                }
+                return false;
+            }
+        });
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (text[0].equals("Ελληνικά"))
+                {
+                    //create and print pdf in greek
+                    try {
+                        myutils.createPdfFileGr(cartsList,custid,custvatid,number,shopId,iliadisDatabase,CartActivity.this);
+                        //shopDatabase.daoShop().updateOrderStatus(1,cartsList.get(0).getOrderid());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (DocumentException e) {
+                        e.printStackTrace();
+                    }
+                    //send csv file
+                    Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
+                    String result="";
+                    result = myutils.createCsvFile(cartsList,number,custid,carts.get(0).getOrderid(),iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCustomerid(),custvatid,iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPaymentid(),shopId,customer,iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid());
+                    if (result.equals("success")) {
+                        //shopDatabase.daoShop().updateOrderStatus(2, cartsList.get(0).getOrderid());
+                        Toast.makeText(CartActivity.this, getString(R.string.sendfilecsv), Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(CartActivity.this, getString(R.string.nosendfilecsv), Toast.LENGTH_LONG).show();
+                    }
+                }
+                else if (text[0].equals("English"))
+                {
+                    //create and print pdf in english
+                    try {
+                        myutils.createPdfFileEn(cartsList,custid,custvatid,number,shopId,iliadisDatabase,CartActivity.this);
+                        shopDatabase.daoShop().updateOrderStatus(1,cartsList.get(0).getOrderid());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (DocumentException e) {
+                        e.printStackTrace();
+                    }
+                    //send csv file
+                    Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
+                    String result="";
+                    result = myutils.createCsvFile(cartsList,number,custid,carts.get(0).getOrderid(),iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCustomerid(),custvatid,iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPaymentid(),shopId,customer,iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid());
+                    if (result.equals("success")) {
+                        shopDatabase.daoShop().updateOrderStatus(2, cartsList.get(0).getOrderid());
+                        Toast.makeText(CartActivity.this, getString(R.string.sendfilecsv), Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(CartActivity.this, getString(R.string.nosendfilecsv), Toast.LENGTH_LONG).show();
+                    }
+                }
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
 }

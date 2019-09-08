@@ -93,18 +93,6 @@
         android:textStyle="bold"
         android:gravity="center"
         android:padding="10dp"
-        android:text="@string/addtobusket" />
+        android:text="@string/updatecart" />
 
-    <Button
-        android:id="@+id/button13"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@color/colorGreen"
-        android:textColor="#fff"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:gravity="left"
-        android:text="@string/newscan" />
 </RelativeLayout>

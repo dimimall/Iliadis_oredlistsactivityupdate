@@ -92,6 +92,7 @@ public class SecCustomerActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 selectshop = shops.get(i).getShopid();
+
             }
         });
 
