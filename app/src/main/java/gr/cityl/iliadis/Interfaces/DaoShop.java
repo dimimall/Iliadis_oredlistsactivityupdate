@@ -3,6 +3,7 @@ package gr.cityl.iliadis.Interfaces;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
@@ -26,22 +27,28 @@ public interface DaoShop {
     @Delete()
     void deleteCart(Cart cart);
 
+    @Delete()
+    void deleteCartList(List<Cart> carts);
+
     @Query("Delete from `order` where orderid=:orderid")
     void deleteOrderByOrderId(int orderid);
 
-    @Update
+    @Update()
     void updateOrder(Order order);
 
-    @Query("Update cart set comment =:comment and price=:price and quantity=:qty where cartid=:cartid")
-    void updateCart(String comment,String price,int qty,int cartid);
+    @Update(onConflict = OnConflictStrategy.IGNORE)
+    void updateCart(Cart cart);
 
-    @Query("Update 'order' set status =:status where orderid =:orderid")
-    void updateOrderStatus(int status,int orderid);
+    @Query("Update cart set comment =:comment and price=:price and quantity=:qty where cartid=:cartid")
+    void updateCart2(String comment,String price,int qty,int cartid);
+
+    @Query("Update 'order' set status =:status and commendorder=:comment where orderid =:orderid")
+    void updateOrderStatus(int status,String comment,int orderid);
 
     @Query("Select * from 'order' where custid =:custid")
     Order getOrder(String custid);
 
-    @Query("Select * from 'order' where custid =:custid")
+    @Query("Select * from 'order' where custid =:custid and status=0")
     List<Order> getListOrder(String custid);
 
     @Query("Select * from 'order' where custid =:custid and status=0")

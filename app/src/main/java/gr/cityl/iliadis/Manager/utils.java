@@ -301,7 +301,7 @@ public class utils {
         doc.add( Chunk.NEWLINE );
 
         //Stoixeia paraggeleias
-        del_table.addCell(new Paragraph("Κωδικός παραγγελίας",urFontName));
+        del_table.addCell(new Paragraph("ΚΩΔΙΚΟΣ ΠΑΡΑΓΓΕΛΙΑΣ",urFontName));
         del_table.addCell(new Paragraph("ΗΜΕΡΟΜΗΝΙΑ: ",urFontName));
         del_table.addCell(new Paragraph("ΠΩΛΗΤΗΣ: ",urFontName));
         del_table.addCell(new Paragraph(""+carts.get(0).getOrderid(),urFontName));
@@ -322,7 +322,7 @@ public class utils {
         PdfPTable cust_table = new PdfPTable(1);
         cust_table.setWidthPercentage(100);
         cust_table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-        Paragraph c = new Paragraph("Πελάτης",urFontName);
+        Paragraph c = new Paragraph("ΠΕΛΑΤΗΣ",urFontName);
         cust_table.addCell(c);
         Paragraph c1 = new Paragraph("ΚΩΔΙΚΟΣ ΠΕΛΑΤΗ: " + custid,urFontName);
         cust_table.addCell(c1);
@@ -441,6 +441,8 @@ public class utils {
         for(int i = 0; i < carts.size(); i++){
             prodSum = prodSum + carts.get(i).getQuantity();
             priceSum = priceSum + (Double.parseDouble(carts.get(i).getPriceid().replace(",",".")) * carts.get(i).getQuantity());
+            Log.d("Dimitra","cataloguid "+iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid());
+            Log.d("Dimitra","discount 1: "+carts.get(i).getDiscountid());
             Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid(),carts.get(i).getDiscountid());
             discount = discount + catalog.getDiscount1();
             //sPriceSum = sPriceSum + (Double.parseDouble(carts.get(i).getPrice().replace(",",".")) * carts.get(i).getQuantity());
@@ -676,7 +678,7 @@ public class utils {
             //prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getComment(),urFontName)));
             prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getQuantity(),urFontName)));
             prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getPriceid(),urFontName)));
-            prod_table.addCell(new PdfPCell(new Phrase("" + (new DecimalFormat("##.##").format(carts.get(i).getPrice())),urFontName)));
+            prod_table.addCell(new PdfPCell(new Phrase("" + (new DecimalFormat("##.##").format(Double.parseDouble(carts.get(i).getPrice()))),urFontName)));
         }
         doc.add(prod_table);
 

@@ -160,8 +160,10 @@ public class EditProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d("Dimitra"," "+cart.getCartid()+"  "+cart.getOrderid()+" "+cart.getRealcode()+" "+cart.getProdcode()+" "+String.valueOf(totalprice)+" "+comment+" "+cart.getDescription()+" "+Integer.parseInt(editQuantity.getText().toString())+" "+cart.getVatcode()+" "+cart.getPriceid());
-                //Cart updatecart = new Cart(cart.getOrderid(),cart.getRealcode(),cart.getProdcode(),String.valueOf(totalprice),comment,cart.getDescription(),Integer.parseInt(editQuantity.getText().toString()),cart.getVatcode(),cart.getPrice(),cart.getPriceid());
-                shopDatabase.daoShop().updateCart(comment,String.valueOf(totalprice),Integer.parseInt(editQuantity.getText().toString()),cart.getCartid());
+                shopDatabase.daoShop().deleteCart(cart);
+                Cart updatecart = new Cart(cart.getOrderid(),cart.getRealcode(),cart.getProdcode(),String.valueOf(totalprice),comment,cart.getDescription(),Integer.parseInt(editQuantity.getText().toString()),cart.getVatcode(),cart.getPriceid(),cart.getDiscountid());
+                //shopDatabase.daoShop().updateCart(comment,String.valueOf(totalprice),Integer.parseInt(editQuantity.getText().toString()),cart.getCartid());
+                shopDatabase.daoShop().insertTask(updatecart);
                 Intent intent = new Intent(EditProductActivity.this,ProductActivity.class);
                 intent.putExtra("custid",custid);
                 intent.putExtra("custvatid",custvatid);

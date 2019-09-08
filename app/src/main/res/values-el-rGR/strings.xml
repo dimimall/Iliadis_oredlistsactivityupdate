@@ -33,7 +33,7 @@
     <string name="initial">Αρχική</string>
     <string name="product">Προϊόν</string>
     <string name="comment">Σχόλιο</string>
-    <string name="addtobusket">Προσθήκη στο καλάθι&lt;brκαι συνέχεια</string>
+    <string name="addtobusket">Προσθήκη στο καλάθι\nκαι συνέχεια</string>
     <string name="printorder">Εκτύπωση Παραγγελίας</string>
     <string name="reprintagain">Επανέκτυπωση Παραγγελίας</string>
     <string name="pendingorders">Εκκρεμής Παραγγελίες</string>
@@ -61,6 +61,6 @@
     <string name="downloadfilecatalogue">Κατέβασμα αρχείου καταλόγου.. Παρακαλώ περιμένετε...</string>
     <string name="downloadfilevat">Κατέβασμα αρχείου ΦΠΑ.. Παρακαλώ περιμένετε...</string>
     <string name="downloadfilecountry">Κατέβασμα αρχείου χωρών.. Παρακαλώ περιμένετε...</string>
-    <string name="updatecart">Ενημέρωση&lt;brπροϊόντος</string>
+    <string name="updatecart">Ενημέρωση\nπροϊόντος</string>
     <string name="existproduct">Το προϊόν υπάρχει στο καλάθι</string>
 </resources>

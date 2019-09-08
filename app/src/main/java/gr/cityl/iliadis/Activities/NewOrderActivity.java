@@ -78,6 +78,8 @@ public class NewOrderActivity extends AppCompatActivity {
                     }
                     else {
                         afm_textinput.getEditText().setText("");
+                        code_textinput.getEditText().setText("");
+                        desc_textinput.getEditText().setText("");
                         myutils.createDialog("Δε υπάρχει αυτός ο πελάτης",NewOrderActivity.this);
                     }
                     try {
@@ -107,6 +109,8 @@ public class NewOrderActivity extends AppCompatActivity {
                     }
                     else{
                         code_textinput.getEditText().setText("");
+                        afm_textinput.getEditText().setText("");
+                        desc_textinput.getEditText().setText("");
                         myutils.createDialog("Δε υπάρχει αυτός ο πελάτης",NewOrderActivity.this);
                     }
 
@@ -149,6 +153,8 @@ public class NewOrderActivity extends AppCompatActivity {
                             }
                             else {
                                 desc_textinput.getEditText().setText("");
+                                afm_textinput.getEditText().setText("");
+                                code_textinput.getEditText().setText("");
                                 myutils.createDialog("Δε υπάρχει αυτός ο πελάτης",NewOrderActivity.this);
                             }
                             dialog.cancel();

@@ -29,16 +29,24 @@ public class Order implements Serializable{
     @NonNull
     String shopid;
 
+    @ColumnInfo(name = "commendorder")
+    String commentorder;
+
     public Order()
     {
 
     }
-    public Order(String custid,int status,String dateparsed,String shopid)
+    public Order(String custid,int status,String dateparsed,String shopid,String commentorder)
     {
         this.custid=custid;
         this.status=status;
         this.dateparsed=dateparsed;
         this.shopid = shopid;
+        this.commentorder = commentorder;
+    }
+
+    public void setCommentorder(String commentorder) {
+        this.commentorder = commentorder;
     }
 
     public void setShopid(@NonNull String shopid) {
@@ -61,12 +69,15 @@ public class Order implements Serializable{
         this.status = status;
     }
 
+    public String getCommentorder() {
+        return commentorder;
+    }
+
     @NonNull
     public String getCustid() {
         return custid;
     }
 
-    @NonNull
     public int getStatus() {
         return status;
     }

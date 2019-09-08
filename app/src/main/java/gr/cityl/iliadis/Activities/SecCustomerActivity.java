@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import gr.cityl.iliadis.Manager.Calls;
 import gr.cityl.iliadis.Manager.utils;
 import gr.cityl.iliadis.Models.Cart;
 import gr.cityl.iliadis.Models.Order;
@@ -42,6 +43,7 @@ public class SecCustomerActivity extends AppCompatActivity {
     String selectshop="0";
     ShopDatabase shopDatabase;
     utils myutils;
+    Calls calls;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class SecCustomerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sec_customer);
 
         myutils = new utils();
+        calls = new Calls();
 
         getSupportActionBar().setTitle(getString(R.string.customer));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -116,6 +119,7 @@ public class SecCustomerActivity extends AppCompatActivity {
                         order1.setStatus(0);
                         order1.setDateparsed(currentDateandTime);
                         order1.setShopid(selectshop);
+                        order1.setCommentorder("");
                         shopDatabase.daoShop().insertTask(order1);
                     }
                     else {
@@ -129,9 +133,11 @@ public class SecCustomerActivity extends AppCompatActivity {
                         order1.setStatus(0);
                         order1.setDateparsed(currentDateandTime);
                         order1.setShopid("0");
+                        order1.setCommentorder("");
                         shopDatabase.daoShop().insertTask(order1);
                     }
                     List<Order> orders = shopDatabase.daoShop().getListOrder(custid);
+                    calls.makePostUsingVolley(SecCustomerActivity.this,custid,"18",String.valueOf(orders.get(0).getOrderid()));
                     intent.putExtra("custvatid",custvatid);
                     intent.putExtra("custid",custid);
 					intent.putExtra("catalogueid",custcatid);
@@ -177,6 +183,7 @@ public class SecCustomerActivity extends AppCompatActivity {
                                         order1.setStatus(0);
                                         order1.setDateparsed(currentDateandTime);
                                         order1.setShopid(selectshop);
+                                        order1.setCommentorder("");
                                         shopDatabase.daoShop().insertTask(order1);
                                     }
                                     else if (shops.size() > 0){
@@ -191,9 +198,11 @@ public class SecCustomerActivity extends AppCompatActivity {
                                         order1.setStatus(0);
                                         order1.setDateparsed(currentDateandTime);
                                         order1.setShopid("0");
+                                        order1.setCommentorder("");
                                         shopDatabase.daoShop().insertTask(order1);
                                     }
                                     List<Order> orders = shopDatabase.daoShop().getListOrder(custid);
+                                    calls.makePostUsingVolley(SecCustomerActivity.this,custid,"18",String.valueOf(orders.get(0).getOrderid()));
                                     intent.putExtra("custvatid",custvatid);
                                     intent.putExtra("custid",custid);
                                     intent.putExtra("catalogueid",custcatid);

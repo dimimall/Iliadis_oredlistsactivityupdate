@@ -15,7 +15,7 @@ import gr.cityl.iliadis.Interfaces.DaoShop;
 
 public abstract class ShopDatabase extends RoomDatabase {
 
-    private static final String DB_NAME="Shop_db";
+    private static final String DB_NAME="shop_db";
     private static ShopDatabase instance;
 
     public static synchronized ShopDatabase getInstance(Context context){

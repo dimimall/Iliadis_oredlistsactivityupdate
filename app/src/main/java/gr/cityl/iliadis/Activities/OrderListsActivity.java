@@ -147,6 +147,8 @@ public class OrderListsActivity extends AppCompatActivity {
                                 case R.id.menu1:
                                     //handle menu1 click
                                     shopDatabase.daoShop().deleteOrderByOrderId(paramOrdersList.get(position).getOrderid());
+                                    List<Cart> carts = shopDatabase.daoShop().getCartList(paramOrdersList.get(position).getOrderid());
+                                    shopDatabase.daoShop().deleteCartList(carts);
                                     paramOrdersList.remove(holder.getAdapterPosition());
                                     notifyDataSetChanged();
                                     return true;

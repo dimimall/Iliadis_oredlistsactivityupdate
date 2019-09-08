@@ -21,29 +21,25 @@ public class Cart implements Serializable{
     @ColumnInfo(name = "orderid")
     int orderid;
     @ColumnInfo(name = "realcode")
-    @NonNull
     String realcode;
     @ColumnInfo(name = "prodcode")
-    @NonNull
     String prodcode;
     @ColumnInfo(name = "price")
-    @NonNull
     String price;
     @ColumnInfo(name = "comment")
     String comment;
     @ColumnInfo(name = "description")
-    @NonNull
     String description;
     @ColumnInfo(name = "quantity")
-    @NonNull
     int quantity;
     @ColumnInfo(name = "vatcode")
-    @NonNull
     String vatcode;
     @ColumnInfo(name = "priceid")
-    @NonNull
     String priceid;
 
+    public Cart()
+    {
+    }
     public Cart(int orderid,String realcode,String prodcode,String price,String comment,String description,int quantity,String vatcode,String priceid,String discountid)
     {
         this.orderid=orderid;
@@ -62,43 +58,43 @@ public class Cart implements Serializable{
         this.discountid = discountid;
     }
 
-    public void setDescription(@NonNull String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setVatcode(@NonNull String vatcode) {
+    public void setVatcode(String vatcode) {
         this.vatcode = vatcode;
     }
 
-    public void setRealcode(@NonNull String realcode) {
+    public void setRealcode(String realcode) {
         this.realcode = realcode;
     }
 
-    public void setProdcode(@NonNull String prodcode) {
+    public void setProdcode(String prodcode) {
         this.prodcode = prodcode;
     }
 
-    public void setPrice(@NonNull String price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
-    public void setPriceid(@NonNull String priceid) {
+    public void setPriceid(String priceid) {
         this.priceid = priceid;
     }
 
-    public void setCartid(int cartid) {
+    public void setCartid(@NonNull  int cartid) {
         this.cartid = cartid;
     }
 
-    public void setComment(@NonNull String comment) {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
-    public void setQuantity(@NonNull int quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
-    public void setOrderid(@NonNull int orderid) {
+    public void setOrderid(int orderid) {
         this.orderid = orderid;
     }
 
@@ -106,51 +102,43 @@ public class Cart implements Serializable{
         return discountid;
     }
 
-    @NonNull
     public String getDescription() {
         return description;
     }
 
+    @NonNull
     public int getCartid() {
         return cartid;
     }
 
-    @NonNull
     public int getOrderid() {
         return orderid;
     }
 
-    @NonNull
     public String getRealcode() {
         return realcode;
     }
 
-    @NonNull
     public String getProdcode() {
         return prodcode;
     }
 
-    @NonNull
     public String getComment() {
         return comment;
     }
 
-    @NonNull
     public String getPrice() {
         return price;
     }
 
-    @NonNull
     public String getVatcode() {
         return vatcode;
     }
 
-    @NonNull
     public String getPriceid() {
         return priceid;
     }
 
-    @NonNull
     public int getQuantity() {
         return quantity;
     }

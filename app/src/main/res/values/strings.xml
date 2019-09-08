@@ -32,7 +32,7 @@
     <string name="initial">Home</string>
     <string name="product">Product</string>
     <string name="comment">Comment</string>
-    <string name="addtobusket">Add to busket&lt;brand continue</string>
+    <string name="addtobusket">Add to busket&lt;and continue</string>
     <string name="printorder">Print order</string>
     <string name="reprintagain">Reprint order</string>
     <string name="pendingorders">Pending orders</string>
@@ -60,6 +60,6 @@
     <string name="downloadfilecatalogue">Download file catalogue.. Please wait...</string>
     <string name="downloadfilevat">Download file VAT.. Please wait...</string>
     <string name="downloadfilecountry">Download file countries.. Please wait...</string>
-    <string name="updatecart">Update&lt;brproduct</string>
+    <string name="updatecart">Update&lt;product</string>
     <string name="existproduct">This product exist in cart</string>
 </resources>
