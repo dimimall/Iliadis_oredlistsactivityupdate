@@ -93,6 +93,7 @@ public class EditProductActivity extends AppCompatActivity {
         catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,cart.getDiscountid());
         totalprice = cart.getQuantity() * myutlis.getProductPrice(Double.parseDouble(cart.getPriceid().replace(",",".")),catalog.getDiscount1());
         priceText.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(totalprice));
+        commentText.getEditText().setText(cart.getComment());
 
         editQuantity.setOnKeyListener(new View.OnKeyListener() {
 
@@ -159,10 +160,9 @@ public class EditProductActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("Dimitra"," "+cart.getCartid()+"  "+cart.getOrderid()+" "+cart.getRealcode()+" "+cart.getProdcode()+" "+String.valueOf(totalprice)+" "+comment+" "+cart.getDescription()+" "+Integer.parseInt(editQuantity.getText().toString())+" "+cart.getVatcode()+" "+cart.getPriceid());
                 shopDatabase.daoShop().deleteCart(cart);
                 Cart updatecart = new Cart(cart.getOrderid(),cart.getRealcode(),cart.getProdcode(),String.valueOf(totalprice),comment,cart.getDescription(),Integer.parseInt(editQuantity.getText().toString()),cart.getVatcode(),cart.getPriceid(),cart.getDiscountid());
-                //shopDatabase.daoShop().updateCart(comment,String.valueOf(totalprice),Integer.parseInt(editQuantity.getText().toString()),cart.getCartid());
+                //shopDatabase.daoShop().updateCart2(comment,String.valueOf(totalprice),Integer.parseInt(editQuantity.getText().toString()),cart.getCartid(),cart.getOrderid());
                 shopDatabase.daoShop().insertTask(updatecart);
                 Intent intent = new Intent(EditProductActivity.this,ProductActivity.class);
                 intent.putExtra("custid",custid);

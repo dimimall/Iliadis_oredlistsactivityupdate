@@ -1,5 +1,6 @@
 package gr.cityl.iliadis.Services;
 
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import gr.cityl.iliadis.Activities.MainActivity;
 import gr.cityl.iliadis.Manager.MySingleton;
 import gr.cityl.iliadis.Models.IliadisDatabase;
 import gr.cityl.iliadis.Models.Products;
@@ -30,6 +32,13 @@ public class UpdateProductDbReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
+
+//        Intent contentIntent = new Intent(context, MainActivity.class);
+//
+//        PendingIntent contentPendingIntent = PendingIntent.getActivity
+//                (context, 101, contentIntent, PendingIntent
+//                        .FLAG_UPDATE_CURRENT);
+
         updateNewProductsDb(context);
     }
 
@@ -45,7 +54,7 @@ public class UpdateProductDbReceiver extends BroadcastReceiver {
                             //Parse the JSON response array by iterating over it
                             for (int i = 0; i < responseArray.length(); i++) {
                                 JSONObject response = responseArray.getJSONObject(i);
-                                Log.d("Receiver",response.toString());
+                                Log.d("Receiver update",response.toString());
                                 Products product = new Products();
                                 product.setProdcode(response.getString("prodcode"));
                                 product.setRealcode(response.getString("realcode"));

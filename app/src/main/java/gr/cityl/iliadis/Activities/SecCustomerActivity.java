@@ -15,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -64,7 +63,7 @@ public class SecCustomerActivity extends AppCompatActivity {
         final List<SecCustomers> shops = (List<SecCustomers>) getIntent().getSerializableExtra("shops");
         final String custvatid = getIntent().getStringExtra("custvatid");
 		final int custcatid = getIntent().getIntExtra("catalogueid",0);
-        final List<Order> orders = shopDatabase.daoShop().getListOrderStatus0(custid);
+        final List<Order> orders = shopDatabase.daoShop().getListOrder(custid);
 
         String title = getIntent().getStringExtra("name shop");
 

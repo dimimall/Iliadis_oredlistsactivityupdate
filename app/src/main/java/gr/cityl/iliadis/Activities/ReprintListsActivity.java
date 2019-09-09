@@ -41,7 +41,7 @@ public class ReprintListsActivity extends AppCompatActivity {
     private String shopid;
     private int custcatid;
     private utils myutils;
-    private String number;
+    private String number,ipprintpref;
     private String shopId;
 
     @Override
@@ -56,6 +56,7 @@ public class ReprintListsActivity extends AppCompatActivity {
 
         myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
         number = myutils.sharedpreferences.getString("numsale", "");
+        ipprintpref = myutils.sharedpreferences.getString("ipprint", "");
 
         shopDatabase = ShopDatabase.getInstance(ReprintListsActivity.this);
         iliadisDatabase = IliadisDatabase.getInstance(ReprintListsActivity.this);
@@ -158,7 +159,7 @@ public class ReprintListsActivity extends AppCompatActivity {
                                     number = myutils.sharedpreferences.getString("numsale", "");
                                     shopId = myutils.sharedpreferences.getString("shopid","");
                                     try {
-                                        myutils.createPdfFileGr(cartsList,custid,custvatid,number,shopId,iliadisDatabase,ReprintListsActivity.this);
+                                        myutils.createPdfFileGr(cartsList,custid,custvatid,number,shopId,ipprintpref,iliadisDatabase,ReprintListsActivity.this);
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     } catch (DocumentException e) {

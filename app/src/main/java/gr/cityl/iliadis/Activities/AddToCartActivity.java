@@ -45,7 +45,7 @@ public class AddToCartActivity extends AppCompatActivity {
     private List<Cart> carts;
     private double totalprice;
     private utils myutlis = new utils();
-    private String comment="";
+    private String comment="no comment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +93,7 @@ public class AddToCartActivity extends AppCompatActivity {
         descriptionText.setText(products.getProdescription());
         editQuantity.setText(products.getMinimumstep());
         catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,products.getPriceid());
+        Log.d("Dimitra","discount product "+myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1()));
         totalprice = Integer.parseInt(products.getMinimumstep()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
         priceText.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(totalprice));
 
@@ -173,15 +174,18 @@ public class AddToCartActivity extends AppCompatActivity {
             }
         });
 
-//        scan.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(AddToCartActivity.this,ProductActivity.class);
-//                intent.putExtra("custid",custid);
-//                intent.putExtra("custvatid",custvatid);
-//                startActivity(intent);
-//            }
-//        });
+        scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AddToCartActivity.this,ProductActivity.class);
+                intent.putExtra("custid",custid);
+                intent.putExtra("custvatid",custvatid);
+                intent.putExtra("orderid",orderid);
+                intent.putExtra("catalogueid",custcatid);
+                intent.putExtra("shopid",shopid);
+                startActivity(intent);
+            }
+        });
     }
 
     public void init()

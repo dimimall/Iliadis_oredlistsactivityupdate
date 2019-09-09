@@ -148,6 +148,7 @@ public class CartActivity extends AppCompatActivity {
         cartsList = (List<Cart>) getIntent().getExtras().getSerializable("cart");
         custcatid = getIntent().getExtras().getInt("catalogueid");
         carts.addAll(cartsList);
+
         shopDatabase = ShopDatabase.getInstance(CartActivity.this);
         iliadisDatabase = IliadisDatabase.getInstance(CartActivity.this);
 
@@ -202,7 +203,6 @@ public class CartActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 dialogBox();
-
             }
         });
 
@@ -281,7 +281,7 @@ public class CartActivity extends AppCompatActivity {
                 }else{
                     final String filterPattern =charSequence.toString().toLowerCase().trim();
                     for(Cart listcart : cartsList){
-                        if(listcart.getProdcode().startsWith(filterPattern)){
+                        if(listcart.getProdcode().startsWith(filterPattern)|| listcart.getRealcode().startsWith(filterPattern)){
                             carts.add(listcart);
                         }
                     }
@@ -337,9 +337,9 @@ public class CartActivity extends AppCompatActivity {
                             switch (item.getItemId()) {
                                 case R.id.menu1:
                                     //handle menu1 click
-                                    cartList.remove(holder.getAdapterPosition());
                                     Cart cart = cartList.get(holder.getAdapterPosition());
                                     shopDatabase.daoShop().deleteCart(cart);
+                                    cartList.remove(holder.getAdapterPosition());
                                     notifyDataSetChanged();
                                     return true;
                                 case R.id.menu2:
@@ -413,7 +413,7 @@ public class CartActivity extends AppCompatActivity {
 
     public void dialogBox()
     {
-        final String[] text = {"",""};
+        final String[] text = {"","no comment"};
 
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this);
@@ -468,7 +468,8 @@ public class CartActivity extends AppCompatActivity {
                 {
                     //create and print pdf in greek
                     try {
-                        myutils.createPdfFileGr(cartsList,custid,custvatid,number,shopId,iliadisDatabase,CartActivity.this);
+                        myutils.createPdfFileGr(cartsList,custid,custvatid,number,shopId,ipprintpref,iliadisDatabase,CartActivity.this);
+                        Log.d("Dimitra","order "+cartsList.get(0).getOrderid());
                         shopDatabase.daoShop().updateOrderStatus(1,text[1],cartsList.get(0).getOrderid());
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -478,8 +479,9 @@ public class CartActivity extends AppCompatActivity {
                     //send csv file
                     Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
                     String result="";
-                    result = myutils.createCsvFile(cartsList,number,custid,carts.get(0).getOrderid(),iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCustomerid(),custvatid,iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPaymentid(),shopId,customer,iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid());
+                    result = myutils.createCsvFile(cartsList,number,custid,carts.get(0).getOrderid(),iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCustomerid(),custvatid,iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPaymentid(),shopId,customer,iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid(),text[1]);
                     if (result.equals("success")) {
+                        Log.d("Dimitra","order "+cartsList.get(0).getOrderid());
                         shopDatabase.daoShop().updateOrderStatus(2,text[1],cartsList.get(0).getOrderid());
                         Toast.makeText(CartActivity.this, getString(R.string.sendfilecsv), Toast.LENGTH_LONG).show();
                     }
@@ -495,7 +497,7 @@ public class CartActivity extends AppCompatActivity {
                 {
                     //create and print pdf in english
                     try {
-                        myutils.createPdfFileEn(cartsList,custid,custvatid,number,shopId,iliadisDatabase,CartActivity.this);
+                        myutils.createPdfFileEn(cartsList,custid,custvatid,number,shopId,ipprintpref,iliadisDatabase,CartActivity.this);
                         shopDatabase.daoShop().updateOrderStatus(1,text[1],cartsList.get(0).getOrderid());
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -505,14 +507,14 @@ public class CartActivity extends AppCompatActivity {
                     //send csv file
                     Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
                     String result="";
-                    result = myutils.createCsvFile(cartsList,number,custid,carts.get(0).getOrderid(),iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCustomerid(),custvatid,iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPaymentid(),shopId,customer,iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid());
+                    result = myutils.createCsvFile(cartsList,number,custid,carts.get(0).getOrderid(),iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCustomerid(),custvatid,iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPaymentid(),shopId,customer,iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid(),text[1]);
                     if (result.equals("success")) {
                         shopDatabase.daoShop().updateOrderStatus(2,text[1],cartsList.get(0).getOrderid());
                         Toast.makeText(CartActivity.this, getString(R.string.sendfilecsv), Toast.LENGTH_LONG).show();
                     }
                     else
                     {
-                        shopDatabase.daoShop().updateOrderStatus(2,text[1],cartsList.get(0).getOrderid());
+                        shopDatabase.daoShop().updateOrderStatus(1,text[1],cartsList.get(0).getOrderid());
                         Toast.makeText(CartActivity.this, getString(R.string.nosendfilecsv), Toast.LENGTH_LONG).show();
                     }
                     Intent intent = new Intent(CartActivity.this,MainActivity.class);

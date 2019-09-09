@@ -12,7 +12,7 @@ import gr.cityl.iliadis.Interfaces.DaoAccess;
  * Created by dimitra on 26/07/2019.
  */
 
-@Database(entities = {Products.class,Customers.class,Catalog.class,FPA.class,SecCustomers.class,Country.class}, version = 1, exportSchema = false)
+@Database(entities = {Products.class,Customers.class,Catalog.class,FPA.class,SecCustomers.class,Country.class}, version = 2, exportSchema = false)
 public abstract class IliadisDatabase extends RoomDatabase {
 
     private static final String DB_NAME="Iliadis_DB";

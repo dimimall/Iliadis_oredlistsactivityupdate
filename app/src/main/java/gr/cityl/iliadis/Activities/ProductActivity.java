@@ -1,16 +1,11 @@
 package gr.cityl.iliadis.Activities;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -21,12 +16,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import gr.cityl.iliadis.Manager.utils;
 import gr.cityl.iliadis.Models.Cart;
+import gr.cityl.iliadis.Models.Catalog;
 import gr.cityl.iliadis.Models.IliadisDatabase;
-import gr.cityl.iliadis.Models.Order;
 import gr.cityl.iliadis.Models.Products;
 import gr.cityl.iliadis.Models.ShopDatabase;
 import gr.cityl.iliadis.R;
@@ -42,6 +38,7 @@ public class ProductActivity extends AppCompatActivity {
     Products product;
     List<Cart> carts;
     utils myutils;
+    String realcodecart="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +100,8 @@ public class ProductActivity extends AppCompatActivity {
                         if (!prodcart.equals(product.getProdcode()))
                         {
                             desctext.setText(product.getProdescription());
-                            pricetext.setText(getString(R.string.price)+":"+product.getPrice());
+                            Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
+                            pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
                             balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
                             reservedtext.setText(getString(R.string.reserved)+":"+product.getReserved());
                             renewtext.setText(getString(R.string.renew)+":"+product.getQuantitywaiting());
@@ -118,13 +116,14 @@ public class ProductActivity extends AppCompatActivity {
                     else if (barcodetext.getEditText().getText().toString().length()>=5)
                     {
                         product = iliadisDatabase.daoAccess().getProductByRealCode(barcodetext.getEditText().getText().toString());
-                        String realcart = shopDatabase.daoShop().getCartRealCode(orderid,product.getRealcode());
-                        if (realcart == null)
-                            realcart = " ";
-                        if (!realcart.equals(product.getRealcode()))
+                        realcodecart = shopDatabase.daoShop().getCartRealCode(orderid,product.getRealcode());
+                        if (realcodecart == null)
+                            realcodecart = " ";
+                        if (!realcodecart.equals(product.getRealcode()))
                         {
                             desctext.setText(product.getProdescription());
-                            pricetext.setText(getString(R.string.price)+":"+product.getPrice());
+                            Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
+                            pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
                             balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
                             reservedtext.setText(getString(R.string.reserved)+":"+product.getReserved());
                             renewtext.setText(getString(R.string.renew)+":"+product.getQuantitywaiting());
@@ -154,20 +153,24 @@ public class ProductActivity extends AppCompatActivity {
                 renewtext.setText(getString(R.string.renew)+":");
                 availabletext.setText(getString(R.string.available)+":");
                 datereceivetext.setText(getString(R.string.datedelivery)+":");
+                barcodetext.getEditText().setText("");
             }
         });
 
         basket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ProductActivity.this,AddToCartActivity.class);
-                intent.putExtra("prodcode", (Serializable) product);
-                intent.putExtra("custid",custid);
-                intent.putExtra("custvatid",custvatid);
-                intent.putExtra("shopid",shopid);
-                intent.putExtra("orderid",orderid);
-                intent.putExtra("catalogueid",custcatid);
-                startActivity(intent);
+                if (!barcodetext.getEditText().getText().toString().equals("") && product != null)
+                {
+                    Intent intent = new Intent(ProductActivity.this,AddToCartActivity.class);
+                    intent.putExtra("prodcode", (Serializable) product);
+                    intent.putExtra("custid",custid);
+                    intent.putExtra("custvatid",custvatid);
+                    intent.putExtra("shopid",shopid);
+                    intent.putExtra("orderid",orderid);
+                    intent.putExtra("catalogueid",custcatid);
+                    startActivity(intent);
+                }
             }
         });
     }

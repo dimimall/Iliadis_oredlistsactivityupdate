@@ -115,7 +115,7 @@ public class utils {
         return config;
     }
 
-    public String createCsvFile(List<Cart> carts, String salesid, String custid, int orderid, String customerid, String custvatid, String paymentid, String shopid, Customers customer, int custcatid){
+    public String createCsvFile(List<Cart> carts, String salesid, String custid, int orderid, String customerid, String custvatid, String paymentid, String shopid, Customers customer, int custcatid,String commentOrder){
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -145,7 +145,9 @@ public class utils {
                 bfWriter.newLine();
                 bfWriter.write(custid);
                 bfWriter.newLine();
-                bfWriter.write(orderid);
+                bfWriter.write(" "+orderid);
+                bfWriter.newLine();
+                bfWriter.write(commentOrder);
                 bfWriter.newLine();
                 bfWriter.write(customerid);
                 bfWriter.newLine();
@@ -173,11 +175,11 @@ public class utils {
                 {
                     bfWriter.write(carts.get(i).getRealcode());
                     bfWriter.newLine();
-                    bfWriter.write(carts.get(i).getQuantity());
+                    bfWriter.write(" "+carts.get(i).getQuantity());
                     bfWriter.newLine();
                     bfWriter.write(carts.get(i).getVatcode());
                     bfWriter.newLine();
-                    bfWriter.write(custcatid);
+                    bfWriter.write(" "+custcatid);
                     bfWriter.newLine();
                     bfWriter.write(carts.get(i).getPriceid());
                     bfWriter.newLine();
@@ -243,7 +245,7 @@ public class utils {
         return price;
     }
 
-    public void createPdfFileGr(List<Cart> carts, String custid, String custvatid, String number, String shopId, IliadisDatabase iliadisDatabase,Context context) throws IOException, DocumentException
+    public void createPdfFileGr(List<Cart> carts, String custid, String custvatid, String number, String shopId,String ipprinter, IliadisDatabase iliadisDatabase,Context context) throws IOException, DocumentException
     {
         AssetManager assetManager = context.getAssets();
         InputStream is = null;
@@ -403,8 +405,10 @@ public class utils {
             prod_table.addCell(new PdfPCell(new Phrase(carts.get(i).getRealcode(),urFontName)));
             prod_table.addCell(new PdfPCell(new Phrase(carts.get(i).getDescription()+"\n"+carts.get(i).getComment(),urFontName)));
             //prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getComment(),urFontName)));
+//            Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid(),iliadisDatabase.daoAccess().getProductByProdCode(carts.get(i).getProdcode()).getPriceid());
+//            getProductPrice(Double.parseDouble(iliadisDatabase.daoAccess().getProductByProdCode(carts.get(i).getProdcode()).getPrice()),catalog.getDiscount1());
             prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getQuantity(),urFontName)));
-            prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getPriceid(),urFontName)));
+            prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getPrice(),urFontName)));
             prod_table.addCell(new PdfPCell(new Phrase(""+new DecimalFormat("##.##").format(Double.parseDouble(carts.get(i).getPrice())),urFontName)));
         }
         doc.add(prod_table);
@@ -440,13 +444,12 @@ public class utils {
 
         for(int i = 0; i < carts.size(); i++){
             prodSum = prodSum + carts.get(i).getQuantity();
-            priceSum = priceSum + (Double.parseDouble(carts.get(i).getPriceid().replace(",",".")) * carts.get(i).getQuantity());
-            Log.d("Dimitra","cataloguid "+iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid());
-            Log.d("Dimitra","discount 1: "+carts.get(i).getDiscountid());
+            priceSum = priceSum + (Double.parseDouble(carts.get(i).getPrice().replace(",",".")));
             Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid(),carts.get(i).getDiscountid());
             discount = discount + catalog.getDiscount1();
-            //sPriceSum = sPriceSum + (Double.parseDouble(carts.get(i).getPrice().replace(",",".")) * carts.get(i).getQuantity());
-            vTotal = vTotal + (((k * Double.parseDouble(carts.get(i).getPrice().replace(",","."))) / 100) * carts.get(i).getQuantity());
+            Log.d("Dimitra","discount "+discount/100);
+            sPriceSum = sPriceSum + (Double.parseDouble(carts.get(i).getPriceid().replace(",",".")) * carts.get(i).getQuantity());
+            vTotal = vTotal + (((k * Double.parseDouble(carts.get(i).getPrice().replace(",","."))) / 100));
         }
         PdfPCell s = new PdfPCell(new Phrase("ΣΥΝΟΛΟ ΠΟΣΟΤΗΤΑΣ: " + new DecimalFormat("##.##").format(prodSum),urFontName));
         s.setBorder(Rectangle.NO_BORDER);
@@ -454,13 +457,13 @@ public class utils {
         sum_table.addCell(s);
         //sum_table.addCell("" + new DecimalFormat("##.##").format(prodSum));
 
-        PdfPCell s1 = new PdfPCell(new Phrase("ΛΟΓΑΡΙΑΣΜΟΣ ΠΑΡΑΓΓΕΛΙΑΣ: " + new DecimalFormat("##.##").format(priceSum)  + "€",urFontName));
+        PdfPCell s1 = new PdfPCell(new Phrase("ΛΟΓΑΡΙΑΣΜΟΣ ΠΑΡΑΓΓΕΛΙΑΣ: " + new DecimalFormat("##.##").format(sPriceSum)  + "€",urFontName));
         s1.setBorder(Rectangle.NO_BORDER);
         s1.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s1);
         //sum_table.addCell("" + new DecimalFormat("##.##").format(priceSum));
 
-        PdfPCell s2 = new PdfPCell(new Phrase("ΕΚΠΤΩΣΗ: " + new DecimalFormat("##.##").format(discount/100) + "€",urFontName));
+        PdfPCell s2 = new PdfPCell(new Phrase("ΕΚΠΤΩΣΗ: " + new DecimalFormat("##.##").format(sPriceSum-priceSum) + "€",urFontName));
         s2.setBorder(Rectangle.NO_BORDER);
         s2.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s2);
@@ -489,7 +492,8 @@ public class utils {
 
         doc.add( Chunk.NEWLINE );
         doc.add( Chunk.NEWLINE );
-
+        doc.add( Chunk.NEWLINE );
+        doc.add( Chunk.NEWLINE );
 
         PdfPTable com_table = new PdfPTable(new float[] { 600f, 150f, 150f });
         com_table.setWidthPercentage(100);
@@ -507,16 +511,16 @@ public class utils {
         doc.add(com_table);
         doc.close();
 
-//        String success = printPdf();
-//        Log.d("Dimitra",success);
-//        if (success.equals("success"))
+
+//        for (int i=0; i<2; i++)
 //        {
-//            String success2 = printPdf();
-//            Log.d("Dimitra",success2);
+//            String success = printPdf(ipprinter);
+//            Log.d("Dimitra",success);
 //        }
+
     }
 
-    public void createPdfFileEn(List<Cart> carts, String custid, String custvatid, String number, String shopId, IliadisDatabase iliadisDatabase,Context context) throws IOException, DocumentException
+    public void createPdfFileEn(List<Cart> carts, String custid, String custvatid, String number, String shopId,String ipprinter, IliadisDatabase iliadisDatabase,Context context) throws IOException, DocumentException
     {
         AssetManager assetManager = context.getAssets();
         InputStream is = null;
@@ -600,15 +604,12 @@ public class utils {
         Paragraph c1 = new Paragraph("ID CUSTOMER: " + custid,urFontName);
         cust_table.addCell(c1);
         Paragraph c2 = new Paragraph("NAME: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCompanyName(),urFontName);
-        Log.d("Dimitra",iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCompanyName());
         cust_table.addCell(c2);
         Paragraph c3 = new Paragraph("VAT.: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getAfm(),urFontName);
         cust_table.addCell(c3);
         Paragraph c4 = new Paragraph("TAX OFFICE: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getTaxOffice(),urFontName);
-        Log.d("Dimitra",iliadisDatabase.daoAccess().getCustomerByCustid(custid).getTaxOffice());
         cust_table.addCell(c4);
         Paragraph c5 = new Paragraph("COUNTRY: " + iliadisDatabase.daoAccess().getCountry(iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCountry()).getCountry(),urFontName);
-        Log.d("Dimitra",iliadisDatabase.daoAccess().getCountry(iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCountry()).getCountry());
         cust_table.addCell(c5);
 
         all_cust_table.addCell(cust_table);
@@ -713,11 +714,11 @@ public class utils {
 
         for(int i = 0; i < carts.size(); i++){
             prodSum = prodSum + carts.get(i).getQuantity();
-            priceSum = priceSum + (Double.parseDouble(carts.get(i).getPriceid().replace(",",".")) * carts.get(i).getQuantity());
+            priceSum = priceSum + (Double.parseDouble(carts.get(i).getPrice().replace(",",".")));
             Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid(),carts.get(i).getDiscountid());
-            discount = discount + catalog.getDiscount1();
+            discount = discount + catalog.getDiscount1()*carts.get(i).getQuantity();
             //sPriceSum = sPriceSum + (Double.parseDouble(carts.get(i).getPrice().replace(",",".")) * carts.get(i).getQuantity());
-            vTotal = vTotal + (((k * Double.parseDouble(carts.get(i).getPrice().replace(",","."))) / 100) * carts.get(i).getQuantity());
+            vTotal = vTotal + (((k * Double.parseDouble(carts.get(i).getPrice().replace(",","."))) / 100));
         }
         PdfPCell s = new PdfPCell(new Phrase("TOTAL QUANTITY: " + new DecimalFormat("##.##").format(prodSum),urFontName));
         s.setBorder(Rectangle.NO_BORDER);
@@ -778,16 +779,11 @@ public class utils {
         doc.add(com_table);
         doc.close();
 
-//        String success = printPdf();
+//        String success = printPdf(ipprinter);
 //        Log.d("Dimitra",success);
-//        if (success.equals("success"))
-//        {
-//            String success2 = printPdf();
-//            Log.d("Dimitra",success2);
-//        }
     }
 
-    public String  printPdf() {
+    public String  printPdf(String ipprinter) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         final String SUCCESSFULLY_SENT = "Successfully sent to printer";
@@ -803,7 +799,6 @@ public class utils {
             is =fileInputStream;
             clientSocket = new Socket("192.168.1.3", 9100);
             outToServer = new DataOutputStream(clientSocket.getOutputStream());
-            //byte[] buffer = new byte[3000];
             int i;
             while ((i=is.read()) !=-1){
                 outToServer.write(i);

@@ -39,8 +39,8 @@ public interface DaoShop {
     @Update(onConflict = OnConflictStrategy.IGNORE)
     void updateCart(Cart cart);
 
-    @Query("Update cart set comment =:comment and price=:price and quantity=:qty where cartid=:cartid")
-    void updateCart2(String comment,String price,int qty,int cartid);
+    @Query("Update cart set comment =:comment and price=:price and quantity=:qty where cartid=:cartid and orderid=:orderid")
+    void updateCart2(String comment,String price,int qty,int cartid,int orderid);
 
     @Query("Update 'order' set status =:status and commendorder=:comment where orderid =:orderid")
     void updateOrderStatus(int status,String comment,int orderid);
@@ -51,11 +51,11 @@ public interface DaoShop {
     @Query("Select * from 'order' where custid =:custid and status=0")
     List<Order> getListOrder(String custid);
 
-    @Query("Select * from 'order' where custid =:custid and status=0")
-    List<Order> getListOrderStatus0(String custid);
+    @Query("Select * from 'order' where status=0")
+    List<Order> getListOrderStatus0();
 
-    @Query("Select * from 'order' where custid =:custid and status=1 or status=2")
-    List<Order> getListOrderStatus1(String custid);
+    @Query("Select * from 'order' where status=2")
+    List<Order> getListOrderStatus1();
 
     @Query("Select * from cart where orderid =:orderid")
     List<Cart> getCartList(int orderid);

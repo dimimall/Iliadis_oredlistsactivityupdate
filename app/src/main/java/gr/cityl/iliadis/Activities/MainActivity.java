@@ -4,6 +4,9 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.arch.persistence.db.SupportSQLiteDatabase;
+import android.arch.persistence.room.Room;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +14,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -79,10 +83,14 @@ public class MainActivity extends AppCompatActivity
 
         myutils = new utils();
 
-        Intent notifyIntent = new Intent(getApplicationContext(),UpdateProductDbReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),101,notifyIntent,0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,   SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
+
+        Room.databaseBuilder(MainActivity.this, ShopDatabase.class, ShopDatabase.DB_NAME)
+                .addMigrations(MIGRATION_2_3,MIGRATION_3_4).build();
+
+//        Intent notifyIntent = new Intent(getApplicationContext(),UpdateProductDbReceiver.class);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),101,notifyIntent,0);
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,   SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES,AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -169,31 +177,25 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this,NewOrderActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
-            if (custid.length() > 0)
-            {
-                List<Order> orders = shopDatabase.daoShop().getListOrderStatus0(custid);
-                Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
-                Intent intent = new Intent(MainActivity.this,OrderListsActivity.class);
-                intent.putExtra("custid",customer.getCustid());
-                intent.putExtra("custvatid", customer.getCustvatid());
-                intent.putExtra("catalogueid",customer.getCatalogueid());
-                intent.putExtra("orders", (Serializable) orders);
-                intent.putExtra("shopsid",shopid);
-                startActivity(intent);
-            }
+            List<Order> orders = shopDatabase.daoShop().getListOrderStatus0();
+            Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
+            Intent intent = new Intent(MainActivity.this,OrderListsActivity.class);
+            intent.putExtra("custid",customer.getCustid());
+            intent.putExtra("custvatid", customer.getCustvatid());
+            intent.putExtra("catalogueid",customer.getCatalogueid());
+            intent.putExtra("orders", (Serializable) orders);
+            intent.putExtra("shopsid",shopid);
+            startActivity(intent);
         } else if (id == R.id.nav_manage) {
-            if (custid.length() > 0)
-            {
-                List<Order> orders = shopDatabase.daoShop().getListOrderStatus1(custid);
-                Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
-                Intent intent = new Intent(MainActivity.this,ReprintListsActivity.class);
-                intent.putExtra("custid",customer.getCustid());
-                intent.putExtra("custvatid", customer.getCustvatid());
-                intent.putExtra("catalogueid",customer.getCatalogueid());
-                intent.putExtra("orders", (Serializable) orders);
-                intent.putExtra("shopsid",shopid);
-                startActivity(intent);
-            }
+            List<Order> orders = shopDatabase.daoShop().getListOrderStatus1();
+            Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
+            Intent intent = new Intent(MainActivity.this,ReprintListsActivity.class);
+            intent.putExtra("custid",customer.getCustid());
+            intent.putExtra("custvatid", customer.getCustvatid());
+            intent.putExtra("catalogueid",customer.getCatalogueid());
+            intent.putExtra("orders", (Serializable) orders);
+            intent.putExtra("shopsid",shopid);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
             Intent intent = new Intent(MainActivity.this,ReloadDbsActivity.class);
             startActivity(intent);
@@ -214,8 +216,8 @@ public class MainActivity extends AppCompatActivity
     public void quit() {
         Intent start = new Intent(Intent.ACTION_MAIN);
         start.addCategory(Intent.CATEGORY_HOME);
-        start.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        start.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //start.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //start.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(start);
     }
 
@@ -271,7 +273,6 @@ public class MainActivity extends AppCompatActivity
 
                             }
                             iliadisDatabase.daoAccess().insertTaskProducts(products);
-                            Log.d("Dimitra","passssss");
                             loadJsonCustomers();
 
                         } catch (JSONException e) {
@@ -329,7 +330,6 @@ public class MainActivity extends AppCompatActivity
                                 //iliadisDatabase.daoAccess().insertTask(customer);
                             }
                             iliadisDatabase.daoAccess().insertTaskCustomers(customers);
-                            Log.d("Dimitra","passssss2222");
                             loadJsonASecCustomers();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -378,7 +378,6 @@ public class MainActivity extends AppCompatActivity
                                 //iliadisDatabase.daoAccess().insertTask(secCustomer);
                             }
                             iliadisDatabase.daoAccess().insertTaskShops(secCustomers);
-                            Log.d("Dimitra","passsss333333");
                             loadJsonCatalog();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -438,7 +437,6 @@ public class MainActivity extends AppCompatActivity
                                 //iliadisDatabase.daoAccess().insertTask(catalog);
                             }
                             iliadisDatabase.daoAccess().insertTaskCatalog(catalogs);
-                            Log.d("Dimitra","passssss444444");
                             loadJsonFPA();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -478,9 +476,7 @@ public class MainActivity extends AppCompatActivity
                                 FPA fpa1 = new FPA();
                                 fpa1.setVatid(response.getString("vatid"));
                                 fpa1.setVat(response.getDouble("vat"));
-                                Log.v("Data ",response.getString("vat"));
                                 if (response.has("custvatid")){
-                                    Log.v("Data ",response.getString("custvatid"));
                                     fpa1.setCustvatid(response.getString("custvatid"));
                                 }
                                 fpa.add(fpa1);
@@ -488,7 +484,6 @@ public class MainActivity extends AppCompatActivity
                                 //iliadisDatabase.daoAccess().insertTask(fpa1);
                             }
                             iliadisDatabase.daoAccess().insertTaskFpa(fpa);
-                            Log.d("Dimitra","passssss555555");
                             loadJsonCountry();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -514,23 +509,22 @@ public class MainActivity extends AppCompatActivity
         displayLoader(getString(R.string.downloadfilecountry));
 
         final ArrayList<Country> countries = new ArrayList<>();
-                                JsonArrayRequest jsArrayRequest = new JsonArrayRequest
-                                        (Request.Method.GET, "https://pod.iliadis.com.gr/getcountries.asp", null, new Response.Listener<JSONArray>() {
-                                            @Override
-                                            public void onResponse(JSONArray responseArray) {
-                                                pDialog.dismiss();
-                                                try {
-                                                    StringBuilder textViewData = new StringBuilder();
-                                                    //Parse the JSON response array by iterating over it
-                                                    for (int i = 0; i < responseArray.length(); i++) {
-                                                        JSONObject response = responseArray.getJSONObject(i);
-                                                        Country country = new Country();
-                                                        country.setCountryid(response.getString("countryid"));
-                                                        country.setCountry(response.getString("country"));
-                                                        countries.add(country);
-                                Log.d("Dimitra",country.getCountry());
 
-                                //iliadisDatabase.daoAccess().insertTask(country);
+        JsonArrayRequest jsArrayRequest = new JsonArrayRequest
+                (Request.Method.GET, "https://pod.iliadis.com.gr/getcountries.asp", null, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray responseArray) {
+                        pDialog.dismiss();
+                        try {
+                            StringBuilder textViewData = new StringBuilder();
+                            //Parse the JSON response array by iterating over it
+                            for (int i = 0; i < responseArray.length(); i++) {
+                                JSONObject response = responseArray.getJSONObject(i);
+                                Country country = new Country();
+                                country.setCountryid(response.getString("countryid"));
+                                country.setCountry(response.getString("country"));
+                                countries.add(country);
+                                Log.d("Dimitra",country.getCountry());
                             }
                             iliadisDatabase.daoAccess().insertTaskCountry(countries);
                             //loadJsonCatalog();
@@ -571,4 +565,24 @@ public class MainActivity extends AppCompatActivity
             loadJsonProducts();
         }
     }
+
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE cart (cartid INTEGER primary key autoincrement NOT NULL,  "
+                    +"orderid INTEGER, "+ "realcode TEXT, "+"prodcode TEXT, "+"price TEXT, "+"comment TEXT, "+"description TEXT, "+"quantity INTEGER, "+"vatcode TEXT, "+"priceid TEXT)");
+            database.execSQL("CREATE TABLE order (orderid INTEGER primary key autoincrement NOT NULL, "+"custid TEXT, "+"status INTEGER, "+"dateparsed TEXT)");
+        }
+    };
+    //Add column
+    static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE cart "
+                    + " ADD COLUMN discountid TEXT , COLUMN priceid TEXT");
+
+            database.execSQL("ALTER TABLE order "
+                    + " ADD COLUMN commentorder TEXT");
+        }
+    };
 }

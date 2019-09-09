@@ -35,7 +35,7 @@ public class Calls {
         pDialog.setMessage("Loading...");
         pDialog.show();
 
-        StringRequest req = new StringRequest(Request.Method.GET,url,
+        StringRequest req = new StringRequest(Request.Method.POST,url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -68,9 +68,9 @@ public class Calls {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("custid",custid);
                 params.put("salesid",salesid);
                 params.put("orderid",orderid);
+                params.put("custid",custid);
                 return params;
             }
 
