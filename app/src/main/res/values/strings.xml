@@ -62,4 +62,8 @@
     <string name="downloadfilecountry">Download file countries.. Please wait...</string>
     <string name="updatecart">Update&lt;product</string>
     <string name="existproduct">This product exist in cart</string>
+    <string name="title_activity_basic">BasicActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -512,11 +512,11 @@ public class utils {
         doc.close();
 
 
-//        for (int i=0; i<2; i++)
-//        {
-//            String success = printPdf(ipprinter);
-//            Log.d("Dimitra",success);
-//        }
+        for (int i=0; i<2; i++)
+        {
+            String success = printPdf(ipprinter);
+            Log.d("Dimitra",success);
+        }
 
     }
 
@@ -716,8 +716,9 @@ public class utils {
             prodSum = prodSum + carts.get(i).getQuantity();
             priceSum = priceSum + (Double.parseDouble(carts.get(i).getPrice().replace(",",".")));
             Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid(),carts.get(i).getDiscountid());
-            discount = discount + catalog.getDiscount1()*carts.get(i).getQuantity();
-            //sPriceSum = sPriceSum + (Double.parseDouble(carts.get(i).getPrice().replace(",",".")) * carts.get(i).getQuantity());
+            discount = discount + catalog.getDiscount1();
+            Log.d("Dimitra","discount "+discount/100);
+            sPriceSum = sPriceSum + (Double.parseDouble(carts.get(i).getPriceid().replace(",",".")) * carts.get(i).getQuantity());
             vTotal = vTotal + (((k * Double.parseDouble(carts.get(i).getPrice().replace(",","."))) / 100));
         }
         PdfPCell s = new PdfPCell(new Phrase("TOTAL QUANTITY: " + new DecimalFormat("##.##").format(prodSum),urFontName));
@@ -726,13 +727,13 @@ public class utils {
         sum_table.addCell(s);
         //sum_table.addCell("" + new DecimalFormat("##.##").format(prodSum));
 
-        PdfPCell s1 = new PdfPCell(new Phrase("PRICE ORDER: " + new DecimalFormat("##.##").format(priceSum)  + "€",urFontName));
+        PdfPCell s1 = new PdfPCell(new Phrase("PRICE ORDER: " + new DecimalFormat("##.##").format(sPriceSum)  + "€",urFontName));
         s1.setBorder(Rectangle.NO_BORDER);
         s1.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s1);
         //sum_table.addCell("" + new DecimalFormat("##.##").format(priceSum));
 
-        PdfPCell s2 = new PdfPCell(new Phrase("DISCOUNT: " + new DecimalFormat("##.##").format(discount/100) + "€",urFontName));
+        PdfPCell s2 = new PdfPCell(new Phrase("DISCOUNT: " + new DecimalFormat("##.##").format(sPriceSum-priceSum) + "€",urFontName));
         s2.setBorder(Rectangle.NO_BORDER);
         s2.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s2);
@@ -779,8 +780,11 @@ public class utils {
         doc.add(com_table);
         doc.close();
 
-//        String success = printPdf(ipprinter);
-//        Log.d("Dimitra",success);
+        for (int i=0; i<2; i++)
+        {
+            String success = printPdf(ipprinter);
+            Log.d("Dimitra",success);
+        }
     }
 
     public String  printPdf(String ipprinter) {

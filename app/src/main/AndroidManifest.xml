@@ -30,7 +30,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.NewOrderActivity" />
+        <activity
+            android:name=".Activities.NewOrderActivity" />
         <activity android:name=".Activities.ReloadDbsActivity" />
         <activity android:name=".Activities.SettingsActivity" />
         <activity android:name=".Activities.SecCustomerActivity" />
@@ -51,8 +52,9 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".Activities.EditProductActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Activities.EditProductActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

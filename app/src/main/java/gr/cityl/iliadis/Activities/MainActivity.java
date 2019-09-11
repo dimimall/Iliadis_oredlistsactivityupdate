@@ -12,9 +12,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,6 +29,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -58,7 +63,7 @@ import gr.cityl.iliadis.R;
 import gr.cityl.iliadis.Services.UpdateProductDbReceiver;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,BlankFragment.OnFragmentInteractionListener {
 
     TextView textView,neworder,title;
     LinearLayout buttonLayout;
@@ -87,10 +92,10 @@ public class MainActivity extends AppCompatActivity
         Room.databaseBuilder(MainActivity.this, ShopDatabase.class, ShopDatabase.DB_NAME)
                 .addMigrations(MIGRATION_2_3,MIGRATION_3_4).build();
 
-//        Intent notifyIntent = new Intent(getApplicationContext(),UpdateProductDbReceiver.class);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),101,notifyIntent,0);
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,   SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES,AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
+        Intent notifyIntent = new Intent(getApplicationContext(),UpdateProductDbReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),101,notifyIntent,0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,   SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES,AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -112,8 +117,12 @@ public class MainActivity extends AppCompatActivity
         buttonLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,NewOrderActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(MainActivity.this,NewOrderActivity.class);
+//                startActivity(intent);
+                    Fragment blancFragment = new BlankFragment();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame,blancFragment).commit();
             }
         });
     }
@@ -585,4 +594,9 @@ public class MainActivity extends AppCompatActivity
                     + " ADD COLUMN commentorder TEXT");
         }
     };
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }

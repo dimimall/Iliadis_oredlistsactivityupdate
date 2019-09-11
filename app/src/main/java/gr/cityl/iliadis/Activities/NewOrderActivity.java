@@ -6,9 +6,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -26,8 +32,10 @@ import java.util.List;
 import gr.cityl.iliadis.Manager.utils;
 import gr.cityl.iliadis.Models.Customers;
 import gr.cityl.iliadis.Models.IliadisDatabase;
+import gr.cityl.iliadis.Models.Order;
 import gr.cityl.iliadis.Models.ParamOrders;
 import gr.cityl.iliadis.Models.SecCustomers;
+import gr.cityl.iliadis.Models.ShopDatabase;
 import gr.cityl.iliadis.R;
 
 public class NewOrderActivity extends AppCompatActivity {
@@ -37,17 +45,21 @@ public class NewOrderActivity extends AppCompatActivity {
     TextInputLayout desc_textinput;
     Button send;
     IliadisDatabase iliadisDatabase;
+    ShopDatabase shopDatabase;
     Customers customer;
     List<SecCustomers> secCustomers;
     utils myutils;
     List<String> companyNames;
-
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_order);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         iliadisDatabase = IliadisDatabase.getInstance(this);
+        shopDatabase = ShopDatabase.getInstance(this);
         secCustomers = new ArrayList<>();
         myutils = new utils();
 
@@ -55,6 +67,7 @@ public class NewOrderActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         init();
+
 
         myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
         String value = myutils.sharedpreferences.getString("numsale", "");
@@ -209,7 +222,6 @@ public class NewOrderActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     public void init()
     {

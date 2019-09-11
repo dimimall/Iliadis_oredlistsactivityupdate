@@ -36,8 +36,9 @@ public class Order implements Serializable{
     {
 
     }
-    public Order(String custid,int status,String dateparsed,String shopid,String commentorder)
+    public Order(int orderid ,String custid,int status,String dateparsed,String shopid,String commentorder)
     {
+        this.orderid = orderid;
         this.custid=custid;
         this.status=status;
         this.dateparsed=dateparsed;
