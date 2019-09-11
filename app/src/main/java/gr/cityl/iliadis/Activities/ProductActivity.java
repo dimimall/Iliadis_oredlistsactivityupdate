@@ -39,7 +39,7 @@ public class ProductActivity extends AppCompatActivity {
     List<Cart> carts;
     utils myutils;
     String realcodecart="";
-
+    String prodcart="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +50,7 @@ public class ProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // back button pressed
-                onBackPressed();
+                myutils.DialogBackbutton(getString(R.string.cancelorder),ProductActivity.this);
             }
         });
 
@@ -93,8 +93,8 @@ public class ProductActivity extends AppCompatActivity {
                 {
                     if (barcodetext.getEditText().getText().toString().length()>=13)
                     {
-                        String prodcart = shopDatabase.daoShop().getCartProdCode(orderid,product.getProdcode());
                         product = iliadisDatabase.daoAccess().getProductByProdCode(barcodetext.getEditText().getText().toString());
+                        prodcart = shopDatabase.daoShop().getCartProdCode(orderid,product.getProdcode());
                         if (prodcart == null)
                             prodcart=" ";
                         if (!prodcart.equals(product.getProdcode()))

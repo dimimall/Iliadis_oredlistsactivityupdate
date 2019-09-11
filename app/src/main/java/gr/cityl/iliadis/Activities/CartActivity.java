@@ -111,6 +111,8 @@ public class CartActivity extends AppCompatActivity {
         number = myutils.sharedpreferences.getString("numsale", "");
         ipprintpref = myutils.sharedpreferences.getString("ipprint", "");
 
+        Log.d("Dimitra","printer "+ipprintpref);
+
         isReadStoragePermissionGranted();
         isWriteStoragePermissionGranted();
 
@@ -119,7 +121,7 @@ public class CartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // back button pressed
-                onBackPressed();
+                myutils.DialogBackbutton(getString(R.string.cancelorder),CartActivity.this);
             }
         });
 
@@ -414,7 +416,7 @@ public class CartActivity extends AppCompatActivity {
 
     public void dialogBox()
     {
-        final String[] text = {"","no comment"};
+        final String[] text = {""," "};
 
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this);
@@ -423,7 +425,7 @@ public class CartActivity extends AppCompatActivity {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.dialog_box, null);
         alertDialogBuilder.setView(view);
-        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setCancelable(true);
         final AlertDialog dialog = alertDialogBuilder.create();
         dialog.show();
 

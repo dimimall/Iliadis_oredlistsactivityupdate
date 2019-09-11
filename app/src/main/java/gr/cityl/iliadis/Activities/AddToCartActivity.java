@@ -45,7 +45,7 @@ public class AddToCartActivity extends AppCompatActivity {
     private List<Cart> carts;
     private double totalprice;
     private utils myutlis = new utils();
-    private String comment="no comment";
+    private String comment=" ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class AddToCartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // back button pressed
-                onBackPressed();
+                myutlis.DialogBackbutton(getString(R.string.cancelorder),AddToCartActivity.this);
             }
         });
 
@@ -91,7 +91,7 @@ public class AddToCartActivity extends AppCompatActivity {
 
         realProdCodeText.setText(products.getProdcode()+"-"+products.getRealcode());
         descriptionText.setText(products.getProdescription());
-        editQuantity.setText(products.getMinimumstep());
+        editQuantity.setText(products.getMinquantity());
         catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,products.getPriceid());
         Log.d("Dimitra","discount product "+myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1()));
         totalprice = Integer.parseInt(products.getMinimumstep()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());

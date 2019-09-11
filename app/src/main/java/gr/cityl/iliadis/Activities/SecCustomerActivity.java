@@ -43,7 +43,7 @@ public class SecCustomerActivity extends AppCompatActivity {
     ShopDatabase shopDatabase;
     utils myutils;
     Calls calls;
-
+    String number;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +58,10 @@ public class SecCustomerActivity extends AppCompatActivity {
         shopDatabase = ShopDatabase.getInstance(this);
 
         init();
+
+        myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
+        number = myutils.sharedpreferences.getString("numsale", "");
+        Log.d("Dimitra"," number "+number);
 
         final String custid = getIntent().getStringExtra("custid");
         final List<SecCustomers> shops = (List<SecCustomers>) getIntent().getSerializableExtra("shops");
@@ -152,6 +156,7 @@ public class SecCustomerActivity extends AppCompatActivity {
                             getString(R.string.next),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
+                                    myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
                                     Intent intent = new Intent(SecCustomerActivity.this,OrderListsActivity.class);
                                     intent.putExtra("orders", (Serializable) orders);
                                     intent.putExtra("custvatid",custvatid);
@@ -201,7 +206,7 @@ public class SecCustomerActivity extends AppCompatActivity {
                                         shopDatabase.daoShop().insertTask(order1);
                                     }
                                     List<Order> orders = shopDatabase.daoShop().getListOrder(custid);
-                                    calls.makePostUsingVolley(SecCustomerActivity.this,custid,"18",String.valueOf(orders.get(0).getOrderid()));
+                                    calls.makePostUsingVolley(SecCustomerActivity.this,custid,number,String.valueOf(orders.get(0).getOrderid()));
                                     intent.putExtra("custvatid",custvatid);
                                     intent.putExtra("custid",custid);
                                     intent.putExtra("catalogueid",custcatid);
@@ -232,7 +237,7 @@ public class SecCustomerActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                myutils.DialogBackbutton(getString(R.string.cancelorder),SecCustomerActivity.this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

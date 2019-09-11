@@ -10,15 +10,13 @@ import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -63,7 +61,7 @@ import gr.cityl.iliadis.R;
 import gr.cityl.iliadis.Services.UpdateProductDbReceiver;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,BlankFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     TextView textView,neworder,title;
     LinearLayout buttonLayout;
@@ -95,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         Intent notifyIntent = new Intent(getApplicationContext(),UpdateProductDbReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),101,notifyIntent,0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,   SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES,AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP,   System.currentTimeMillis() + AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -117,12 +115,8 @@ public class MainActivity extends AppCompatActivity
         buttonLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(MainActivity.this,NewOrderActivity.class);
-//                startActivity(intent);
-                    Fragment blancFragment = new BlankFragment();
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.frame,blancFragment).commit();
+                Intent intent = new Intent(MainActivity.this,NewOrderActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -594,9 +588,4 @@ public class MainActivity extends AppCompatActivity
                     + " ADD COLUMN commentorder TEXT");
         }
     };
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 }

@@ -54,7 +54,7 @@ public class EditProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // back button pressed
-                onBackPressed();
+                myutlis.DialogBackbutton(getString(R.string.cancelorder),EditProductActivity.this);
             }
         });
 
