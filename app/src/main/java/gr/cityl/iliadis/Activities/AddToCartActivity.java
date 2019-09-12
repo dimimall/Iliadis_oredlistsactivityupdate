@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.os.ConfigurationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Locale;
 
 import gr.cityl.iliadis.Manager.utils;
 import gr.cityl.iliadis.Models.Cart;
@@ -65,7 +67,7 @@ public class AddToCartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // back button pressed
-                myutlis.DialogBackbutton(getString(R.string.cancelorder),AddToCartActivity.this);
+                onBackPressed();
             }
         });
 
@@ -90,7 +92,7 @@ public class AddToCartActivity extends AppCompatActivity {
         shopDatabase = ShopDatabase.getInstance(this);
 
         realProdCodeText.setText(products.getProdcode()+"-"+products.getRealcode());
-        descriptionText.setText(products.getProdescription());
+        descriptionText.setText(localeChange());
         editQuantity.setText(products.getMinquantity());
         catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,products.getPriceid());
         Log.d("Dimitra","discount product "+myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1()));
@@ -210,5 +212,19 @@ public class AddToCartActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public String localeChange()
+    {
+        String str="";
+        Locale current = ConfigurationCompat.getLocales(getResources().getConfiguration()).get(0);
+        Log.d("Dimitra","current "+current);
+        if (current.equals("el_GR")){
+            str = products.getProdescription();
+        }
+        else {
+            str = products.getProdescriptionEn();
+        }
+        return str;
     }
 }

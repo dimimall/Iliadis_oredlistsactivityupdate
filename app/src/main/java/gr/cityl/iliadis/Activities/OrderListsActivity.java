@@ -158,6 +158,7 @@ public class OrderListsActivity extends AppCompatActivity {
                                     intent.putExtra("custid",custid);
                                     intent.putExtra("custvatid",custvatid);
                                     intent.putExtra("orderid",paramOrdersList.get(position).getOrderid());
+                                    Log.d("Dimitra","orderid "+paramOrdersList.get(position).getOrderid());
                                     intent.putExtra("catalogueid",custcatid);
                                     intent.putExtra("shopid",shopid);
                                     startActivity(intent);

@@ -216,7 +216,7 @@ public class NewOrderActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent intent = new Intent(this,NewOrderActivity.class);
+                Intent intent = new Intent(this,MainActivity.class);
                 startActivity(intent);
                 return true;
             default:

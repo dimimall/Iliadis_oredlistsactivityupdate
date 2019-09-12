@@ -2,6 +2,7 @@ package gr.cityl.iliadis.Activities;
 
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.os.ConfigurationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Locale;
 
 import gr.cityl.iliadis.Manager.utils;
 import gr.cityl.iliadis.Models.Cart;
@@ -94,47 +96,69 @@ public class ProductActivity extends AppCompatActivity {
                     if (barcodetext.getEditText().getText().toString().length()>=13)
                     {
                         product = iliadisDatabase.daoAccess().getProductByProdCode(barcodetext.getEditText().getText().toString());
-                        prodcart = shopDatabase.daoShop().getCartProdCode(orderid,product.getProdcode());
-                        if (prodcart == null)
-                            prodcart=" ";
-                        if (!prodcart.equals(product.getProdcode()))
+                        if (product != null)
                         {
-                            desctext.setText(product.getProdescription());
-                            Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
-                            pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
-                            balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
-                            reservedtext.setText(getString(R.string.reserved)+":"+product.getReserved());
-                            renewtext.setText(getString(R.string.renew)+":"+product.getQuantitywaiting());
-                            availabletext.setText(getString(R.string.available)+":"+product.getQuantityav());
-                            if (product.getAdate()!= null)
-                                datereceivetext.setText(getString(R.string.datedelivery)+":"+product.getAdate());
-                        }
-                        else {
-                            myutils.createDialog(getString(R.string.existproduct),ProductActivity.this);
+                            prodcart = shopDatabase.daoShop().getCartProdCode(orderid,product.getProdcode());
+                            if (prodcart == null)
+                                prodcart=" ";
+                            if (!prodcart.equals(product.getProdcode()))
+                            {
+                                desctext.setText(localeChange());
+                                Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
+                                pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
+                                balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
+                                reservedtext.setText(getString(R.string.reserved)+":"+product.getReserved());
+                                renewtext.setText(getString(R.string.renew)+":"+product.getQuantitywaiting());
+                                availabletext.setText(getString(R.string.available)+":"+product.getQuantityav());
+                                if (product.getAdate()!= null)
+                                    datereceivetext.setText(getString(R.string.datedelivery)+":"+product.getAdate());
+                            }
+                            else {
+                                myutils.createDialog(getString(R.string.existproduct),ProductActivity.this);
+                                desctext.setText(localeChange());
+                                Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
+                                pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
+                                balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
+                                reservedtext.setText(getString(R.string.reserved)+":"+product.getReserved());
+                                renewtext.setText(getString(R.string.renew)+":"+product.getQuantitywaiting());
+                                availabletext.setText(getString(R.string.available)+":"+product.getQuantityav());
+                                if (product.getAdate()!= null)
+                                    datereceivetext.setText(getString(R.string.datedelivery)+":"+product.getAdate());
+                            }
                         }
                     }
-                    else if (barcodetext.getEditText().getText().toString().length()>=5)
-                    {
+                    else if (barcodetext.getEditText().getText().toString().length()>=5) {
                         product = iliadisDatabase.daoAccess().getProductByRealCode(barcodetext.getEditText().getText().toString());
-                        realcodecart = shopDatabase.daoShop().getCartRealCode(orderid,product.getRealcode());
-                        if (realcodecart == null)
-                            realcodecart = " ";
-                        if (!realcodecart.equals(product.getRealcode()))
+                        if (product != null)
                         {
-                            desctext.setText(product.getProdescription());
-                            Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
-                            pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
-                            balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
-                            reservedtext.setText(getString(R.string.reserved)+":"+product.getReserved());
-                            renewtext.setText(getString(R.string.renew)+":"+product.getQuantitywaiting());
-                            availabletext.setText(getString(R.string.available)+":"+product.getQuantityav());
-                            if (product.getAdate()!= null)
-                                datereceivetext.setText(getString(R.string.datedelivery)+":"+product.getAdate());
+                            realcodecart = shopDatabase.daoShop().getCartRealCode(orderid,product.getRealcode());
+                            if (realcodecart == null)
+                                realcodecart = " ";
+                            if (!realcodecart.equals(product.getRealcode()))
+                            {
+                                desctext.setText(localeChange());
+                                Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
+                                pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
+                                balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
+                                reservedtext.setText(getString(R.string.reserved)+":"+product.getReserved());
+                                renewtext.setText(getString(R.string.renew)+":"+product.getQuantitywaiting());
+                                availabletext.setText(getString(R.string.available)+":"+product.getQuantityav());
+                                if (product.getAdate()!= null)
+                                    datereceivetext.setText(getString(R.string.datedelivery)+":"+product.getAdate());
+                            }
+                            else {
+                                myutils.createDialog(getString(R.string.existproduct),ProductActivity.this);
+                                desctext.setText(localeChange());
+                                Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
+                                pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
+                                balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
+                                reservedtext.setText(getString(R.string.reserved)+":"+product.getReserved());
+                                renewtext.setText(getString(R.string.renew)+":"+product.getQuantitywaiting());
+                                availabletext.setText(getString(R.string.available)+":"+product.getQuantityav());
+                                if (product.getAdate()!= null)
+                                    datereceivetext.setText(getString(R.string.datedelivery)+":"+product.getAdate());
+                            }
                         }
-                        else {
-                            myutils.createDialog(getString(R.string.existproduct),ProductActivity.this);
-                        }
-
                     }
                     return true;
                 }
@@ -198,5 +222,19 @@ public class ProductActivity extends AppCompatActivity {
         availabletext = (TextView)findViewById(R.id.textView15);
         scan = (Button)findViewById(R.id.button10);
         basket = (Button)findViewById(R.id.button11);
+    }
+
+    public String localeChange()
+    {
+        String str="";
+        Locale current = ConfigurationCompat.getLocales(getResources().getConfiguration()).get(0);
+        Log.d("Dimitra","current "+current);
+        if (current.equals("el_GR")){
+            str = product.getProdescription();
+        }
+        else {
+           str = product.getProdescriptionEn();
+        }
+        return str;
     }
 }

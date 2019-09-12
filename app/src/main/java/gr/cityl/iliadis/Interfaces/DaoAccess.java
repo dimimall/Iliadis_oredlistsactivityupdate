@@ -138,4 +138,7 @@ public interface DaoAccess {
 
     @Update
     void update(Products products);
+
+    @Update
+    void updateProductList(List<Products> products);
 }

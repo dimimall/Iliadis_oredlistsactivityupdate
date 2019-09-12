@@ -10,13 +10,10 @@ import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.v4.os.ConfigurationCompat;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -27,7 +24,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,6 +41,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import gr.cityl.iliadis.Manager.MySingleton;
 import gr.cityl.iliadis.Manager.utils;
@@ -79,13 +76,13 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         iliadisDatabase = IliadisDatabase.getInstance(this);
         shopDatabase = ShopDatabase.getInstance(this);
 
         initial();
 
         myutils = new utils();
-
 
         Room.databaseBuilder(MainActivity.this, ShopDatabase.class, ShopDatabase.DB_NAME)
                 .addMigrations(MIGRATION_2_3,MIGRATION_3_4).build();
@@ -232,14 +229,6 @@ public class MainActivity extends AppCompatActivity
         image = (ImageView)findViewById(R.id.image);
         buttonLayout = (LinearLayout)findViewById(R.id.buttonlayout);
         image.setColorFilter(Color.argb(255, 255, 255, 255));
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig)
-    {
-        title.setText(getString(R.string.home));
-        neworder.setText(getString(R.string.neworder));
-        super.onConfigurationChanged(newConfig);
     }
 
     private void loadJsonProducts() {

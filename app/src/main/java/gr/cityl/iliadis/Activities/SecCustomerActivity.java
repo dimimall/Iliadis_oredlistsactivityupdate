@@ -140,7 +140,7 @@ public class SecCustomerActivity extends AppCompatActivity {
                         shopDatabase.daoShop().insertTask(order1);
                     }
                     List<Order> orders = shopDatabase.daoShop().getListOrder(custid);
-                    calls.makePostUsingVolley(SecCustomerActivity.this,custid,"18",String.valueOf(orders.get(0).getOrderid()));
+                    calls.makePostUsingVolley(SecCustomerActivity.this,custid,number,String.valueOf(orders.get(0).getOrderid()));
                     intent.putExtra("custvatid",custvatid);
                     intent.putExtra("custid",custid);
 					intent.putExtra("catalogueid",custcatid);
@@ -156,7 +156,7 @@ public class SecCustomerActivity extends AppCompatActivity {
                             getString(R.string.next),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
+                                    calls.makePostUsingVolley(SecCustomerActivity.this,custid,number,String.valueOf(orders.get(0).getOrderid()));
                                     Intent intent = new Intent(SecCustomerActivity.this,OrderListsActivity.class);
                                     intent.putExtra("orders", (Serializable) orders);
                                     intent.putExtra("custvatid",custvatid);

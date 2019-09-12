@@ -56,9 +56,9 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textView9"
         android:layout_below="@+id/textView9"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="5dp"
         android:textColor="#000000"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:text="@string/price" />
 
@@ -69,7 +69,7 @@
         android:layout_below="@+id/textView10"
         android:textSize="20sp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="15dp"
         android:text="@string/totalrest" />
 
     <TextView
@@ -78,8 +78,8 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textView11"
         android:layout_below="@+id/textView11"
-        android:layout_marginTop="18dp"
-        android:textSize="18sp"
+        android:layout_marginTop="12dp"
+        android:textSize="20sp"
         android:text="@string/reserved" />
 
     <TextView
@@ -88,8 +88,8 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textView12"
         android:layout_below="@+id/textView12"
-        android:layout_marginTop="17dp"
-        android:textSize="18sp"
+        android:layout_marginTop="12dp"
+        android:textSize="20sp"
         android:text="@string/renew" />
 
     <TextView
@@ -98,8 +98,8 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textView13"
         android:layout_below="@+id/textView13"
-        android:layout_marginTop="12dp"
-        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
         android:text="@string/available" />
 
     <TextView
@@ -108,8 +108,8 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textView14"
         android:layout_below="@+id/textView14"
-        android:layout_marginTop="18dp"
-        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
         android:text="@string/datedelivery" />
 
     <Button

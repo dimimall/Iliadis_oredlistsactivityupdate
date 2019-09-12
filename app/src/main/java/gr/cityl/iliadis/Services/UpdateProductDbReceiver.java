@@ -99,20 +99,18 @@ public class UpdateProductDbReceiver extends BroadcastReceiver {
 
     public void updateDbProduct(List<Products> oldList, List<Products> newList)
     {
+        List<Products> products = new ArrayList<>();
+
         for (int i=0; i<oldList.size(); i++)
         {
             for (int j=0; j < newList.size(); j++)
             {
                 if (oldList.get(i).getProdcode().equals(newList.get(j).getProdcode()))
                 {
-                    Log.d("Receiver","passss111111");
-                    iliadisDatabase.daoAccess().update(newList.get(j));
+                    products.add(newList.get(j));
                 }
-//                else {
-//                    Log.d("Receiver","passss222222");
-//                    iliadisDatabase.daoAccess().insertTask(newList.get(j));
-//                }
             }
         }
+        iliadisDatabase.daoAccess().updateProductList(products);
     }
 }

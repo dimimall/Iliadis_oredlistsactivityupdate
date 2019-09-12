@@ -21,18 +21,18 @@
     <string name="searchcode">Search code</string>
     <string name="descproduct">Description product</string>
     <string name="price">Price</string>
-    <string name="totalrest">Total balance</string>
-    <string name="reserved">Reserved</string>
-    <string name="renew">Renewed</string>
-    <string name="available">Available</string>
-    <string name="datedelivery">DATE delivery</string>
+    <string name="totalrest">ON STOCK</string>
+    <string name="reserved">RESERVED</string>
+    <string name="renew">EXPECTED</string>
+    <string name="available">AVAILABLE</string>
+    <string name="datedelivery">DATE OF ARRIVAL</string>
     <string name="newscan">New scan</string>
-    <string name="basket">Busket</string>
+    <string name="basket">Basket</string>
     <string name="neworder">New order</string>
     <string name="initial">Home</string>
     <string name="product">Product</string>
     <string name="comment">Comment</string>
-    <string name="addtobusket">Add to busket&lt;and continue</string>
+    <string name="addtobusket">Add to busket\nand continue</string>
     <string name="printorder">Print order</string>
     <string name="reprintagain">Reprint order</string>
     <string name="pendingorders">Pending orders</string>
@@ -41,7 +41,8 @@
     <string name="delete">Delete</string>
     <string name="editproduct">Edit</string>
     <string name="noshops">There are not shops</string>
-    <string name="qty">Quantity</string>
+    <string name="qty">QUANTITY</string>
+    <string name="cancelorder">Do you want to stop ordering?</string>
     <string name="havependingorder">You have pending orders</string>
     <string name="qtysmaller">Quantity is smaler than default</string>
     <string name="noproducts">There are not products</string>
@@ -60,7 +61,7 @@
     <string name="downloadfilecatalogue">Download file catalogue.. Please wait...</string>
     <string name="downloadfilevat">Download file VAT.. Please wait...</string>
     <string name="downloadfilecountry">Download file countries.. Please wait...</string>
-    <string name="updatecart">Update&lt;product</string>
+    <string name="updatecart">Update\nproduct</string>
     <string name="existproduct">This product exist in cart</string>
     <string name="title_activity_basic">BasicActivity</string>
 

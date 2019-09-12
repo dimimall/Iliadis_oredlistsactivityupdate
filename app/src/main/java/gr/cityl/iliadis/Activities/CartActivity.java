@@ -121,7 +121,14 @@ public class CartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // back button pressed
-                myutils.DialogBackbutton(getString(R.string.cancelorder),CartActivity.this);
+                //myutils.DialogBackbutton(getString(R.string.cancelorder),CartActivity.this);
+                Intent intent = new Intent(CartActivity.this,ProductActivity.class);
+                intent.putExtra("shopid",shopId);
+                intent.putExtra("custvatid",custvatid);
+                intent.putExtra("custid",custid);
+                intent.putExtra("catalogueid",custcatid);
+                intent.putExtra("orderid",shopDatabase.daoShop().getOrder(custid).getOrderid());
+                startActivity(intent);
             }
         });
 

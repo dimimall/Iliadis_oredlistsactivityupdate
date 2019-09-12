@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
@@ -75,6 +76,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import gr.cityl.iliadis.Activities.MainActivity;
 import gr.cityl.iliadis.Models.Cart;
 import gr.cityl.iliadis.Models.Catalog;
 import gr.cityl.iliadis.Models.Customers;
@@ -463,10 +465,10 @@ public class utils {
         sum_table.addCell(s1);
         //sum_table.addCell("" + new DecimalFormat("##.##").format(priceSum));
 
-        PdfPCell s2 = new PdfPCell(new Phrase("ΕΚΠΤΩΣΗ: " + new DecimalFormat("##.##").format(sPriceSum-priceSum) + "€",urFontName));
-        s2.setBorder(Rectangle.NO_BORDER);
-        s2.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        sum_table.addCell(s2);
+//        PdfPCell s2 = new PdfPCell(new Phrase("ΕΚΠΤΩΣΗ: " + new DecimalFormat("##.##").format(sPriceSum-priceSum) + "€",urFontName));
+//        s2.setBorder(Rectangle.NO_BORDER);
+//        s2.setHorizontalAlignment(Element.ALIGN_RIGHT);
+//        sum_table.addCell(s2);
         //sum_table.addCell("" + new DecimalFormat("##.##").format((priceSum - sPriceSum)));
 
         PdfPCell s3 = new PdfPCell(new Phrase("ΠΟΣΟ ΜΕ ΕΚΠΤΩΣΗ: " + new DecimalFormat("##.##").format(priceSum) + "€",urFontName));
@@ -733,10 +735,10 @@ public class utils {
         sum_table.addCell(s1);
         //sum_table.addCell("" + new DecimalFormat("##.##").format(priceSum));
 
-        PdfPCell s2 = new PdfPCell(new Phrase("DISCOUNT: " + new DecimalFormat("##.##").format(sPriceSum-priceSum) + "€",urFontName));
-        s2.setBorder(Rectangle.NO_BORDER);
-        s2.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        sum_table.addCell(s2);
+//        PdfPCell s2 = new PdfPCell(new Phrase("DISCOUNT: " + new DecimalFormat("##.##").format(sPriceSum-priceSum) + "€",urFontName));
+//        s2.setBorder(Rectangle.NO_BORDER);
+//        s2.setHorizontalAlignment(Element.ALIGN_RIGHT);
+//        sum_table.addCell(s2);
         //sum_table.addCell("" + new DecimalFormat("##.##").format((priceSum - sPriceSum)));
 
         PdfPCell s3 = new PdfPCell(new Phrase("PRICE WITH DISCOUNT: " + new DecimalFormat("##.##").format(priceSum) + "€",urFontName));
@@ -745,10 +747,10 @@ public class utils {
         sum_table.addCell(s3);
         //sum_table.addCell("" + new DecimalFormat("##.##").format(sPriceSum));
 
-        PdfPCell s4 = new PdfPCell(new Phrase("COST VAT.: " + new DecimalFormat("##.##").format(vTotal) + "€",urFontName));
-        s4.setBorder(Rectangle.NO_BORDER);
-        s4.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        sum_table.addCell(s4);
+//        PdfPCell s4 = new PdfPCell(new Phrase("COST VAT.: " + new DecimalFormat("##.##").format(vTotal) + "€",urFontName));
+//        s4.setBorder(Rectangle.NO_BORDER);
+//        s4.setHorizontalAlignment(Element.ALIGN_RIGHT);
+//        sum_table.addCell(s4);
 
         PdfPCell s5 = new PdfPCell(new Phrase("TOTAL PRICE: " + new DecimalFormat("##.##").format((priceSum + vTotal)) + "€",urFontName));
         s5.setBorder(Rectangle.NO_BORDER);
@@ -801,7 +803,7 @@ public class utils {
         try {
             FileInputStream fileInputStream = new FileInputStream(pdffile.getAbsolutePath());
             is =fileInputStream;
-            clientSocket = new Socket("192.168.1.3", 9100);
+            clientSocket = new Socket(ipprinter, 9100);
             outToServer = new DataOutputStream(clientSocket.getOutputStream());
             int i;
             while ((i=is.read()) !=-1){
@@ -861,4 +863,37 @@ public class utils {
         alertDialog.show();
     }
 
+    public void DialogBackbutton(String message, final Context context)
+    {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+
+        // set title
+        alertDialogBuilder.setTitle("");
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, close
+                        // current activity
+                        Intent intent = new Intent(context, MainActivity.class);
+                        context.startActivity(intent);
+                    }
+                })
+                .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, close
+                        // current activity
+                        dialog.cancel();
+                    }
+                });
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+    }
 }

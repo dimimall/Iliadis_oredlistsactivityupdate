@@ -33,7 +33,6 @@ import gr.cityl.iliadis.R;
 
 public class ReloadDbsActivity extends AppCompatActivity {
 
-    Button reloadProd;
     Button product;
     Button customer;
     Button shop;
@@ -148,7 +147,6 @@ public class ReloadDbsActivity extends AppCompatActivity {
 
     public void init()
     {
-        reloadProd = (Button)findViewById(R.id.button2);
         product = (Button)findViewById(R.id.button3);
         customer = (Button)findViewById(R.id.button4);
         shop = (Button)findViewById(R.id.button5);
