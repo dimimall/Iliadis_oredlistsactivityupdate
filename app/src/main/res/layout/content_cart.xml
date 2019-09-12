@@ -46,20 +46,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:text="Subtotal"/>
+                android:text="@string/subtotal"/>
             <TextView
                 android:id="@+id/textView25"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:text="VAT"/>
+                android:text="@string/fpa"/>
             <TextView
                 android:id="@+id/textView26"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textColor="#fff"
-                android:text="Grand Total"/>
+                android:text="@string/totalammount"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"

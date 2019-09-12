@@ -37,7 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        getSupportActionBar().setTitle(getString(R.string.action_settings));
+        //getSupportActionBar().setTitle(getString(R.string.action_settings));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         init();
@@ -182,6 +182,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig)
     {
+        getSupportActionBar().setTitle(getString(R.string.action_settings));
         language.setText(getString(R.string.language));
         print.setText(getString(R.string.print));
         salesmam.setText(getString(R.string.numsales));

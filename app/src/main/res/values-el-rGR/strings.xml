@@ -64,4 +64,9 @@
     <string name="downloadfilecountry">Κατέβασμα αρχείου χωρών.. Παρακαλώ περιμένετε...</string>
     <string name="updatecart">Ενημέρωση\nπροϊόντος</string>
     <string name="existproduct">Το προϊόν υπάρχει στο καλάθι</string>
+    <string name="reload_database">Βάσεις Δεδομένων</string>
+    <string name="scanview">Σκανάρισμα</string>
+    <string name="subtotal">Αξία</string>
+    <string name="fpa">ΦΠΑ</string>
+    <string name="totalammount">Συνολική Αξία</string>
 </resources>

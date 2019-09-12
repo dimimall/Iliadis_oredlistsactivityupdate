@@ -111,7 +111,6 @@ public class CartActivity extends AppCompatActivity {
         number = myutils.sharedpreferences.getString("numsale", "");
         ipprintpref = myutils.sharedpreferences.getString("ipprint", "");
 
-        Log.d("Dimitra","printer "+ipprintpref);
 
         isReadStoragePermissionGranted();
         isWriteStoragePermissionGranted();

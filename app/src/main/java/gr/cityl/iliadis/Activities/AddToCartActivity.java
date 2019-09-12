@@ -1,6 +1,7 @@
 package gr.cityl.iliadis.Activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
@@ -47,8 +48,8 @@ public class AddToCartActivity extends AppCompatActivity {
     private List<Cart> carts;
     private double totalprice;
     private utils myutlis = new utils();
-    private String comment=" ";
-
+    private String comment="";
+    private boolean lang ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,13 +92,17 @@ public class AddToCartActivity extends AppCompatActivity {
         iliadisDatabase = IliadisDatabase.getInstance(this);
         shopDatabase = ShopDatabase.getInstance(this);
 
+        myutlis.sharedpreferences = getSharedPreferences(myutlis.MyPREFERENCES, Context.MODE_PRIVATE);
+        lang = myutlis.sharedpreferences.getBoolean("language",false);
+
         realProdCodeText.setText(products.getProdcode()+"-"+products.getRealcode());
-        descriptionText.setText(localeChange());
+        descriptionText.setText(localeChange(products.getProdescriptionEn(),products.getProdescription()));
         editQuantity.setText(products.getMinquantity());
         catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,products.getPriceid());
         Log.d("Dimitra","discount product "+myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1()));
         totalprice = Integer.parseInt(products.getMinimumstep()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
         priceText.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(totalprice));
+
 
         editQuantity.setOnKeyListener(new View.OnKeyListener() {
 
@@ -214,16 +219,16 @@ public class AddToCartActivity extends AppCompatActivity {
         }
     }
 
-    public String localeChange()
+    public String localeChange(String producten,String productgr)
     {
         String str="";
-        Locale current = ConfigurationCompat.getLocales(getResources().getConfiguration()).get(0);
-        Log.d("Dimitra","current "+current);
-        if (current.equals("el_GR")){
-            str = products.getProdescription();
+
+        if (lang == true ){
+            str = producten;
         }
-        else {
-            str = products.getProdescriptionEn();
+        else if (lang == false){
+
+            str = productgr;
         }
         return str;
     }

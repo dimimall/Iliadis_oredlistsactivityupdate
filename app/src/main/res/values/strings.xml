@@ -32,7 +32,7 @@
     <string name="initial">Home</string>
     <string name="product">Product</string>
     <string name="comment">Comment</string>
-    <string name="addtobusket">Add to busket\nand continue</string>
+    <string name="addtobusket">Add to basket\nand continue</string>
     <string name="printorder">Print order</string>
     <string name="reprintagain">Reprint order</string>
     <string name="pendingorders">Pending orders</string>
@@ -64,7 +64,11 @@
     <string name="updatecart">Update\nproduct</string>
     <string name="existproduct">This product exist in cart</string>
     <string name="title_activity_basic">BasicActivity</string>
-
+    <string name="reload_database">Databases</string>
+    <string name="scanview">Scan View</string>
+    <string name="subtotal">Order</string>
+    <string name="fpa">VAT</string>
+    <string name="totalammount">Total Amount</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -3,5 +3,5 @@
 
     <item
         android:id="@+id/menu1"
-        android:title="Εκτύπωση" />
+        android:title="@string/print" />
 </menu>

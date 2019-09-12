@@ -1,5 +1,6 @@
 package gr.cityl.iliadis.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.os.ConfigurationCompat;
@@ -42,6 +43,9 @@ public class ProductActivity extends AppCompatActivity {
     utils myutils;
     String realcodecart="";
     String prodcart="";
+    private boolean lang ;
+    private int orderid=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +71,12 @@ public class ProductActivity extends AppCompatActivity {
         final String custvatid = getIntent().getStringExtra("custvatid");
         final String shopid = getIntent().getStringExtra("shopid");
         final int custcatid = getIntent().getIntExtra("catalogueid",0);
-        final int orderid = getIntent().getExtras().getInt("orderid");
+        //orderid = getIntent().getExtras().getInt("orderid");
+
+
+        myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
+        lang = myutils.sharedpreferences.getBoolean("language",false);
+
 
         cartbutton = (ImageView) toolbar.findViewById(R.id.basket);
         cartbutton.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +112,7 @@ public class ProductActivity extends AppCompatActivity {
                                 prodcart=" ";
                             if (!prodcart.equals(product.getProdcode()))
                             {
-                                desctext.setText(localeChange());
+                                desctext.setText(localeChange(product.getProdescriptionEn(),product.getProdescription()));
                                 Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
                                 pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
                                 balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
@@ -115,7 +124,7 @@ public class ProductActivity extends AppCompatActivity {
                             }
                             else {
                                 myutils.createDialog(getString(R.string.existproduct),ProductActivity.this);
-                                desctext.setText(localeChange());
+                                desctext.setText(localeChange(product.getProdescriptionEn(),product.getProdescription()));
                                 Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
                                 pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
                                 balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
@@ -136,7 +145,7 @@ public class ProductActivity extends AppCompatActivity {
                                 realcodecart = " ";
                             if (!realcodecart.equals(product.getRealcode()))
                             {
-                                desctext.setText(localeChange());
+                                desctext.setText(localeChange(product.getProdescriptionEn(),product.getProdescription()));
                                 Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
                                 pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
                                 balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
@@ -148,7 +157,7 @@ public class ProductActivity extends AppCompatActivity {
                             }
                             else {
                                 myutils.createDialog(getString(R.string.existproduct),ProductActivity.this);
-                                desctext.setText(localeChange());
+                                desctext.setText(localeChange(product.getProdescriptionEn(),product.getProdescription()));
                                 Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
                                 pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
                                 balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
@@ -170,6 +179,7 @@ public class ProductActivity extends AppCompatActivity {
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                barcodetext.requestFocus();
                 desctext.setText("");
                 pricetext.setText(getString(R.string.price)+":");
                 balancetext.setText(getString(R.string.totalrest)+":");
@@ -224,16 +234,15 @@ public class ProductActivity extends AppCompatActivity {
         basket = (Button)findViewById(R.id.button11);
     }
 
-    public String localeChange()
+    public String localeChange(String producten,String productgr)
     {
         String str="";
-        Locale current = ConfigurationCompat.getLocales(getResources().getConfiguration()).get(0);
-        Log.d("Dimitra","current "+current);
-        if (current.equals("el_GR")){
-            str = product.getProdescription();
+
+        if (lang == true ){
+            str = producten;
         }
-        else {
-           str = product.getProdescriptionEn();
+        else if (lang == false){
+           str = productgr;
         }
         return str;
     }

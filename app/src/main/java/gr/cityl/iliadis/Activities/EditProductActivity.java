@@ -1,6 +1,7 @@
 package gr.cityl.iliadis.Activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
@@ -42,21 +43,15 @@ public class EditProductActivity extends AppCompatActivity {
     private double totalprice;
     private utils myutlis = new utils();
     private String comment="";
-
+    private boolean lang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_product);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // back button pressed
-                myutlis.DialogBackbutton(getString(R.string.cancelorder),EditProductActivity.this);
-            }
-        });
+        myutlis.sharedpreferences = getSharedPreferences(myutlis.MyPREFERENCES, Context.MODE_PRIVATE);
+        lang = myutlis.sharedpreferences.getBoolean("language",false);
 
         final String custid = getIntent().getExtras().getString("custid");
         final String custvatid = getIntent().getExtras().getString("custvatid");
@@ -64,6 +59,15 @@ public class EditProductActivity extends AppCompatActivity {
         final int custcatid = getIntent().getExtras().getInt("catalogueid");
         final int orderid = getIntent().getExtras().getInt("orderid");
         cart = (Cart) getIntent().getExtras().getSerializable("cart");
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // back button pressed
+                onBackPressed();
+            }
+        });
 
 
         basket = (ImageView)toolbar.findViewById(R.id.basket);
@@ -88,7 +92,8 @@ public class EditProductActivity extends AppCompatActivity {
         shopDatabase = ShopDatabase.getInstance(this);
 
         realProdCodeText.setText(cart.getProdcode()+"-"+cart.getRealcode());
-        descriptionText.setText(cart.getDescription());
+
+        descriptionText.setText(localeChange(iliadisDatabase.daoAccess().getProductByRealCode(cart.getRealcode()).getProdescriptionEn(),iliadisDatabase.daoAccess().getProductByRealCode(cart.getRealcode()).getProdescription()));
         editQuantity.setText(""+cart.getQuantity());
         catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,cart.getDiscountid());
         totalprice = cart.getQuantity() * myutlis.getProductPrice(Double.parseDouble(cart.getPriceid().replace(",",".")),catalog.getDiscount1());
@@ -162,6 +167,7 @@ public class EditProductActivity extends AppCompatActivity {
             public void onClick(View view) {
                 shopDatabase.daoShop().deleteCart(cart);
                 Cart updatecart = new Cart(cart.getOrderid(),cart.getRealcode(),cart.getProdcode(),String.valueOf(totalprice),comment,cart.getDescription(),Integer.parseInt(editQuantity.getText().toString()),cart.getVatcode(),cart.getPriceid(),cart.getDiscountid());
+
                 //shopDatabase.daoShop().updateCart2(comment,String.valueOf(totalprice),Integer.parseInt(editQuantity.getText().toString()),cart.getCartid(),cart.getOrderid());
                 shopDatabase.daoShop().insertTask(updatecart);
                 Intent intent = new Intent(EditProductActivity.this,ProductActivity.class);
@@ -185,5 +191,18 @@ public class EditProductActivity extends AppCompatActivity {
         editQuantity = (EditText)findViewById(R.id.editText4);
         submit = (Button)findViewById(R.id.button12);
         scan = (Button)findViewById(R.id.button13);
+    }
+    public String localeChange(String producten,String productgr)
+    {
+        String str="";
+
+        if (lang == true ){
+            str = producten;
+        }
+        else if (lang == false){
+
+            str = productgr;
+        }
+        return str;
     }
 }
