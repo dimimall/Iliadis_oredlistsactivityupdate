@@ -11,12 +11,22 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutput;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,5 +87,47 @@ public class Calls {
         };
         // Adding request to request queue
         MySingleton.getInstance(context).addToRequestQueue(req);
+    }
+
+    public void sendCsvFiles(File file,File fileDir){
+
+        String url = "https://pod.iliadis.com.gr/UploadFile.php";
+        File filecsv = new File(fileDir,file.getName());
+        if(filecsv.exists()) {
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppost = new HttpPost(url);
+
+                try {
+                    FileBody bin = new FileBody(filecsv);
+                    //MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+                    MultipartEntity reqEntity = new MultipartEntity();
+                    reqEntity.addPart("order", bin);
+                    httppost.setEntity(reqEntity);
+
+                    System.out.println("Requesting : " + httppost.getRequestLine());
+                    ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                    String responseBody = httpclient.execute(httppost, responseHandler);
+
+                    System.out.println("responseBody : " + responseBody);
+
+                    JSONArray array = new JSONArray(responseBody);
+                    JSONObject object = array.getJSONObject(0);
+                    String success = object.getString("result");
+
+                } catch (UnsupportedEncodingException e) {
+                    Log.e("Error",e.getLocalizedMessage());
+                } catch (ClientProtocolException e) {
+                    Log.e("Error",e.getLocalizedMessage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    httpclient.getConnectionManager().shutdown();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

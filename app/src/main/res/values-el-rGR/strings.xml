@@ -33,7 +33,7 @@
     <string name="initial">Αρχική</string>
     <string name="product">Προϊόν</string>
     <string name="comment">Σχόλιο</string>
-    <string name="cancelorder">Θέλετε να διακοπέι η παραγγελία?</string>
+    <string name="cancelorder">Θέλετε να διακοπεί η παραγγελία?</string>
     <string name="addtobusket">Προσθήκη στο καλάθι\nκαι συνέχεια</string>
     <string name="printorder">Εκτύπωση Παραγγελίας</string>
     <string name="reprintagain">Επανέκτυπωση Παραγγελίας</string>
@@ -69,4 +69,6 @@
     <string name="subtotal">Αξία</string>
     <string name="fpa">ΦΠΑ</string>
     <string name="totalammount">Συνολική Αξία</string>
+    <string name="biggestquantity">Η ποσότητα είναι μεγαλύτερη των διαθέσιμων προϊόντων</string>
+    <string name="csvfiles">Ενημέρωση παραγγελιών στο ΚΕΦ.</string>
 </resources>

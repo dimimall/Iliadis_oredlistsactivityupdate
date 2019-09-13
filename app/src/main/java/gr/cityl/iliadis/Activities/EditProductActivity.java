@@ -130,6 +130,27 @@ public class EditProductActivity extends AppCompatActivity {
                         // show it
                         alertDialog.show();
                     }
+                    else if (Integer.parseInt(editQuantity.getText().toString()) > Integer.parseInt(iliadisDatabase.daoAccess().getProductByProdCode(cart.getProdcode()).getQuantityav()))
+                    {
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                EditProductActivity.this);
+                        // set title
+                        alertDialogBuilder.setTitle("");
+                        // set dialog message
+                        alertDialogBuilder
+                                .setMessage(getString(R.string.biggestquantity))
+                                .setCancelable(false)
+                                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        editQuantity.setText(iliadisDatabase.daoAccess().getProductByProdCode(cart.getProdcode()).getMinquantity());
+                                        dialog.cancel();
+                                    }
+                                });
+                        // create alert dialog
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        // show it
+                        alertDialog.show();
+                    }
                     else if (Integer.parseInt(editQuantity.getText().toString()) == Integer.parseInt(iliadisDatabase.daoAccess().getProductQuantity(cart.getProdcode())))
                     {
                         totalprice = Integer.parseInt(editQuantity.getText().toString()) * myutlis.getProductPrice(Double.parseDouble(cart.getPriceid().replace(",",".")),catalog.getDiscount1());

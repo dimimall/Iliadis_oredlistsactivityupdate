@@ -72,6 +72,7 @@ import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -155,6 +156,7 @@ public class CartActivity extends AppCompatActivity {
             shopId="0";
         custvatid = getIntent().getExtras().getString("custvatid");
         cartsList = (List<Cart>) getIntent().getExtras().getSerializable("cart");
+
         custcatid = getIntent().getExtras().getInt("catalogueid");
         carts.addAll(cartsList);
 

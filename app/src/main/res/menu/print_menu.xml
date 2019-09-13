@@ -3,5 +3,5 @@
 
     <item
         android:id="@+id/menu1"
-        android:title="@string/print" />
+        android:title="@string/printorder" />
 </menu>

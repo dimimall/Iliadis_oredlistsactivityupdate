@@ -99,7 +99,6 @@ public class AddToCartActivity extends AppCompatActivity {
         descriptionText.setText(localeChange(products.getProdescriptionEn(),products.getProdescription()));
         editQuantity.setText(products.getMinquantity());
         catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,products.getPriceid());
-        Log.d("Dimitra","discount product "+myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1()));
         totalprice = Integer.parseInt(products.getMinimumstep()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
         priceText.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(totalprice));
 
@@ -122,6 +121,27 @@ public class AddToCartActivity extends AppCompatActivity {
                         // set dialog message
                         alertDialogBuilder
                                 .setMessage(getString(R.string.qtysmaller))
+                                .setCancelable(false)
+                                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        editQuantity.setText(products.getMinimumstep());
+                                        dialog.cancel();
+                                    }
+                                });
+                        // create alert dialog
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        // show it
+                        alertDialog.show();
+                    }
+                    else if (Integer.parseInt(editQuantity.getText().toString()) > Integer.parseInt(products.getQuantityav()))
+                    {
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                AddToCartActivity.this);
+                        // set title
+                        alertDialogBuilder.setTitle("");
+                        // set dialog message
+                        alertDialogBuilder
+                                .setMessage(getString(R.string.biggestquantity))
                                 .setCancelable(false)
                                 .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {

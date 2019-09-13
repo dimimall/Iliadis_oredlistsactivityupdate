@@ -15,7 +15,7 @@ import gr.cityl.iliadis.Interfaces.DaoAccess;
 @Database(entities = {Products.class,Customers.class,Catalog.class,FPA.class,SecCustomers.class,Country.class}, version = 2, exportSchema = false)
 public abstract class IliadisDatabase extends RoomDatabase {
 
-    private static final String DB_NAME="Iliadis_DB";
+    public static final String DB_NAME="Iliadis_DB";
     private static IliadisDatabase instance;
 
     public static synchronized IliadisDatabase getInstance(Context context){

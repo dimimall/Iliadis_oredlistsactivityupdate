@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gr.cityl.iliadis.Activities.MainActivity;
+import gr.cityl.iliadis.Activities.ProductActivity;
 import gr.cityl.iliadis.Manager.MySingleton;
 import gr.cityl.iliadis.Models.IliadisDatabase;
 import gr.cityl.iliadis.Models.Products;
@@ -45,6 +46,7 @@ public class UpdateProductDbReceiver extends BroadcastReceiver {
     public void updateNewProductsDb(final Context context) {
         iliadisDatabase = IliadisDatabase.getInstance(context);
         final List<Products> products = iliadisDatabase.daoAccess().getProductsList();
+        Log.d("Dimitra", "products size "+products.size());
         final List<Products> products1 = new ArrayList<>();
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, "https://pod.iliadis.com.gr/getproductsupdate.asp", null, new Response.Listener<JSONArray>() {
@@ -73,8 +75,9 @@ public class UpdateProductDbReceiver extends BroadcastReceiver {
                                 product.setMinimumstep(response.getString("minimumstep"));
                                 product.setMinquantity(response.getString("minquantity"));
                                 products1.add(product);
+
                             }
-                            if (products.size() > 0)
+                            if (products1.size() > 0)
                             {
                                 updateDbProduct(products,products1);
                             }
@@ -108,9 +111,29 @@ public class UpdateProductDbReceiver extends BroadcastReceiver {
                 if (oldList.get(i).getProdcode().equals(newList.get(j).getProdcode()))
                 {
                     products.add(newList.get(j));
+                    Products products1 = new Products();
+                    products1.setId(oldList.get(i).getId());
+                    products1.setProdcode(newList.get(j).getProdcode());
+                    products1.setRealcode(newList.get(j).getRealcode());
+                    products1.setProdescription(newList.get(j).getProdescription());
+                    products1.setProdescriptionEn(newList.get(j).getProdescriptionEn());
+                    products1.setVatcode(newList.get(j).getVatcode());
+                    products1.setPriceid(newList.get(j).getPriceid());
+                    products1.setPrice(newList.get(j).getPrice());
+                    products1.setSpecialprice(newList.get(j).getSpecialprice());
+                    products1.setQuantityap(newList.get(j).getQuantityap());
+                    products1.setQuantityav(newList.get(j).getQuantityav());
+                    products1.setQuantitytotal(newList.get(j).getQuantitytotal());
+                    products1.setReserved(newList.get(j).getReserved());
+                    products1.setQuantitywaiting(newList.get(j).getQuantitywaiting());
+                    products1.setAdate(newList.get(j).getAdate());
+                    products1.setMinimumstep(newList.get(j).getMinimumstep());
+                    products1.setMinquantity(newList.get(j).getMinquantity());
+
+                    Log.d("Dimitra"," "+newList.get(j).getProdescription()+" id"+newList.get(j));
+                    iliadisDatabase.daoAccess().update(products1);
                 }
             }
         }
-        iliadisDatabase.daoAccess().updateProductList(products);
     }
 }

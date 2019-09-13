@@ -130,7 +130,7 @@ public class utils {
                 e.printStackTrace();
             }
         }
-        File txtfile = new File(fileDir,"order_iliadis.txt");
+        File txtfile = new File(fileDir,orderid+".txt");
         if(!txtfile.exists()) {
             try {
                 txtfile.createNewFile();
@@ -199,7 +199,7 @@ public class utils {
         String success="";
 
         String url = "https://pod.iliadis.com.gr/UploadFile.php";
-        File filecsv = new File(fileDir,"order_iliadis.txt");
+        File filecsv = new File(fileDir,orderid+".txt");
         if(filecsv.exists()) {
             try {
                 HttpClient httpclient = new DefaultHttpClient();
@@ -284,7 +284,7 @@ public class utils {
             e.printStackTrace();
         }
 
-        Font urFontName = new Font(bfTimes, 8, Font.BOLD);
+        Font urFontName = new Font(bfTimes, 8, Font.NORMAL);
         Font titlefont = new Font(bfTimes,18, Font.BOLD, BaseColor.WHITE);
 
         PdfPTable del_table = new PdfPTable(3);
@@ -559,7 +559,7 @@ public class utils {
             e.printStackTrace();
         }
 
-        Font urFontName = new Font(bfTimes, 8, Font.BOLD);
+        Font urFontName = new Font(bfTimes, 8, Font.NORMAL);
         Font titlefont = new Font(bfTimes,18, Font.BOLD, BaseColor.WHITE);
 
         PdfPTable del_table = new PdfPTable(3);

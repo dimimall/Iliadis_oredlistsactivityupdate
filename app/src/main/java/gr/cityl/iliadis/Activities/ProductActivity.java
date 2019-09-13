@@ -71,7 +71,7 @@ public class ProductActivity extends AppCompatActivity {
         final String custvatid = getIntent().getStringExtra("custvatid");
         final String shopid = getIntent().getStringExtra("shopid");
         final int custcatid = getIntent().getIntExtra("catalogueid",0);
-        //orderid = getIntent().getExtras().getInt("orderid");
+        orderid = getIntent().getExtras().getInt("orderid");
 
 
         myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
@@ -196,14 +196,17 @@ public class ProductActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!barcodetext.getEditText().getText().toString().equals("") && product != null)
                 {
-                    Intent intent = new Intent(ProductActivity.this,AddToCartActivity.class);
-                    intent.putExtra("prodcode", (Serializable) product);
-                    intent.putExtra("custid",custid);
-                    intent.putExtra("custvatid",custvatid);
-                    intent.putExtra("shopid",shopid);
-                    intent.putExtra("orderid",orderid);
-                    intent.putExtra("catalogueid",custcatid);
-                    startActivity(intent);
+                    if (Integer.parseInt(product.getQuantityav()) > 0)
+                    {
+                        Intent intent = new Intent(ProductActivity.this,AddToCartActivity.class);
+                        intent.putExtra("prodcode", (Serializable) product);
+                        intent.putExtra("custid",custid);
+                        intent.putExtra("custvatid",custvatid);
+                        intent.putExtra("shopid",shopid);
+                        intent.putExtra("orderid",orderid);
+                        intent.putExtra("catalogueid",custcatid);
+                        startActivity(intent);
+                    }
                 }
             }
         });

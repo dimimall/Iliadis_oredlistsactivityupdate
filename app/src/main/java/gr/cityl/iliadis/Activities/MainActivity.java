@@ -12,8 +12,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.os.ConfigurationCompat;
+import android.telecom.Call;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -38,11 +40,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import gr.cityl.iliadis.Manager.Calls;
 import gr.cityl.iliadis.Manager.MySingleton;
 import gr.cityl.iliadis.Manager.utils;
 import gr.cityl.iliadis.Models.Catalog;
@@ -68,6 +73,7 @@ public class MainActivity extends AppCompatActivity
     ShopDatabase shopDatabase;
     utils myutils;
     Toolbar toolbar;
+    Calls calls;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,14 +89,20 @@ public class MainActivity extends AppCompatActivity
         initial();
 
         myutils = new utils();
+        calls = new Calls();
+
 
         Room.databaseBuilder(MainActivity.this, ShopDatabase.class, ShopDatabase.DB_NAME)
                 .addMigrations(MIGRATION_2_3,MIGRATION_3_4).build();
 
+        Room.databaseBuilder(MainActivity.this, IliadisDatabase.class, IliadisDatabase.DB_NAME)
+                .addMigrations(MIGRATION_1_2_product,MIGRATION_2_3_product).build();
+
+
         Intent notifyIntent = new Intent(getApplicationContext(),UpdateProductDbReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),101,notifyIntent,0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP,   System.currentTimeMillis() + AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,   System.currentTimeMillis() + AlarmManager.INTERVAL_FIFTEEN_MINUTES, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -139,28 +151,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -207,6 +197,23 @@ public class MainActivity extends AppCompatActivity
         else if (id == R.id.nav_settings) {
             Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
             startActivity(intent);
+        }
+        else if (id == R.id.nav_send_csv) {
+            List<Integer> orders = shopDatabase.daoShop().getListOrderCsv();
+            item.setTitle(getString(R.string.csvfiles)+" "+orders.size());
+            String path = Environment.getExternalStorageDirectory().toString()+"/Csv File";
+            File directory = new File(path);
+            File[] files = directory.listFiles();
+            if (files != null)
+            {
+                for (int i=0; i<files.length; i++)
+                {
+                    if (String.valueOf(orders.get(i)).equals(files[i].getName()))
+                    {
+                        calls.sendCsvFiles(directory,files[i]);
+                    }
+                }
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -576,6 +583,22 @@ public class MainActivity extends AppCompatActivity
 
             database.execSQL("ALTER TABLE order "
                     + " ADD COLUMN commentorder TEXT");
+        }
+    };
+
+    static final Migration MIGRATION_1_2_product = new Migration(1, 2) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE product (id INTEGER primary key autoincrement NOT NULL,  "
+                    +"prodcode TEXT, "+ "realcode TEXT, "+"prodescription TEXT, "+"prodescriptionen TEXT, "+"vatcode TEXT, "+"priceid TEXT, "+"price TEXT, "+"specialprice TEXT, "+"reserved TEXT, "+"adate TEXT, "+"minimumstep TEXT, "+"minquantity TEXT, "+"quantityap TEXT, "+"quantityav TEXT, "+"quantitytotal TEXT, "+"quantitywaiting TEXT)");
+        }
+    };
+    //Add column
+    static final Migration MIGRATION_2_3_product = new Migration(2, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE product "
+                    + " ADD COLUMN id primary key autoincrement NOT NULL");
         }
     };
 }
