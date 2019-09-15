@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.arch.persistence.db.SupportSQLiteDatabase;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
@@ -42,8 +43,10 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -112,6 +115,13 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // get menu from navigationView
+        Menu menu = navigationView.getMenu();
+        // find MenuItem you want to change
+        MenuItem nav_camara = menu.findItem(R.id.nav_send_csv);
+        // set new title to the MenuItem
+        nav_camara.setTitle(getString(R.string.csvfiles)+" "+shopDatabase.daoShop().getListOrderCsv().size());
 
         if (utils.isConnectedToNetwork(getApplicationContext()))
         {
@@ -199,18 +209,39 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         }
         else if (id == R.id.nav_send_csv) {
-            List<Integer> orders = shopDatabase.daoShop().getListOrderCsv();
-            item.setTitle(getString(R.string.csvfiles)+" "+orders.size());
+            List<Order> orders = shopDatabase.daoShop().getListOrderCsv();
             String path = Environment.getExternalStorageDirectory().toString()+"/Csv File";
             File directory = new File(path);
             File[] files = directory.listFiles();
+
             if (files != null)
             {
-                for (int i=0; i<files.length; i++)
+                for (int i=0; i<orders.size(); i++)
                 {
-                    if (String.valueOf(orders.get(i)).equals(files[i].getName()))
+                    for (int j=0; j<files.length; j++)
                     {
-                        calls.sendCsvFiles(directory,files[i]);
+                        if (String.valueOf(orders.get(i).getOrderid()).equals(files[j].getName().substring(0,files[j].getName().indexOf("."))))
+                        {
+                            String result = calls.sendCsvFiles(files[j],directory);
+                            if (result.equals("success"))
+                            {
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss ");
+                                String currentDateandTime = sdf.format(new Date());
+                                Order order = new Order();
+                                order.setOrderid(orders.get(i).getOrderid());
+                                order.setCustid(custid);
+                                order.setStatus(2);
+                                order.setDateparsed(currentDateandTime);
+                                order.setShopid(shopid);
+                                order.setCommentorder(orders.get(i).getCommentorder());
+                                shopDatabase.daoShop().updateOrder(order);
+                                Toast.makeText(MainActivity.this, getString(R.string.sendfilecsv), Toast.LENGTH_LONG).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(MainActivity.this, getString(R.string.nosendfilecsv), Toast.LENGTH_LONG).show();
+                            }
+                        }
                     }
                 }
             }
@@ -224,8 +255,6 @@ public class MainActivity extends AppCompatActivity
     public void quit() {
         Intent start = new Intent(Intent.ACTION_MAIN);
         start.addCategory(Intent.CATEGORY_HOME);
-        //start.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //start.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(start);
     }
 

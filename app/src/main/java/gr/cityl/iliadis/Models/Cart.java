@@ -63,6 +63,21 @@ public class Cart implements Serializable{
         this.discountid = discountid;
     }
 
+    public Cart(int cartid,int orderid,String realcode,String prodcode,String price,String comment,String description,int quantity,String vatcode,String priceid,String discountid)
+    {
+        this.cartid = cartid;
+        this.orderid=orderid;
+        this.realcode=realcode;
+        this.prodcode=prodcode;
+        this.price=price;
+        this.comment=comment;
+        this.description = description;
+        this.quantity=quantity;
+        this.vatcode=vatcode;
+        this.priceid=priceid;
+        this.discountid = discountid;
+    }
+
     public void setDiscountid(@NonNull String discountid) {
         this.discountid = discountid;
     }

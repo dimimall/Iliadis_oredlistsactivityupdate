@@ -89,6 +89,7 @@ public class ProductActivity extends AppCompatActivity {
                 intent.putExtra("shopid",shopid);
                 intent.putExtra("cart", (Serializable) carts);
                 intent.putExtra("catalogueid",custcatid);
+                intent.putExtra("orderid",orderid);
                 startActivity(intent);
             }
         });
@@ -102,48 +103,18 @@ public class ProductActivity extends AppCompatActivity {
                         event.getAction() == KeyEvent.ACTION_DOWN &&
                                 event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
                 {
-                    if (barcodetext.getEditText().getText().toString().length()>=13)
-                    {
+                    //if (barcodetext.getEditText().getText().toString().length()>=13)
+                    //{
                         product = iliadisDatabase.daoAccess().getProductByProdCode(barcodetext.getEditText().getText().toString());
                         if (product != null)
                         {
                             prodcart = shopDatabase.daoShop().getCartProdCode(orderid,product.getProdcode());
-                            if (prodcart == null)
-                                prodcart=" ";
-                            if (!prodcart.equals(product.getProdcode()))
-                            {
-                                desctext.setText(localeChange(product.getProdescriptionEn(),product.getProdescription()));
-                                Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
-                                pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
-                                balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
-                                reservedtext.setText(getString(R.string.reserved)+":"+product.getReserved());
-                                renewtext.setText(getString(R.string.renew)+":"+product.getQuantitywaiting());
-                                availabletext.setText(getString(R.string.available)+":"+product.getQuantityav());
-                                if (product.getAdate()!= null)
-                                    datereceivetext.setText(getString(R.string.datedelivery)+":"+product.getAdate());
-                            }
-                            else {
-                                myutils.createDialog(getString(R.string.existproduct),ProductActivity.this);
-                                desctext.setText(localeChange(product.getProdescriptionEn(),product.getProdescription()));
-                                Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
-                                pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
-                                balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
-                                reservedtext.setText(getString(R.string.reserved)+":"+product.getReserved());
-                                renewtext.setText(getString(R.string.renew)+":"+product.getQuantitywaiting());
-                                availabletext.setText(getString(R.string.available)+":"+product.getQuantityav());
-                                if (product.getAdate()!= null)
-                                    datereceivetext.setText(getString(R.string.datedelivery)+":"+product.getAdate());
-                            }
-                        }
-                    }
-                    else if (barcodetext.getEditText().getText().toString().length()>=5) {
-                        product = iliadisDatabase.daoAccess().getProductByRealCode(barcodetext.getEditText().getText().toString());
-                        if (product != null)
-                        {
                             realcodecart = shopDatabase.daoShop().getCartRealCode(orderid,product.getRealcode());
-                            if (realcodecart == null)
-                                realcodecart = " ";
-                            if (!realcodecart.equals(product.getRealcode()))
+                            if (prodcart == null || realcodecart == null) {
+                                prodcart = " ";
+                                realcodecart =" ";
+                            }
+                            if (!prodcart.equals(product.getProdcode()) || !realcodecart.equals(product.getRealcode()))
                             {
                                 desctext.setText(localeChange(product.getProdescriptionEn(),product.getProdescription()));
                                 Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
@@ -168,7 +139,40 @@ public class ProductActivity extends AppCompatActivity {
                                     datereceivetext.setText(getString(R.string.datedelivery)+":"+product.getAdate());
                             }
                         }
-                    }
+                   // }
+//                    else if (barcodetext.getEditText().getText().toString().length()>=5) {
+//                        product = iliadisDatabase.daoAccess().getProductByRealCode(barcodetext.getEditText().getText().toString());
+//                        if (product != null)
+//                        {
+//                            realcodecart = shopDatabase.daoShop().getCartRealCode(orderid,product.getRealcode());
+//                            if (realcodecart == null)
+//                                realcodecart = " ";
+//                            if (!realcodecart.equals(product.getRealcode()))
+//                            {
+//                                desctext.setText(localeChange(product.getProdescriptionEn(),product.getProdescription()));
+//                                Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
+//                                pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
+//                                balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
+//                                reservedtext.setText(getString(R.string.reserved)+":"+product.getReserved());
+//                                renewtext.setText(getString(R.string.renew)+":"+product.getQuantitywaiting());
+//                                availabletext.setText(getString(R.string.available)+":"+product.getQuantityav());
+//                                if (product.getAdate()!= null)
+//                                    datereceivetext.setText(getString(R.string.datedelivery)+":"+product.getAdate());
+//                            }
+//                            else {
+//                                myutils.createDialog(getString(R.string.existproduct),ProductActivity.this);
+//                                desctext.setText(localeChange(product.getProdescriptionEn(),product.getProdescription()));
+//                                Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
+//                                pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
+//                                balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
+//                                reservedtext.setText(getString(R.string.reserved)+":"+product.getReserved());
+//                                renewtext.setText(getString(R.string.renew)+":"+product.getQuantitywaiting());
+//                                availabletext.setText(getString(R.string.available)+":"+product.getQuantityav());
+//                                if (product.getAdate()!= null)
+//                                    datereceivetext.setText(getString(R.string.datedelivery)+":"+product.getAdate());
+//                            }
+//                        }
+                    //}
                     return true;
                 }
                 return false;

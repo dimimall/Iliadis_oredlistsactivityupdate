@@ -97,6 +97,7 @@ public class CartActivity extends AppCompatActivity {
     public List<Cart> cartsList,carts;
     private IliadisDatabase iliadisDatabase;
     private String custid,custvatid,shopId;
+    private int orderid;
     private int custcatid;
     private utils myutils;
     private String number;
@@ -121,13 +122,12 @@ public class CartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // back button pressed
-                //myutils.DialogBackbutton(getString(R.string.cancelorder),CartActivity.this);
                 Intent intent = new Intent(CartActivity.this,ProductActivity.class);
                 intent.putExtra("shopid",shopId);
                 intent.putExtra("custvatid",custvatid);
                 intent.putExtra("custid",custid);
                 intent.putExtra("catalogueid",custcatid);
-                intent.putExtra("orderid",shopDatabase.daoShop().getOrder(custid).getOrderid());
+                intent.putExtra("orderid",orderid);
                 startActivity(intent);
             }
         });
@@ -150,18 +150,16 @@ public class CartActivity extends AppCompatActivity {
         vat.setText("0");
         grandtotal.setText("0");
 
+        shopDatabase = ShopDatabase.getInstance(CartActivity.this);
+        iliadisDatabase = IliadisDatabase.getInstance(CartActivity.this);
+
         custid = getIntent().getExtras().getString("custid");
         shopId= getIntent().getExtras().getString("shopid");
         if (shopId==null)
             shopId="0";
         custvatid = getIntent().getExtras().getString("custvatid");
-        cartsList = (List<Cart>) getIntent().getExtras().getSerializable("cart");
-
         custcatid = getIntent().getExtras().getInt("catalogueid");
-        carts.addAll(cartsList);
-
-        shopDatabase = ShopDatabase.getInstance(CartActivity.this);
-        iliadisDatabase = IliadisDatabase.getInstance(CartActivity.this);
+        orderid = getIntent().getExtras().getInt("orderid");
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclercart);
 
@@ -172,6 +170,8 @@ public class CartActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         //recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), layoutManager.));
+        cartsList = (List<Cart>) getIntent().getExtras().getSerializable("cart");
+        carts.addAll(cartsList);
 
         // specify an adapter (see also next example)
         mAdapter = new MyAdapter(carts,CartActivity.this);
@@ -225,16 +225,28 @@ public class CartActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mAdapter.getFilter().filter(charSequence.toString());
+                //mAdapter.getFilter().filter(charSequence.toString());
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
                 //after the change calling the method and passing the search input
+                filter(editable.toString());
             }
         });
     }
 
+    private void filter(String text) {
+        ArrayList<Cart> filteredList = new ArrayList<>();
+
+        for (Cart item : carts) {
+            if(item.getRealcode().contains(text)|| item.getProdcode().contains(text)){
+                filteredList.add(item);
+            }
+        }
+
+        mAdapter.filterList(filteredList);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -245,15 +257,15 @@ public class CartActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> implements Filterable {
+    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> /*implements Filterable*/ {
         private List<Cart> cartList;
         private Context mycontext;
-        NewFilter mfilter;
+       // NewFilter mfilter;
 
-        @Override
-        public Filter getFilter() {
-            return mfilter;
-        }
+//        @Override
+//        public Filter getFilter() {
+//            return mfilter;
+//        }
 
         // Provide a reference to the views for each data item
         // Complex data items may need more than one view per item, and
@@ -272,41 +284,41 @@ public class CartActivity extends AppCompatActivity {
         public MyAdapter(List<Cart> cartList,Context context) {
             this.cartList = cartList;
             this.mycontext = context;
-            mfilter = new NewFilter(MyAdapter.this);
+            //mfilter = new NewFilter(MyAdapter.this);
         }
 
-        public class NewFilter extends Filter {
-            public MyAdapter mAdapter;
-
-            public NewFilter(MyAdapter mAdapter) {
-                super();
-                this.mAdapter = mAdapter;
-            }
-
-            @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-                carts.clear();
-                final FilterResults results = new FilterResults();
-                if(charSequence.length() == 0){
-                    carts.addAll(cartsList);
-                }else{
-                    final String filterPattern =charSequence.toString().toLowerCase().trim();
-                    for(Cart listcart : cartsList){
-                        if(listcart.getProdcode().startsWith(filterPattern)|| listcart.getRealcode().startsWith(filterPattern)){
-                            carts.add(listcart);
-                        }
-                    }
-                }
-                results.values = carts;
-                results.count = carts.size();
-                return results;
-            }
-
-            @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                this.mAdapter.notifyDataSetChanged();
-            }
-        }
+//        public class NewFilter extends Filter {
+//            public MyAdapter mAdapter;
+//
+//            public NewFilter(MyAdapter mAdapter) {
+//                super();
+//                this.mAdapter = mAdapter;
+//            }
+//
+//            @Override
+//            protected FilterResults performFiltering(CharSequence charSequence) {
+//                carts.clear();
+//                final FilterResults results = new FilterResults();
+//                if(charSequence.length() == 0){
+//                    carts.addAll(cartsList);
+//                }else{
+//                    final String filterPattern =charSequence.toString().toLowerCase().trim();
+//                    for(Cart listcart : cartsList){
+//                        if(listcart.getRealcode().contains(filterPattern)|| listcart.getProdcode().contains(filterPattern)){
+//                            carts.add(listcart);
+//                        }
+//                    }
+//                }
+//                results.values = carts;
+//                results.count = carts.size();
+//                return results;
+//            }
+//
+//            @Override
+//            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+//                this.mAdapter.notifyDataSetChanged();
+//            }
+//        }
 
         // Create new views (invoked by the layout manager)
         @Override
@@ -380,6 +392,11 @@ public class CartActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return cartList.size();
+        }
+
+        public void filterList(ArrayList<Cart> filteredList) {
+            cartList = filteredList;
+            notifyDataSetChanged();
         }
 
     }

@@ -70,5 +70,5 @@
     <string name="fpa">ΦΠΑ</string>
     <string name="totalammount">Συνολική Αξία</string>
     <string name="biggestquantity">Η ποσότητα είναι μεγαλύτερη των διαθέσιμων προϊόντων</string>
-    <string name="csvfiles">Ενημέρωση παραγγελιών στο ΚΕΦ.</string>
+    <string name="csvfiles">Εν.Παρ.ΚΕΦ.</string>
 </resources>

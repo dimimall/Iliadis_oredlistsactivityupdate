@@ -2,6 +2,7 @@ package gr.cityl.iliadis.Manager;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -89,7 +90,12 @@ public class Calls {
         MySingleton.getInstance(context).addToRequestQueue(req);
     }
 
-    public void sendCsvFiles(File file,File fileDir){
+    public String sendCsvFiles(File file,File fileDir){
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        String success="";
 
         String url = "https://pod.iliadis.com.gr/UploadFile.php";
         File filecsv = new File(fileDir,file.getName());
@@ -114,7 +120,9 @@ public class Calls {
 
                     JSONArray array = new JSONArray(responseBody);
                     JSONObject object = array.getJSONObject(0);
-                    String success = object.getString("result");
+                    success = object.getString("result");
+
+                    Log.d("Dimitra", " file "+success);
 
                 } catch (UnsupportedEncodingException e) {
                     Log.e("Error",e.getLocalizedMessage());
@@ -129,5 +137,6 @@ public class Calls {
                 e.printStackTrace();
             }
         }
+        return success;
     }
 }

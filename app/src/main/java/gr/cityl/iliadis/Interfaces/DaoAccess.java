@@ -100,7 +100,7 @@ public interface DaoAccess {
     @Query("Select s.* from seccustomers s inner join customers c on c.custid=s.custid where s.custid =:cust_id")
     List<SecCustomers> getShopsByJoin(String cust_id);
 
-    @Query("Select * from products  where prodcode =:prodcode")
+    @Query("Select * from products  where prodcode =:prodcode Or realcode=:prodcode")
     Products getProductByProdCode(String prodcode);
 
     @Query("Select c1.minimumstep from products c1  where prodcode =:prodcode")
