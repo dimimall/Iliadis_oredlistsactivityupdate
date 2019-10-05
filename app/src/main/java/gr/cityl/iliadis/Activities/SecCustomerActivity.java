@@ -211,7 +211,6 @@ public class SecCustomerActivity extends AppCompatActivity {
                                     intent.putExtra("custid",custid);
                                     intent.putExtra("catalogueid",custcatid);
                                     intent.putExtra("orderid",orders.get(orders.size()-1).getOrderid());
-                                    intent.putExtra("orderid",orders.get(orders.size()-1).getOrderid());
                                     startActivity(intent);
                                 }
                             });

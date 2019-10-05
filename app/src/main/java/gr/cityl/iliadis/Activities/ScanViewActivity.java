@@ -39,7 +39,7 @@ public class ScanViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_view);
 
-        getSupportActionBar().setTitle(getString(R.string.customer));
+        getSupportActionBar().setTitle(getString(R.string.scanview));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         init();

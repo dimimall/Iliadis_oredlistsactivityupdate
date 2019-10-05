@@ -8,6 +8,8 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -97,40 +99,25 @@ public class EditProductActivity extends AppCompatActivity {
         editQuantity.setText(""+cart.getQuantity());
         catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,cart.getDiscountid());
         totalprice = cart.getQuantity() * myutlis.getProductPrice(Double.parseDouble(cart.getPriceid().replace(",",".")),catalog.getDiscount1());
-        priceText.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(totalprice));
+        priceText.setText(getString(R.string.price)+":"+new DecimalFormat("##.####").format(totalprice));
         commentText.getEditText().setText(cart.getComment());
 
-        editQuantity.setOnKeyListener(new View.OnKeyListener() {
+        editQuantity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
+            }
 
-                if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
-                        keyCode == EditorInfo.IME_ACTION_DONE ||
-                        event.getAction() == KeyEvent.ACTION_DOWN &&
-                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (!editable.toString().equals(""))
                 {
-                    if (Integer.parseInt(editQuantity.getText().toString()) < Integer.parseInt(iliadisDatabase.daoAccess().getProductQuantity(cart.getProdcode())))
-                    {
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                                EditProductActivity.this);
-                        // set title
-                        alertDialogBuilder.setTitle("");
-                        // set dialog message
-                        alertDialogBuilder
-                                .setMessage(getString(R.string.qtysmaller))
-                                .setCancelable(false)
-                                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
-                                        editQuantity.setText(cart.getQuantity());
-                                        dialog.cancel();
-                                    }
-                                });
-                        // create alert dialog
-                        AlertDialog alertDialog = alertDialogBuilder.create();
-                        // show it
-                        alertDialog.show();
-                    }
-                    else if (Integer.parseInt(editQuantity.getText().toString()) > Integer.parseInt(iliadisDatabase.daoAccess().getProductByProdCode(cart.getProdcode()).getQuantityav()))
+                    if (Integer.parseInt(editable.toString()) > Integer.parseInt(iliadisDatabase.daoAccess().getProductByProdCode(cart.getProdcode()).getQuantityav()))
                     {
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                                 EditProductActivity.this);
@@ -142,7 +129,8 @@ public class EditProductActivity extends AppCompatActivity {
                                 .setCancelable(false)
                                 .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {
-                                        editQuantity.setText(iliadisDatabase.daoAccess().getProductByProdCode(cart.getProdcode()).getMinquantity());
+                                        //editQuantity.setText(iliadisDatabase.daoAccess().getProductByProdCode(cart.getProdcode()).getMinquantity());
+                                        editQuantity.setText(""+cart.getQuantity());
                                         dialog.cancel();
                                     }
                                 });
@@ -151,21 +139,58 @@ public class EditProductActivity extends AppCompatActivity {
                         // show it
                         alertDialog.show();
                     }
-                    else if (Integer.parseInt(editQuantity.getText().toString()) == Integer.parseInt(iliadisDatabase.daoAccess().getProductQuantity(cart.getProdcode())))
+                    else
                     {
-                        totalprice = Integer.parseInt(editQuantity.getText().toString()) * myutlis.getProductPrice(Double.parseDouble(cart.getPriceid().replace(",",".")),catalog.getDiscount1());
-                        priceText.setText(getString(R.string.price)+": "+new DecimalFormat("##.##").format(totalprice));
-                    }else if (Integer.parseInt(editQuantity.getText().toString()) > Integer.parseInt(iliadisDatabase.daoAccess().getProductQuantity(cart.getProdcode())))
-                    {
-                        totalprice = Integer.parseInt(editQuantity.getText().toString()) * myutlis.getProductPrice(Double.parseDouble(cart.getPriceid().replace(",",".")),catalog.getDiscount1());
-                        priceText.setText(getString(R.string.price)+": "+new DecimalFormat("##.##").format(totalprice));
+                        totalprice = Integer.parseInt(editable.toString()) * myutlis.getProductPrice(Double.parseDouble(cart.getPriceid().replace(",",".")),catalog.getDiscount1());
+                        priceText.setText(getString(R.string.price)+": "+new DecimalFormat("##.####").format(totalprice));
                     }
-
-                    return true;
                 }
-                return false;
             }
         });
+
+//        editQuantity.setOnKeyListener(new View.OnKeyListener() {
+//
+//            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//
+//                if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
+//                        keyCode == EditorInfo.IME_ACTION_DONE ||
+//                        event.getAction() == KeyEvent.ACTION_DOWN &&
+//                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+//                {
+//
+//                    if (Integer.parseInt(editQuantity.getText().toString()) > Integer.parseInt(iliadisDatabase.daoAccess().getProductByProdCode(cart.getProdcode()).getQuantityav()))
+//                    {
+//                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+//                                EditProductActivity.this);
+//                        // set title
+//                        alertDialogBuilder.setTitle("");
+//                        // set dialog message
+//                        alertDialogBuilder
+//                                .setMessage(getString(R.string.biggestquantity))
+//                                .setCancelable(false)
+//                                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog,int id) {
+//                                        //editQuantity.setText(iliadisDatabase.daoAccess().getProductByProdCode(cart.getProdcode()).getMinquantity());
+//                                        editQuantity.setText(""+cart.getQuantity());
+//                                        dialog.cancel();
+//                                    }
+//                                });
+//                        // create alert dialog
+//                        AlertDialog alertDialog = alertDialogBuilder.create();
+//                        // show it
+//                        alertDialog.show();
+//                    }
+//                    else
+//                    {
+//                        totalprice = Integer.parseInt(editQuantity.getText().toString()) * myutlis.getProductPrice(Double.parseDouble(cart.getPriceid().replace(",",".")),catalog.getDiscount1());
+//                        priceText.setText(getString(R.string.price)+": "+new DecimalFormat("##.####").format(totalprice));
+//                    }
+//
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
 
         commentText.getEditText().setOnKeyListener(new View.OnKeyListener() {
 
@@ -186,7 +211,6 @@ public class EditProductActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //shopDatabase.daoShop().deleteCart(cart);
                 Cart updatecart = new Cart(cart.getCartid(), cart.getOrderid(),cart.getRealcode(),cart.getProdcode(),String.valueOf(totalprice),comment,cart.getDescription(),Integer.parseInt(editQuantity.getText().toString()),cart.getVatcode(),cart.getPriceid(),cart.getDiscountid());
                 shopDatabase.daoShop().updateCart(updatecart);
 

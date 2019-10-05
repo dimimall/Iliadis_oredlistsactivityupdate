@@ -68,4 +68,10 @@ public interface DaoShop {
 
     @Query("Select c2.realcode from cart c2 where c2.orderid =:orderid and c2.realcode =:realcode")
     String getCartRealCode(int orderid,String realcode);
+
+    @Query("Select o1.custid from `order` as o1 where o1.orderid=:orderid")
+    String getCastidOrder(int orderid);
+
+    @Query("Select o1.shopid from `order` as o1 where o1.orderid=:orderid")
+    String getShopidOrder(int orderid);
 }

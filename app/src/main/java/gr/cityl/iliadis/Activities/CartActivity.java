@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -117,6 +118,14 @@ public class CartActivity extends AppCompatActivity {
         isReadStoragePermissionGranted();
         isWriteStoragePermissionGranted();
 
+        custid = getIntent().getExtras().getString("custid");
+        shopId= getIntent().getExtras().getString("shopid");
+        if (shopId==null)
+            shopId="0";
+        custvatid = getIntent().getExtras().getString("custvatid");
+        custcatid = getIntent().getExtras().getInt("catalogueid");
+        orderid = getIntent().getExtras().getInt("orderid");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,13 +162,6 @@ public class CartActivity extends AppCompatActivity {
         shopDatabase = ShopDatabase.getInstance(CartActivity.this);
         iliadisDatabase = IliadisDatabase.getInstance(CartActivity.this);
 
-        custid = getIntent().getExtras().getString("custid");
-        shopId= getIntent().getExtras().getString("shopid");
-        if (shopId==null)
-            shopId="0";
-        custvatid = getIntent().getExtras().getString("custvatid");
-        custcatid = getIntent().getExtras().getInt("catalogueid");
-        orderid = getIntent().getExtras().getInt("orderid");
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclercart);
 
@@ -260,12 +262,6 @@ public class CartActivity extends AppCompatActivity {
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> /*implements Filterable*/ {
         private List<Cart> cartList;
         private Context mycontext;
-       // NewFilter mfilter;
-
-//        @Override
-//        public Filter getFilter() {
-//            return mfilter;
-//        }
 
         // Provide a reference to the views for each data item
         // Complex data items may need more than one view per item, and
@@ -284,41 +280,7 @@ public class CartActivity extends AppCompatActivity {
         public MyAdapter(List<Cart> cartList,Context context) {
             this.cartList = cartList;
             this.mycontext = context;
-            //mfilter = new NewFilter(MyAdapter.this);
         }
-
-//        public class NewFilter extends Filter {
-//            public MyAdapter mAdapter;
-//
-//            public NewFilter(MyAdapter mAdapter) {
-//                super();
-//                this.mAdapter = mAdapter;
-//            }
-//
-//            @Override
-//            protected FilterResults performFiltering(CharSequence charSequence) {
-//                carts.clear();
-//                final FilterResults results = new FilterResults();
-//                if(charSequence.length() == 0){
-//                    carts.addAll(cartsList);
-//                }else{
-//                    final String filterPattern =charSequence.toString().toLowerCase().trim();
-//                    for(Cart listcart : cartsList){
-//                        if(listcart.getRealcode().contains(filterPattern)|| listcart.getProdcode().contains(filterPattern)){
-//                            carts.add(listcart);
-//                        }
-//                    }
-//                }
-//                results.values = carts;
-//                results.count = carts.size();
-//                return results;
-//            }
-//
-//            @Override
-//            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-//                this.mAdapter.notifyDataSetChanged();
-//            }
-//        }
 
         // Create new views (invoked by the layout manager)
         @Override
@@ -456,7 +418,7 @@ public class CartActivity extends AppCompatActivity {
 
         Spinner spinner = view.findViewById(R.id.spinner2);
         final TextInputLayout comment = view.findViewById(R.id.textInputLayout7);
-        Button ok = view.findViewById(R.id.button15);
+        final Button ok = view.findViewById(R.id.button15);
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line);
         adapter.add("Ελληνικά");
@@ -474,19 +436,20 @@ public class CartActivity extends AppCompatActivity {
             }
         });
 
-        comment.getEditText().setOnKeyListener(new View.OnKeyListener() {
+        comment.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
+            }
 
-                if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
-                        keyCode == EditorInfo.IME_ACTION_DONE ||
-                        event.getAction() == KeyEvent.ACTION_DOWN &&
-                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
-                {
-                    text[1] = comment.getEditText().getText().toString();
-                    return true;
-                }
-                return false;
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                text[1] = editable.toString();
             }
         });
         ok.setOnClickListener(new View.OnClickListener() {
@@ -494,6 +457,8 @@ public class CartActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (text[0].equals("Ελληνικά"))
                 {
+                    Toast.makeText(getApplicationContext(),"please wait....",Toast.LENGTH_LONG).show();
+
                     //create and print pdf in greek
                     try {
                         myutils.createPdfFileGr(cartsList,custid,custvatid,number,shopId,ipprintpref,iliadisDatabase,CartActivity.this);

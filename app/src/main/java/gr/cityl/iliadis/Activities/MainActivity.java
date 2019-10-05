@@ -179,23 +179,13 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
             List<Order> orders = shopDatabase.daoShop().getListOrderStatus0();
-            Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
             Intent intent = new Intent(MainActivity.this,OrderListsActivity.class);
-            intent.putExtra("custid",customer.getCustid());
-            intent.putExtra("custvatid", customer.getCustvatid());
-            intent.putExtra("catalogueid",customer.getCatalogueid());
             intent.putExtra("orders", (Serializable) orders);
-            intent.putExtra("shopsid",shopid);
             startActivity(intent);
         } else if (id == R.id.nav_manage) {
             List<Order> orders = shopDatabase.daoShop().getListOrderStatus1();
-            Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(custid);
             Intent intent = new Intent(MainActivity.this,ReprintListsActivity.class);
-            intent.putExtra("custid",customer.getCustid());
-            intent.putExtra("custvatid", customer.getCustvatid());
-            intent.putExtra("catalogueid",customer.getCatalogueid());
             intent.putExtra("orders", (Serializable) orders);
-            intent.putExtra("shopsid",shopid);
             startActivity(intent);
         } else if (id == R.id.nav_share) {
             Intent intent = new Intent(MainActivity.this,ReloadDbsActivity.class);

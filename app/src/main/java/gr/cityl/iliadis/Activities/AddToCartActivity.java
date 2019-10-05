@@ -9,6 +9,8 @@ import android.support.v4.os.ConfigurationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -60,6 +62,8 @@ public class AddToCartActivity extends AppCompatActivity {
         final String shopid = getIntent().getExtras().getString("shopid");
         final int custcatid = getIntent().getExtras().getInt("catalogueid");
         final int orderid = getIntent().getExtras().getInt("orderid");
+        Log.d("Dimitra","orderid "+orderid);
+
         products = (Products) getIntent().getExtras().getSerializable("prodcode");
 
 
@@ -83,6 +87,7 @@ public class AddToCartActivity extends AppCompatActivity {
                 intent.putExtra("cart", (Serializable) carts);
                 intent.putExtra("shopid",shopid);
                 intent.putExtra("catalogueid",custcatid);
+                intent.putExtra("orderid",orderid);
                 startActivity(intent);
             }
         });
@@ -99,41 +104,25 @@ public class AddToCartActivity extends AppCompatActivity {
         descriptionText.setText(localeChange(products.getProdescriptionEn(),products.getProdescription()));
         editQuantity.setText(products.getMinquantity());
         catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,products.getPriceid());
-        totalprice = Integer.parseInt(products.getMinimumstep()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
-        priceText.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(totalprice));
+        totalprice = Integer.parseInt(products.getMinquantity()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
+        priceText.setText(getString(R.string.price)+":"+new DecimalFormat("##.####").format(totalprice));
 
+        editQuantity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-        editQuantity.setOnKeyListener(new View.OnKeyListener() {
+            }
 
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
-                        keyCode == EditorInfo.IME_ACTION_DONE ||
-                        event.getAction() == KeyEvent.ACTION_DOWN &&
-                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (!editable.toString().equals(""))
                 {
-                    if (Integer.parseInt(editQuantity.getText().toString()) < Integer.parseInt(products.getMinimumstep()))
-                    {
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                                AddToCartActivity.this);
-                        // set title
-                        alertDialogBuilder.setTitle("");
-                        // set dialog message
-                        alertDialogBuilder
-                                .setMessage(getString(R.string.qtysmaller))
-                                .setCancelable(false)
-                                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
-                                        editQuantity.setText(products.getMinimumstep());
-                                        dialog.cancel();
-                                    }
-                                });
-                        // create alert dialog
-                        AlertDialog alertDialog = alertDialogBuilder.create();
-                        // show it
-                        alertDialog.show();
-                    }
-                    else if (Integer.parseInt(editQuantity.getText().toString()) > Integer.parseInt(products.getQuantityav()))
+                    if (Integer.parseInt(editable.toString()) > Integer.parseInt(products.getQuantityav()))
                     {
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                                 AddToCartActivity.this);
@@ -145,7 +134,7 @@ public class AddToCartActivity extends AppCompatActivity {
                                 .setCancelable(false)
                                 .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {
-                                        editQuantity.setText(products.getMinimumstep());
+                                        editQuantity.setText(products.getQuantityav());
                                         dialog.cancel();
                                     }
                                 });
@@ -154,21 +143,53 @@ public class AddToCartActivity extends AppCompatActivity {
                         // show it
                         alertDialog.show();
                     }
-                    else if (Integer.parseInt(editQuantity.getText().toString()) == Integer.parseInt(products.getMinimumstep()))
-                    {
-                        totalprice = Integer.parseInt(products.getMinimumstep()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
-                        priceText.setText(getString(R.string.price)+": "+new DecimalFormat("##.##").format(totalprice));
-                    }else if (Integer.parseInt(editQuantity.getText().toString()) > Integer.parseInt(products.getMinimumstep()))
-                    {
-                        totalprice = Integer.parseInt(editQuantity.getText().toString()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
-                        priceText.setText(getString(R.string.price)+": "+new DecimalFormat("##.##").format(totalprice));
+                    else {
+                        totalprice = Integer.parseInt(editable.toString()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
+                        priceText.setText(getString(R.string.price)+": "+new DecimalFormat("##.####").format(totalprice));
                     }
-
-                    return true;
                 }
-                return false;
             }
         });
+
+//        editQuantity.setOnKeyListener(new View.OnKeyListener() {
+//
+//            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//
+//                if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
+//                        keyCode == EditorInfo.IME_ACTION_DONE ||
+//                        event.getAction() == KeyEvent.ACTION_DOWN &&
+//                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
+//                {
+//                    if (Integer.parseInt(editQuantity.getText().toString()) > Integer.parseInt(products.getQuantityav()))
+//                    {
+//                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+//                                AddToCartActivity.this);
+//                        // set title
+//                        alertDialogBuilder.setTitle("");
+//                        // set dialog message
+//                        alertDialogBuilder
+//                                .setMessage(getString(R.string.biggestquantity))
+//                                .setCancelable(false)
+//                                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog,int id) {
+//                                        editQuantity.setText(products.getQuantityav());
+//                                        dialog.cancel();
+//                                    }
+//                                });
+//                        // create alert dialog
+//                        AlertDialog alertDialog = alertDialogBuilder.create();
+//                        // show it
+//                        alertDialog.show();
+//                    }
+//                    else {
+//                        totalprice = Integer.parseInt(editQuantity.getText().toString()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
+//                        priceText.setText(getString(R.string.price)+": "+new DecimalFormat("##.####").format(totalprice));
+//                    }
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
 
         commentText.getEditText().setOnKeyListener(new View.OnKeyListener() {
 

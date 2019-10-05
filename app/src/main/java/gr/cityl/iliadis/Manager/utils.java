@@ -12,6 +12,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.support.design.widget.TextInputLayout;
@@ -83,6 +85,8 @@ import gr.cityl.iliadis.Models.Customers;
 import gr.cityl.iliadis.Models.IliadisDatabase;
 import gr.cityl.iliadis.R;
 
+import static android.content.Context.WIFI_SERVICE;
+
 /**
  * Created by dimitra on 21/07/2019.
  */
@@ -105,6 +109,17 @@ public class utils {
         return isConnected;
     }
 
+    public String getMacAddress(Context context)
+    {
+        if (isConnectedToNetwork(context))
+        {
+            WifiManager wifiMgr = (WifiManager) context.getSystemService(WIFI_SERVICE);
+            WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+            return wifiInfo.getMacAddress();
+        }
+        else
+            return " ";
+    }
 
     public static Configuration changeLocaleApp(String key, String localeLoad, Context context)
     {
@@ -364,10 +379,10 @@ public class utils {
             addr_table.addCell(f2);
         }
         if(Integer.parseInt(shopId) == 0) {
-            Paragraph f3 = new Paragraph("ΚΩΔΙΚΟΣ ΠΟΛΗΣ: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPostalCode(),urFontName);
+            Paragraph f3 = new Paragraph("Τ.Κ: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPostalCode(),urFontName);
             addr_table.addCell(f3);
         }else{
-            Paragraph f3 = new Paragraph("ΚΩΔΙΚΟΣ ΠΟΛΗΣ: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPostalCode(),urFontName);
+            Paragraph f3 = new Paragraph("Τ.Κ: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPostalCode(),urFontName);
             addr_table.addCell(f3);
         }
         Paragraph f4 = new Paragraph("ΤΗΛΕΦΩΝΟ: " + iliadisDatabase.daoAccess().getCustomerByCustid(custid).getPhone(),urFontName);
@@ -407,11 +422,10 @@ public class utils {
             prod_table.addCell(new PdfPCell(new Phrase(carts.get(i).getRealcode(),urFontName)));
             prod_table.addCell(new PdfPCell(new Phrase(carts.get(i).getDescription()+"\n"+carts.get(i).getComment(),urFontName)));
             //prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getComment(),urFontName)));
-//            Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid(),iliadisDatabase.daoAccess().getProductByProdCode(carts.get(i).getProdcode()).getPriceid());
-//            getProductPrice(Double.parseDouble(iliadisDatabase.daoAccess().getProductByProdCode(carts.get(i).getProdcode()).getPrice()),catalog.getDiscount1());
             prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getQuantity(),urFontName)));
-            prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getPrice(),urFontName)));
-            prod_table.addCell(new PdfPCell(new Phrase(""+new DecimalFormat("##.##").format(Double.parseDouble(carts.get(i).getPrice())),urFontName)));
+            Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid(),iliadisDatabase.daoAccess().getProductByProdCode(carts.get(i).getProdcode()).getPriceid());
+            prod_table.addCell(new PdfPCell(new Phrase("" + new DecimalFormat("##.####").format(getProductPrice(Double.parseDouble(iliadisDatabase.daoAccess().getProductByProdCode(carts.get(i).getProdcode()).getPrice().replace(",",".")),catalog.getDiscount1())),urFontName)));
+            prod_table.addCell(new PdfPCell(new Phrase(""+new DecimalFormat("##.####").format(Double.parseDouble(carts.get(i).getPrice())),urFontName)));
         }
         doc.add(prod_table);
 
@@ -453,13 +467,13 @@ public class utils {
             sPriceSum = sPriceSum + (Double.parseDouble(carts.get(i).getPriceid().replace(",",".")) * carts.get(i).getQuantity());
             vTotal = vTotal + (((k * Double.parseDouble(carts.get(i).getPrice().replace(",","."))) / 100));
         }
-        PdfPCell s = new PdfPCell(new Phrase("ΣΥΝΟΛΟ ΠΟΣΟΤΗΤΑΣ: " + new DecimalFormat("##.##").format(prodSum),urFontName));
+        PdfPCell s = new PdfPCell(new Phrase("ΣΥΝΟΛΟ ΠΟΣΟΤΗΤΑΣ: " + new DecimalFormat("##.####").format(prodSum),urFontName));
         s.setBorder(Rectangle.NO_BORDER);
         s.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s);
         //sum_table.addCell("" + new DecimalFormat("##.##").format(prodSum));
 
-        PdfPCell s1 = new PdfPCell(new Phrase("ΛΟΓΑΡΙΑΣΜΟΣ ΠΑΡΑΓΓΕΛΙΑΣ: " + new DecimalFormat("##.##").format(sPriceSum)  + "€",urFontName));
+        PdfPCell s1 = new PdfPCell(new Phrase("ΚΑΘΑΡΗ ΑΞΙΑ: " + new DecimalFormat("##.####").format(sPriceSum)  + "€",urFontName));
         s1.setBorder(Rectangle.NO_BORDER);
         s1.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s1);
@@ -471,18 +485,18 @@ public class utils {
 //        sum_table.addCell(s2);
         //sum_table.addCell("" + new DecimalFormat("##.##").format((priceSum - sPriceSum)));
 
-        PdfPCell s3 = new PdfPCell(new Phrase("ΠΟΣΟ ΜΕ ΕΚΠΤΩΣΗ: " + new DecimalFormat("##.##").format(priceSum) + "€",urFontName));
+        PdfPCell s3 = new PdfPCell(new Phrase("ΠΟΣΟ ΜΕΤΑ ΤΗΝ ΕΚΠΤΩΣΗ: " + new DecimalFormat("##.####").format(priceSum) + "€",urFontName));
         s3.setBorder(Rectangle.NO_BORDER);
         s3.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s3);
         //sum_table.addCell("" + new DecimalFormat("##.##").format(sPriceSum));
 
-        PdfPCell s4 = new PdfPCell(new Phrase("ΚΟΣΤΟΣ ΦΠΑ.: " + new DecimalFormat("##.##").format(vTotal) + "€",urFontName));
+        PdfPCell s4 = new PdfPCell(new Phrase("ΦΠΑ.: " + new DecimalFormat("##.####").format(vTotal) + "€",urFontName));
         s4.setBorder(Rectangle.NO_BORDER);
         s4.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s4);
 
-        PdfPCell s5 = new PdfPCell(new Phrase("ΣΥΝΟΛΙΚΟ ΠΟΣΟ: " + new DecimalFormat("##.##").format((priceSum + vTotal)) + "€",urFontName));
+        PdfPCell s5 = new PdfPCell(new Phrase("ΣΥΝΟΛΙΚΗ ΑΞΙΑ: " + new DecimalFormat("##.####").format((priceSum + vTotal)) + "€",urFontName));
         s5.setBorder(Rectangle.NO_BORDER);
         s5.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s5);
@@ -678,9 +692,9 @@ public class utils {
         for(int i = 0; i < carts.size(); i++){
             prod_table.addCell(new PdfPCell(new Phrase(carts.get(i).getRealcode(),urFontName)));
             prod_table.addCell(new PdfPCell(new Phrase(carts.get(i).getDescription()+"\n"+carts.get(i).getComment(),urFontName)));
-            //prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getComment(),urFontName)));
             prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getQuantity(),urFontName)));
-            prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getPriceid(),urFontName)));
+            Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid(),iliadisDatabase.daoAccess().getProductByProdCode(carts.get(i).getProdcode()).getPriceid());
+            prod_table.addCell(new PdfPCell(new Phrase("" + new DecimalFormat("##.##").format(getProductPrice(Double.parseDouble(iliadisDatabase.daoAccess().getProductByProdCode(carts.get(i).getProdcode()).getPrice().replace(",",".")),catalog.getDiscount1())),urFontName)));
             prod_table.addCell(new PdfPCell(new Phrase("" + (new DecimalFormat("##.##").format(Double.parseDouble(carts.get(i).getPrice()))),urFontName)));
         }
         doc.add(prod_table);
@@ -723,13 +737,13 @@ public class utils {
             sPriceSum = sPriceSum + (Double.parseDouble(carts.get(i).getPriceid().replace(",",".")) * carts.get(i).getQuantity());
             vTotal = vTotal + (((k * Double.parseDouble(carts.get(i).getPrice().replace(",","."))) / 100));
         }
-        PdfPCell s = new PdfPCell(new Phrase("TOTAL QUANTITY: " + new DecimalFormat("##.##").format(prodSum),urFontName));
+        PdfPCell s = new PdfPCell(new Phrase("TOTAL QUANTITY: " + new DecimalFormat("##.####").format(prodSum),urFontName));
         s.setBorder(Rectangle.NO_BORDER);
         s.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s);
         //sum_table.addCell("" + new DecimalFormat("##.##").format(prodSum));
 
-        PdfPCell s1 = new PdfPCell(new Phrase("PRICE ORDER: " + new DecimalFormat("##.##").format(sPriceSum)  + "€",urFontName));
+        PdfPCell s1 = new PdfPCell(new Phrase("ORDER AMOUNT: " + new DecimalFormat("##.####").format(sPriceSum)  + "€",urFontName));
         s1.setBorder(Rectangle.NO_BORDER);
         s1.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s1);
@@ -741,7 +755,7 @@ public class utils {
 //        sum_table.addCell(s2);
         //sum_table.addCell("" + new DecimalFormat("##.##").format((priceSum - sPriceSum)));
 
-        PdfPCell s3 = new PdfPCell(new Phrase("PRICE WITH DISCOUNT: " + new DecimalFormat("##.##").format(priceSum) + "€",urFontName));
+        PdfPCell s3 = new PdfPCell(new Phrase("AMOUNT AFTER DISCOUNT: " + new DecimalFormat("##.####").format(priceSum) + "€",urFontName));
         s3.setBorder(Rectangle.NO_BORDER);
         s3.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s3);
@@ -752,7 +766,7 @@ public class utils {
 //        s4.setHorizontalAlignment(Element.ALIGN_RIGHT);
 //        sum_table.addCell(s4);
 
-        PdfPCell s5 = new PdfPCell(new Phrase("TOTAL PRICE: " + new DecimalFormat("##.##").format((priceSum + vTotal)) + "€",urFontName));
+        PdfPCell s5 = new PdfPCell(new Phrase("TOTAL AMOUNT: " + new DecimalFormat("##.####").format((priceSum + vTotal)) + "€",urFontName));
         s5.setBorder(Rectangle.NO_BORDER);
         s5.setHorizontalAlignment(Element.ALIGN_RIGHT);
         sum_table.addCell(s5);

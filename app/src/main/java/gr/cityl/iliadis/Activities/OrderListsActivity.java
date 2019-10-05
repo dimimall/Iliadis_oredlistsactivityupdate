@@ -154,13 +154,18 @@ public class OrderListsActivity extends AppCompatActivity {
                                     return true;
                                 case R.id.menu2:
                                     //handle menu2 click
+                                    Customers customers = iliadisDatabase.daoAccess().getCustomerByCustid(shopDatabase.daoShop().getCastidOrder(paramOrders.get(position).getOrderid()));
+                                    Log.d("Dimitra","customer custid: "+customers.getCustid());
+                                    Log.d("Dimitra","customer custvatid: "+customers.getCustvatid());
+                                    Log.d("Dimitra","customer catalogue: "+customers.getCatalogueid());
+
                                     Intent intent = new Intent(OrderListsActivity.this,ProductActivity.class);
-                                    intent.putExtra("custid",custid);
-                                    intent.putExtra("custvatid",custvatid);
+                                    intent.putExtra("custid",customers.getCustid());
+                                    intent.putExtra("custvatid",customers.getCustvatid());
                                     intent.putExtra("orderid",paramOrdersList.get(position).getOrderid());
                                     Log.d("Dimitra","orderid "+paramOrdersList.get(position).getOrderid());
-                                    intent.putExtra("catalogueid",custcatid);
-                                    intent.putExtra("shopid",shopid);
+                                    intent.putExtra("catalogueid",customers.getCatalogueid());
+                                    intent.putExtra("shopid",paramOrders.get(position).getShopid());
                                     startActivity(intent);
                                     return true;
                                 default:

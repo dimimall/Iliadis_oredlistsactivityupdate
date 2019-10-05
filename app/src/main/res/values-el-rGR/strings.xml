@@ -65,7 +65,7 @@
     <string name="updatecart">Ενημέρωση\nπροϊόντος</string>
     <string name="existproduct">Το προϊόν υπάρχει στο καλάθι</string>
     <string name="reload_database">Βάσεις Δεδομένων</string>
-    <string name="scanview">Σκανάρισμα</string>
+    <string name="scanview">Σκανάρισμα Προϊόντων</string>
     <string name="subtotal">Αξία</string>
     <string name="fpa">ΦΠΑ</string>
     <string name="totalammount">Συνολική Αξία</string>
