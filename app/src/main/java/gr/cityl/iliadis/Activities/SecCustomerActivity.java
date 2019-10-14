@@ -222,6 +222,22 @@ public class SecCustomerActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        new AlertDialog.Builder(this)
+                .setTitle("Iliadis")
+                .setMessage(getString(R.string.closeapp))
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        moveTaskToBack(true);
+                    }
+                }).create().show();
+    }
+
     public void init()
     {
         textView = (TextView)findViewById(R.id.textView6);

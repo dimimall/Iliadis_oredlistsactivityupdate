@@ -3,6 +3,7 @@ package gr.cityl.iliadis.Activities;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
@@ -103,6 +104,7 @@ public class CartActivity extends AppCompatActivity {
     private utils myutils;
     private String number;
     private String ipprintpref;
+    private boolean lang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +115,7 @@ public class CartActivity extends AppCompatActivity {
         myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
         number = myutils.sharedpreferences.getString("numsale", "");
         ipprintpref = myutils.sharedpreferences.getString("ipprint", "");
-
+        lang = myutils.sharedpreferences.getBoolean("language",false);
 
         isReadStoragePermissionGranted();
         isWriteStoragePermissionGranted();
@@ -202,6 +204,8 @@ public class CartActivity extends AppCompatActivity {
                 //prodSum = prodSum + carts.get(i).getQuantity();
                 priceSum = priceSum + (Double.parseDouble(carts.get(i).getPrice().replace(",",".")));
                 sPriceSum = sPriceSum + (Double.parseDouble(carts.get(i).getPrice().replace(",",".")) * carts.get(i).getQuantity());
+                Log.d("Dimitra","vat : "+iliadisDatabase.daoAccess().getVat(iliadisDatabase.daoAccess().getProductByProdCode(carts.get(i).getProdcode()).getVatcode(),custvatid));
+                k = (int)iliadisDatabase.daoAccess().getVat(iliadisDatabase.daoAccess().getProductByProdCode(carts.get(i).getProdcode()).getVatcode(),custvatid);
                 vTotal = vTotal + (((k * Double.parseDouble(carts.get(i).getPrice().replace(",","."))) / 100) /** carts.get(i).getQuantity()*/);
             }
             subtotal.setText(new DecimalFormat("##.##").format(priceSum) + "€");
@@ -248,6 +252,22 @@ public class CartActivity extends AppCompatActivity {
         }
 
         mAdapter.filterList(filteredList);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        new AlertDialog.Builder(this)
+                .setTitle("Iliadis")
+                .setMessage(getString(R.string.closeapp))
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        moveTaskToBack(true);
+                    }
+                }).create().show();
     }
 
     @Override
@@ -304,7 +324,7 @@ public class CartActivity extends AppCompatActivity {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
             holder.code.setText(cartList.get(position).getRealcode()+"-"+cartList.get(position).getProdcode());
-            holder.description.setText(cartList.get(position).getDescription());
+            holder.description.setText(localeChange(iliadisDatabase.daoAccess().getProductByRealCode(cartList.get(position).getRealcode()).getProdescriptionEn(),cartList.get(position).getDescription()));
             holder.qty.setText("QTY: "+cartList.get(position).getQuantity());
             holder.price.setText(new DecimalFormat("##.##").format(Double.parseDouble(cartList.get(position).getPrice())));
 
@@ -361,6 +381,20 @@ public class CartActivity extends AppCompatActivity {
             notifyDataSetChanged();
         }
 
+    }
+
+    public String localeChange(String producten,String productgr)
+    {
+        String str="";
+
+        if (lang == true ){
+            str = producten;
+        }
+        else if (lang == false){
+
+            str = productgr;
+        }
+        return str;
     }
 
     public  boolean isReadStoragePermissionGranted() {

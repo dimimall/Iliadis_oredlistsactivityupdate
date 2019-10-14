@@ -463,8 +463,9 @@ public class utils {
             priceSum = priceSum + (Double.parseDouble(carts.get(i).getPrice().replace(",",".")));
             Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid(),carts.get(i).getDiscountid());
             discount = discount + catalog.getDiscount1();
-            Log.d("Dimitra","discount "+discount/100);
             sPriceSum = sPriceSum + (Double.parseDouble(carts.get(i).getPriceid().replace(",",".")) * carts.get(i).getQuantity());
+            Log.d("Dimitra","vat2 : "+iliadisDatabase.daoAccess().getVat(iliadisDatabase.daoAccess().getProductByProdCode(carts.get(i).getProdcode()).getVatcode(),custvatid));
+            k = (int)iliadisDatabase.daoAccess().getVat(iliadisDatabase.daoAccess().getProductByProdCode(carts.get(i).getProdcode()).getVatcode(),custvatid);
             vTotal = vTotal + (((k * Double.parseDouble(carts.get(i).getPrice().replace(",","."))) / 100));
         }
         PdfPCell s = new PdfPCell(new Phrase("ΣΥΝΟΛΟ ΠΟΣΟΤΗΤΑΣ: " + new DecimalFormat("##.####").format(prodSum),urFontName));
@@ -691,7 +692,7 @@ public class utils {
 
         for(int i = 0; i < carts.size(); i++){
             prod_table.addCell(new PdfPCell(new Phrase(carts.get(i).getRealcode(),urFontName)));
-            prod_table.addCell(new PdfPCell(new Phrase(carts.get(i).getDescription()+"\n"+carts.get(i).getComment(),urFontName)));
+            prod_table.addCell(new PdfPCell(new Phrase(iliadisDatabase.daoAccess().getProductByRealCode(carts.get(i).getRealcode()).getProdescriptionEn()+"\n"+carts.get(i).getComment(),urFontName)));
             prod_table.addCell(new PdfPCell(new Phrase("" + carts.get(i).getQuantity(),urFontName)));
             Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid(),iliadisDatabase.daoAccess().getProductByProdCode(carts.get(i).getProdcode()).getPriceid());
             prod_table.addCell(new PdfPCell(new Phrase("" + new DecimalFormat("##.##").format(getProductPrice(Double.parseDouble(iliadisDatabase.daoAccess().getProductByProdCode(carts.get(i).getProdcode()).getPrice().replace(",",".")),catalog.getDiscount1())),urFontName)));
@@ -733,8 +734,9 @@ public class utils {
             priceSum = priceSum + (Double.parseDouble(carts.get(i).getPrice().replace(",",".")));
             Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(iliadisDatabase.daoAccess().getCustomerByCustid(custid).getCatalogueid(),carts.get(i).getDiscountid());
             discount = discount + catalog.getDiscount1();
-            Log.d("Dimitra","discount "+discount/100);
             sPriceSum = sPriceSum + (Double.parseDouble(carts.get(i).getPriceid().replace(",",".")) * carts.get(i).getQuantity());
+            Log.d("Dimitra","vat3 : "+iliadisDatabase.daoAccess().getVat(iliadisDatabase.daoAccess().getProductByProdCode(carts.get(i).getProdcode()).getVatcode(),custvatid));
+            k = (int)iliadisDatabase.daoAccess().getVat(iliadisDatabase.daoAccess().getProductByProdCode(carts.get(i).getProdcode()).getVatcode(),custvatid);
             vTotal = vTotal + (((k * Double.parseDouble(carts.get(i).getPrice().replace(",","."))) / 100));
         }
         PdfPCell s = new PdfPCell(new Phrase("TOTAL QUANTITY: " + new DecimalFormat("##.####").format(prodSum),urFontName));

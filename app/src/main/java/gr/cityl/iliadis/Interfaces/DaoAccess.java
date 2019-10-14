@@ -118,6 +118,9 @@ public interface DaoAccess {
     @Query("Select c1.* from catalog c1 where c1.custcatid =:custcatid and c1.catid =:priceid")
     Catalog getCatalogueDiscount(int custcatid, String priceid);
 
+    @Query("Select v1.vat from fpa v1 where v1.vatid=:vatcode and v1.custvatid=:custvatid")
+    double getVat(String vatcode,String custvatid);
+
     @Delete
     void deleteProducts(List<Products> products);
 

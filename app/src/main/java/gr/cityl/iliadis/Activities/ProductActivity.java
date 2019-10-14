@@ -1,6 +1,8 @@
 package gr.cityl.iliadis.Activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.os.ConfigurationCompat;
@@ -33,7 +35,7 @@ import gr.cityl.iliadis.R;
 public class ProductActivity extends AppCompatActivity {
 
     TextInputLayout barcodetext;
-    TextView desctext,pricetext,balancetext,reservedtext,renewtext,datereceivetext,availabletext;
+    TextView desctext,pricetext,balancetext,reservedtext,renewtext,datereceivetext,availabletext,realcode;
     Button basket,scan;
     ImageView cartbutton;
     IliadisDatabase iliadisDatabase;
@@ -43,7 +45,7 @@ public class ProductActivity extends AppCompatActivity {
     utils myutils;
     String realcodecart="";
     String prodcart="";
-    private boolean lang ;
+    boolean lang ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,7 @@ public class ProductActivity extends AppCompatActivity {
 
         myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
         lang = myutils.sharedpreferences.getBoolean("language",false);
-
+        Log.d("Dimitra","language: "+lang);
 
         cartbutton = (ImageView) toolbar.findViewById(R.id.basket);
         cartbutton.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +117,9 @@ public class ProductActivity extends AppCompatActivity {
                             }
                             if (!prodcart.equals(product.getProdcode()) || !realcodecart.equals(product.getRealcode()))
                             {
+                                Log.d("Dimitra","text: "+localeChange(product.getProdescriptionEn(),product.getProdescription()));
                                 desctext.setText(localeChange(product.getProdescriptionEn(),product.getProdescription()));
+                                realcode.setText(product.getRealcode());
                                 Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
                                 pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
                                 balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
@@ -128,6 +132,7 @@ public class ProductActivity extends AppCompatActivity {
                             else {
                                 myutils.createDialog(getString(R.string.existproduct),ProductActivity.this);
                                 desctext.setText(localeChange(product.getProdescriptionEn(),product.getProdescription()));
+                                realcode.setText(product.getRealcode());
                                 Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
                                 pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
                                 balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
@@ -181,6 +186,21 @@ public class ProductActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        new AlertDialog.Builder(this)
+                .setTitle("Iliadis")
+                .setMessage(getString(R.string.closeapp))
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        moveTaskToBack(true);
+                    }
+                }).create().show();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -200,6 +220,7 @@ public class ProductActivity extends AppCompatActivity {
         balancetext = (TextView)findViewById(R.id.textView11);
         reservedtext = (TextView)findViewById(R.id.textView12);
         renewtext = (TextView)findViewById(R.id.textView13);
+        realcode = (TextView)findViewById(R.id.textView19);
         datereceivetext = (TextView)findViewById(R.id.textView14);
         availabletext = (TextView)findViewById(R.id.textView15);
         scan = (Button)findViewById(R.id.button10);
@@ -212,9 +233,11 @@ public class ProductActivity extends AppCompatActivity {
 
         if (lang == true ){
             str = producten;
+            Log.d("Dimitra","locale1 "+lang+" "+str);
         }
         else if (lang == false){
            str = productgr;
+            Log.d("Dimitra","locale2 "+lang+" "+str);
         }
         return str;
     }

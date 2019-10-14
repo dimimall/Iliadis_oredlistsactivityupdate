@@ -130,7 +130,7 @@ public class UpdateProductDbReceiver extends BroadcastReceiver {
                     products1.setMinimumstep(newList.get(j).getMinimumstep());
                     products1.setMinquantity(newList.get(j).getMinquantity());
 
-                    Log.d("Dimitra"," "+newList.get(j).getProdescription()+" id "+oldList.get(i).getId());
+                    Log.d("Dimitra"," "+newList.get(j).getProdescription()+" English "+newList.get(j).getProdescriptionEn()+" "+" id "+oldList.get(i).getId());
                     iliadisDatabase.daoAccess().update(products1);
                 }
             }

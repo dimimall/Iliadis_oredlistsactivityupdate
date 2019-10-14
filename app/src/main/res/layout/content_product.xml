@@ -12,7 +12,7 @@
         android:backgroundTint="@color/colorGreen"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="100dp"
         android:focusable="true"
         android:id="@+id/textInputLayout4">
 
@@ -138,6 +138,17 @@
         android:text="@string/basket"
         android:textColor="#ffffff"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView19"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/textView8"
+        android:layout_marginTop="67dp"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:text="realcode" />
 
 
 </RelativeLayout>

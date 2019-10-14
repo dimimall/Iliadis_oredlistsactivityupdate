@@ -13,7 +13,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="22dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="60dp"
         android:textSize="20sp"
         android:text="RealCode" />
 
@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textView22"
         android:layout_below="@+id/editText4"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="25dp"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="#c3c3c3"

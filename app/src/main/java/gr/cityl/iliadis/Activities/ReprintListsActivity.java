@@ -172,7 +172,7 @@ public class ReprintListsActivity extends AppCompatActivity {
                                     final String[] text = {""," "};
                                     final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                                             ReprintListsActivity.this);
-                                    LayoutInflater inflater = (LayoutInflater) getApplicationContext()
+                                    LayoutInflater inflater = (LayoutInflater) ReprintListsActivity.this
                                             .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                                     View view = inflater.inflate(R.layout.dialog_box, null);
                                     alertDialogBuilder.setView(view);

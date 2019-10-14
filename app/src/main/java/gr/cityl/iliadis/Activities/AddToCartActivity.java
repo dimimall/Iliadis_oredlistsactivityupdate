@@ -151,59 +151,21 @@ public class AddToCartActivity extends AppCompatActivity {
             }
         });
 
-//        editQuantity.setOnKeyListener(new View.OnKeyListener() {
-//
-//            public boolean onKey(View v, int keyCode, KeyEvent event) {
-//
-//                if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
-//                        keyCode == EditorInfo.IME_ACTION_DONE ||
-//                        event.getAction() == KeyEvent.ACTION_DOWN &&
-//                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
-//                {
-//                    if (Integer.parseInt(editQuantity.getText().toString()) > Integer.parseInt(products.getQuantityav()))
-//                    {
-//                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-//                                AddToCartActivity.this);
-//                        // set title
-//                        alertDialogBuilder.setTitle("");
-//                        // set dialog message
-//                        alertDialogBuilder
-//                                .setMessage(getString(R.string.biggestquantity))
-//                                .setCancelable(false)
-//                                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
-//                                    public void onClick(DialogInterface dialog,int id) {
-//                                        editQuantity.setText(products.getQuantityav());
-//                                        dialog.cancel();
-//                                    }
-//                                });
-//                        // create alert dialog
-//                        AlertDialog alertDialog = alertDialogBuilder.create();
-//                        // show it
-//                        alertDialog.show();
-//                    }
-//                    else {
-//                        totalprice = Integer.parseInt(editQuantity.getText().toString()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
-//                        priceText.setText(getString(R.string.price)+": "+new DecimalFormat("##.####").format(totalprice));
-//                    }
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
 
-        commentText.getEditText().setOnKeyListener(new View.OnKeyListener() {
+        commentText.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
+            }
 
-                if (keyCode == EditorInfo.IME_ACTION_SEARCH ||
-                        keyCode == EditorInfo.IME_ACTION_DONE ||
-                        event.getAction() == KeyEvent.ACTION_DOWN &&
-                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER)
-                {
-                    comment = commentText.getEditText().getText().toString();
-                    return true;
-                }
-                return false;
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                comment = editable.toString();
             }
         });
 
@@ -246,18 +208,6 @@ public class AddToCartActivity extends AppCompatActivity {
         editQuantity = (EditText)findViewById(R.id.editText4);
         submit = (Button)findViewById(R.id.button12);
         scan = (Button)findViewById(R.id.button13);
-    }
-	
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     public String localeChange(String producten,String productgr)
