@@ -70,5 +70,7 @@
     <string name="totalammount">Total Amount</string>
     <string name="biggestquantity">Quantity is greater than available</string>
     <string name="csvfiles">Orders to CAP.</string>
+    <string name="order">Order</string>
+    <string name="realcode">Realcode</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

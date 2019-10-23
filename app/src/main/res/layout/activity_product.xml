@@ -32,7 +32,7 @@
                 android:layout_height="50dp"
                 android:id="@+id/basket"
                 android:layout_marginLeft="110dp"
-                android:src="@drawable/basket"/>
+                android:src="@drawable/cart"/>
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>

@@ -59,7 +59,7 @@ public class Calls {
                             json = new JSONArray(response);
                             JSONObject object = json.getJSONObject(0);
                             String result = object.getString("result");
-                            Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+                            Log.d("Calls",result);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

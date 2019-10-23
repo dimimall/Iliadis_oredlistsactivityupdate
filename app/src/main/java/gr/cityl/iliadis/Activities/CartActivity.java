@@ -58,6 +58,8 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import org.w3c.dom.Text;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -91,7 +93,7 @@ public class CartActivity extends AppCompatActivity {
 
     private TextInputLayout searchText;
     private RecyclerView recyclerView;
-    private TextView subtotal,vat,grandtotal;
+    private TextView subtotal,vat,grandtotal,ordertext;
     private Button print;
     private ShopDatabase shopDatabase;
     MyAdapter mAdapter;
@@ -142,6 +144,8 @@ public class CartActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        ordertext = (TextView)toolbar.findViewById(R.id.order);
+        ordertext.setText(getString(R.string.order)+" ("+orderid+")");
 
         searchText = (TextInputLayout)findViewById(R.id.textInputLayout6);
         recyclerView = (RecyclerView)findViewById(R.id.recyclercart);

@@ -71,4 +71,6 @@
     <string name="totalammount">Συνολική Αξία</string>
     <string name="biggestquantity">Η ποσότητα είναι μεγαλύτερη των διαθέσιμων προϊόντων</string>
     <string name="csvfiles">Εν.Παρ.ΚΕΦ.</string>
+    <string name="order">Παραγγελία</string>
+    <string name="realcode">Κωδικός</string>
 </resources>

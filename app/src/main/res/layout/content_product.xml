@@ -12,7 +12,7 @@
         android:backgroundTint="@color/colorGreen"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="70dp"
         android:focusable="true"
         android:id="@+id/textInputLayout4">
 
@@ -37,7 +37,7 @@
         android:layout_marginTop="22dp"
         android:text="@string/descproduct"
         android:textColor="#000000"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
@@ -47,7 +47,7 @@
         android:layout_alignStart="@+id/textView8"
         android:layout_below="@+id/textView8"
         android:layout_marginTop="25dp"
-        android:textSize="22sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/colorGreen"
         android:text="" />
@@ -58,9 +58,9 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textView9"
         android:layout_below="@+id/textView9"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="20dp"
         android:textColor="#000000"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:text="@string/price" />
 
@@ -69,7 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView10"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="15dp"
         android:text="@string/totalrest" />
@@ -81,7 +81,7 @@
         android:layout_alignStart="@+id/textView11"
         android:layout_below="@+id/textView11"
         android:layout_marginTop="12dp"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:text="@string/reserved" />
 
     <TextView
@@ -91,7 +91,7 @@
         android:layout_alignStart="@+id/textView12"
         android:layout_below="@+id/textView12"
         android:layout_marginTop="12dp"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:text="@string/renew" />
 
     <TextView
@@ -101,7 +101,7 @@
         android:layout_alignStart="@+id/textView13"
         android:layout_below="@+id/textView13"
         android:layout_marginTop="10dp"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:text="@string/available" />
 
     <TextView
@@ -111,7 +111,7 @@
         android:layout_alignStart="@+id/textView14"
         android:layout_below="@+id/textView14"
         android:layout_marginTop="10dp"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:text="@string/datedelivery" />
 
     <Button
@@ -143,12 +143,10 @@
         android:id="@+id/textView19"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/textView8"
-        android:layout_marginTop="67dp"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:text="realcode" />
+        android:layout_alignStart="@+id/textView15"
+        android:layout_below="@+id/textView15"
+        android:text="@string/realcode"
+        android:textSize="18sp" />
 
 
 </RelativeLayout>

@@ -542,7 +542,7 @@ public class utils {
         AssetManager assetManager = context.getAssets();
         InputStream is = null;
         try {
-            is = assetManager.open("pdf_image_gr.png");
+            is = assetManager.open("pdf_image_en.png");
         } catch (IOException e) {
             e.printStackTrace();
         }

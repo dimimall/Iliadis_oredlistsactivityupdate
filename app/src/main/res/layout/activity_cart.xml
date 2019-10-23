@@ -27,6 +27,15 @@
                 android:textSize="20dp"
                 android:text="@string/basket"/>
 
+            <TextView
+                android:id="@+id/order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:layout_marginLeft="80dp"
+                android:text="@string/printorder"
+                android:textSize="20dp"/>
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>

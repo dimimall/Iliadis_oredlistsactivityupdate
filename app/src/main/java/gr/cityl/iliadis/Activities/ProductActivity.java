@@ -119,7 +119,7 @@ public class ProductActivity extends AppCompatActivity {
                             {
                                 Log.d("Dimitra","text: "+localeChange(product.getProdescriptionEn(),product.getProdescription()));
                                 desctext.setText(localeChange(product.getProdescriptionEn(),product.getProdescription()));
-                                realcode.setText(product.getRealcode());
+                                realcode.setText(getString(R.string.realcode)+":"+product.getRealcode());
                                 Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
                                 pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
                                 balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
@@ -132,7 +132,7 @@ public class ProductActivity extends AppCompatActivity {
                             else {
                                 myutils.createDialog(getString(R.string.existproduct),ProductActivity.this);
                                 desctext.setText(localeChange(product.getProdescriptionEn(),product.getProdescription()));
-                                realcode.setText(product.getRealcode());
+                                realcode.setText(getString(R.string.realcode)+":"+product.getRealcode());
                                 Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
                                 pricetext.setText(getString(R.string.price)+":"+new DecimalFormat("##.##").format(myutils.getProductPrice(Double.parseDouble(product.getPrice().replace(",",".")),catalog.getDiscount1())));
                                 balancetext.setText(getString(R.string.totalrest)+":"+product.getQuantitytotal());
@@ -155,6 +155,7 @@ public class ProductActivity extends AppCompatActivity {
             public void onClick(View view) {
                 barcodetext.requestFocus();
                 desctext.setText("");
+                realcode.setText("");
                 pricetext.setText(getString(R.string.price)+":");
                 balancetext.setText(getString(R.string.totalrest)+":");
                 reservedtext.setText(getString(R.string.reserved)+":");

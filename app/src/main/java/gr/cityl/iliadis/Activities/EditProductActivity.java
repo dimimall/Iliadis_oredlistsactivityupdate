@@ -84,6 +84,7 @@ public class EditProductActivity extends AppCompatActivity {
                 intent.putExtra("cart", (Serializable) carts);
                 intent.putExtra("shopid",shopid);
                 intent.putExtra("catalogueid",custcatid);
+                intent.putExtra("orderid",orderid);
                 startActivity(intent);
             }
         });
