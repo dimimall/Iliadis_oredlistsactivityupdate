@@ -2,6 +2,7 @@ package gr.cityl.iliadis.Activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
@@ -81,6 +83,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import gr.cityl.iliadis.Interfaces.AlertDialogCallback;
 import gr.cityl.iliadis.Manager.utils;
 import gr.cityl.iliadis.Models.Cart;
 import gr.cityl.iliadis.Models.Customers;
@@ -89,7 +92,7 @@ import gr.cityl.iliadis.Models.Order;
 import gr.cityl.iliadis.Models.ShopDatabase;
 import gr.cityl.iliadis.R;
 
-public class CartActivity extends AppCompatActivity {
+public class CartActivity extends AppCompatActivity{
 
     private TextInputLayout searchText;
     private RecyclerView recyclerView;
@@ -107,6 +110,7 @@ public class CartActivity extends AppCompatActivity {
     private String number;
     private String ipprintpref;
     private boolean lang;
+    private AlertDialogCallback alertDialogCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,10 +224,17 @@ public class CartActivity extends AppCompatActivity {
             Toast.makeText(CartActivity.this,getString(R.string.noproducts),Toast.LENGTH_LONG).show();
         }
 
+        alertDialogCallback = new AlertDialogCallback() {
+            @Override
+            public void alertDialogCallback(String[] ret) {
+
+            }
+        };
+
         print.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialogBox();
+                dialogBox(alertDialogCallback);
             }
         });
 
@@ -439,9 +450,10 @@ public class CartActivity extends AppCompatActivity {
         }
     }
 
-    public void dialogBox()
+    public void dialogBox(final AlertDialogCallback callback)
     {
-        final String[] text = {""," "};
+        this.alertDialogCallback=callback;
+        final String[] text = {""," "," "};
 
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this);
@@ -457,7 +469,6 @@ public class CartActivity extends AppCompatActivity {
         Spinner spinner = view.findViewById(R.id.spinner2);
         final TextInputLayout comment = view.findViewById(R.id.textInputLayout7);
         final Button ok = view.findViewById(R.id.button15);
-
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line);
         adapter.add("Ελληνικά");
         adapter.add("English");
@@ -493,13 +504,51 @@ public class CartActivity extends AppCompatActivity {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.dismiss();
                 if (text[0].equals("Ελληνικά"))
                 {
-                    Toast.makeText(getApplicationContext(),"please wait....",Toast.LENGTH_LONG).show();
-
                     //create and print pdf in greek
                     try {
                         myutils.createPdfFileGr(cartsList,custid,custvatid,number,shopId,ipprintpref,iliadisDatabase,CartActivity.this);
+                        final int[] progressStatus={0};
+                        final Handler handler = new Handler();
+                        for (int i=0; i<2; i++)
+                        {
+                            final ProgressDialog pd = new ProgressDialog(CartActivity.this);
+                            pd.setMessage("Loading.........");
+                            pd.show();
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    utils.printPdf(ipprintpref,CartActivity.this);
+                                    while(progressStatus[0] < 100){
+                                        // Update the progress status
+                                        progressStatus[0] +=1;
+
+                                        // Try to sleep the thread for 20 milliseconds
+                                        try{
+                                            Thread.sleep(20);
+                                        }catch(InterruptedException e){
+                                            e.printStackTrace();
+                                        }
+
+                                        // Update the progress bar
+                                        handler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                // Update the progress status
+                                                pd.setProgress(progressStatus[0]);
+                                                // If task execution completed
+                                                if(progressStatus[0] == 100){
+                                                    // Dismiss/hide the progress dialog
+                                                    pd.dismiss();
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            }).start();
+                        }
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss ");
                         String currentDateandTime = sdf.format(new Date());
                         Order order = new Order();
@@ -544,6 +593,48 @@ public class CartActivity extends AppCompatActivity {
                     //create and print pdf in english
                     try {
                         myutils.createPdfFileEn(cartsList,custid,custvatid,number,shopId,ipprintpref,iliadisDatabase,CartActivity.this);
+                        final int[] progressStatus = {0};
+                        final Handler handler = new Handler();
+                        for (int i=0; i<2; i++)
+                        {
+                            final ProgressDialog pd = new ProgressDialog(CartActivity.this);
+                            pd.setMessage("Loading.........");
+                            pd.show();
+                            // Set the progress status zero on each button click
+
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    utils.printPdf(ipprintpref,CartActivity.this);
+                                    while(progressStatus[0] < 100){
+                                        // Update the progress status
+                                        progressStatus[0] +=1;
+
+                                        // Try to sleep the thread for 20 milliseconds
+                                        try{
+                                            Thread.sleep(20);
+                                        }catch(InterruptedException e){
+                                            e.printStackTrace();
+                                        }
+
+                                        // Update the progress bar
+                                        handler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                // Update the progress status
+                                                pd.setProgress(progressStatus[0]);
+                                                // If task execution completed
+                                                if(progressStatus[0] == 100){
+                                                    // Dismiss/hide the progress dialog
+                                                    pd.dismiss();
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            }).start();
+                        }
+
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss ");
                         String currentDateandTime = sdf.format(new Date());
                         Order order = new Order();
@@ -583,7 +674,6 @@ public class CartActivity extends AppCompatActivity {
                     Intent intent = new Intent(CartActivity.this,MainActivity.class);
                     startActivity(intent);
                 }
-                dialog.dismiss();
             }
         });
         dialog.show();

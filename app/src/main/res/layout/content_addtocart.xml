@@ -41,15 +41,15 @@
 
     <EditText
         android:id="@+id/editText4"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/textView21"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="28dp"
-        android:maxLength="5"
+        android:layout_alignBaseline="@+id/textView22"
+        android:layout_alignBottom="@+id/textView22"
+        android:layout_alignStart="@+id/button12"
+        android:layout_marginStart="69dp"
         android:ems="10"
-        android:inputType="number" />
+        android:inputType="number"
+        android:maxLength="5" />
 
     <TextView
         android:id="@+id/textView23"
@@ -108,5 +108,18 @@
         android:textStyle="bold"
         android:gravity="left"
         android:text="@string/newscan" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/editText4"
+        android:layout_marginStart="14dp"
+        android:layout_toRightOf="@+id/editText4"
+        android:background="@color/colorGreen"
+        android:text="@string/prosthiki"
+        android:textColor="#fff"
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

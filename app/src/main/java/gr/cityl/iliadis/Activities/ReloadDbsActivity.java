@@ -1,6 +1,7 @@
 package gr.cityl.iliadis.Activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,7 +41,8 @@ public class ReloadDbsActivity extends AppCompatActivity {
     Button fpa;
     Button country;
     IliadisDatabase iliadisDatabase;
-
+    utils myutils;
+    String ipserverpref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +54,10 @@ public class ReloadDbsActivity extends AppCompatActivity {
         iliadisDatabase = IliadisDatabase.getInstance(this);
 
         init();
+        myutils = new utils();
+
+        myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
+        ipserverpref = myutils.sharedpreferences.getString("ipserver", "");
 
         product.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,7 +171,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
         pDialog.show();
 
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, "https://pod.iliadis.com.gr/getproducts.asp", null, new Response.Listener<JSONArray>() {
+                (Request.Method.GET, ipserverpref+"/getproducts.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
                         pDialog.dismiss();
@@ -227,7 +233,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
         pDialog.show();
 
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, "https://pod.iliadis.com.gr/getcustomersx.asp", null, new Response.Listener<JSONArray>() {
+                (Request.Method.GET, ipserverpref+"/getcustomersx.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
                         pDialog.dismiss();
@@ -289,7 +295,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
         pDialog.show();
 
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, "https://pod.iliadis.com.gr/getcatalogues.asp", null, new Response.Listener<JSONArray>() {
+                (Request.Method.GET, ipserverpref+"/getcatalogues.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
                         pDialog.dismiss();
@@ -352,7 +358,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
         pDialog.show();
 
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, "https://pod.iliadis.com.gr/getvats.asp", null, new Response.Listener<JSONArray>() {
+                (Request.Method.GET, ipserverpref+"/getvats.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
                         pDialog.dismiss();
@@ -402,7 +408,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
         pDialog.show();
 
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, "https://pod.iliadis.com.gr/getcountries.asp", null, new Response.Listener<JSONArray>() {
+                (Request.Method.GET, ipserverpref+"/getcountries.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
                         pDialog.dismiss();
@@ -449,7 +455,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
         pDialog.show();
 
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, "https://pod.iliadis.com.gr/getseccustomers.asp", null, new Response.Listener<JSONArray>() {
+                (Request.Method.GET, ipserverpref+"/getseccustomers.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
                         pDialog.dismiss();

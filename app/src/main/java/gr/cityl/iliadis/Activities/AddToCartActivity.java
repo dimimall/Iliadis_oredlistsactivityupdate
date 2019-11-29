@@ -52,6 +52,7 @@ public class AddToCartActivity extends AppCompatActivity {
     private utils myutlis = new utils();
     private String comment="";
     private boolean lang ;
+    private Button add;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +104,7 @@ public class AddToCartActivity extends AppCompatActivity {
         realProdCodeText.setText(products.getProdcode()+"-"+products.getRealcode());
         descriptionText.setText(localeChange(products.getProdescriptionEn(),products.getProdescription()));
         editQuantity.setText(products.getMinquantity());
+        editQuantity.setSelection(editQuantity.getText().length());
         catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,products.getPriceid());
         totalprice = Integer.parseInt(products.getMinquantity()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
         priceText.setText(getString(R.string.price)+":"+new DecimalFormat("##.####").format(totalprice));
@@ -115,14 +117,9 @@ public class AddToCartActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (!editable.toString().equals(""))
+                if (!charSequence.toString().equals(""))
                 {
-                    if (Integer.parseInt(editable.toString()) > Integer.parseInt(products.getQuantityav()))
+                    if (Integer.parseInt(charSequence.toString()) > Integer.parseInt(products.getQuantityav()))
                     {
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                                 AddToCartActivity.this);
@@ -144,10 +141,14 @@ public class AddToCartActivity extends AppCompatActivity {
                         alertDialog.show();
                     }
                     else {
-                        totalprice = Integer.parseInt(editable.toString()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
+                        totalprice = Integer.parseInt(charSequence.toString()) * myutlis.getProductPrice(Double.parseDouble(products.getPrice().replace(",",".")),catalog.getDiscount1());
                         priceText.setText(getString(R.string.price)+": "+new DecimalFormat("##.####").format(totalprice));
                     }
                 }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
             }
         });
 
@@ -184,6 +185,23 @@ public class AddToCartActivity extends AppCompatActivity {
             }
         });
 
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Cart cart = new Cart(orderid,products.getRealcode(),products.getProdcode(),String.valueOf(totalprice),comment,products.getProdescription(),Integer.parseInt(editQuantity.getText().toString()),products.getVatcode(),products.getPrice(),products.getPriceid());
+                shopDatabase.daoShop().insertTask(cart);
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+                Intent intent = new Intent(AddToCartActivity.this,ProductActivity.class);
+                intent.putExtra("custid",custid);
+                intent.putExtra("custvatid",custvatid);
+                intent.putExtra("orderid",orderid);
+                intent.putExtra("catalogueid",custcatid);
+                intent.putExtra("shopid",shopid);
+                startActivity(intent);
+            }
+        });
+
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -206,8 +224,12 @@ public class AddToCartActivity extends AppCompatActivity {
         priceText = (TextView)findViewById(R.id.textView23);
         commentText = (TextInputLayout)findViewById(R.id.textInputLayout5);
         editQuantity = (EditText)findViewById(R.id.editText4);
+        editQuantity.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         submit = (Button)findViewById(R.id.button12);
         scan = (Button)findViewById(R.id.button13);
+        add = (Button)findViewById(R.id.button2);
     }
 
     public String localeChange(String producten,String productgr)

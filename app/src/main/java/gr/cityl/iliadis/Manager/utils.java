@@ -1,7 +1,7 @@
 package gr.cityl.iliadis.Manager;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,10 +14,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.StrictMode;
-import android.support.design.widget.TextInputLayout;
 import android.util.Log;
+import android.util.Printer;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +72,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.text.DecimalFormat;
@@ -79,6 +82,7 @@ import java.util.List;
 import java.util.Locale;
 
 import gr.cityl.iliadis.Activities.MainActivity;
+import gr.cityl.iliadis.Activities.ReprintListsActivity;
 import gr.cityl.iliadis.Models.Cart;
 import gr.cityl.iliadis.Models.Catalog;
 import gr.cityl.iliadis.Models.Customers;
@@ -528,12 +532,11 @@ public class utils {
         doc.add(com_table);
         doc.close();
 
-
-        for (int i=0; i<2; i++)
-        {
-            String success = printPdf(ipprinter);
-            Log.d("Dimitra",success);
-        }
+//        for (int i=0; i<2; i++)
+//        {
+//            String success = printPdf(ipprinter,context);
+//            Log.d("Dimitra",success);
+//        }
 
     }
 
@@ -798,14 +801,10 @@ public class utils {
         doc.add(com_table);
         doc.close();
 
-        for (int i=0; i<2; i++)
-        {
-            String success = printPdf(ipprinter);
-            Log.d("Dimitra",success);
-        }
     }
 
-    public String  printPdf(String ipprinter) {
+
+    public static String  printPdf(String ipprinter,Context context) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         final String SUCCESSFULLY_SENT = "Successfully sent to printer";
@@ -852,6 +851,7 @@ public class utils {
         }
         return result;
     }
+
 
     public void createDialog(String message,Context context)
     {

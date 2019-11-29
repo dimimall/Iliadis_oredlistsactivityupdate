@@ -131,6 +131,8 @@ public class SettingsActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = myutils.sharedpreferences.edit();
                     editor.putString("ipserver",ipserver.getText().toString());
                     editor.commit();
+                    Intent intent = new Intent(SettingsActivity.this,MainActivity.class);
+                    startActivity(intent);
                     return true;
                 }
                 return false;

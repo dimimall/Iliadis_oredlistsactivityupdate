@@ -72,5 +72,6 @@
     <string name="csvfiles">Orders to CAP.</string>
     <string name="order">Order</string>
     <string name="realcode">Realcode</string>
+    <string name="prosthiki">Add</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity
     utils myutils;
     Toolbar toolbar;
     Calls calls;
+    String ipserverpref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +85,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         iliadisDatabase = IliadisDatabase.getInstance(this);
         shopDatabase = ShopDatabase.getInstance(this);
@@ -94,13 +94,14 @@ public class MainActivity extends AppCompatActivity
         myutils = new utils();
         calls = new Calls();
 
+        myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
+        ipserverpref = myutils.sharedpreferences.getString("ipserver", "");
 
         Room.databaseBuilder(MainActivity.this, ShopDatabase.class, ShopDatabase.DB_NAME)
                 .addMigrations(MIGRATION_2_3,MIGRATION_3_4).build();
 
         Room.databaseBuilder(MainActivity.this, IliadisDatabase.class, IliadisDatabase.DB_NAME)
                 .addMigrations(MIGRATION_1_2_product,MIGRATION_2_3_product).build();
-
 
         Intent notifyIntent = new Intent(getApplicationContext(),UpdateProductDbReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),101,notifyIntent,0);
@@ -258,11 +259,12 @@ public class MainActivity extends AppCompatActivity
         image.setColorFilter(Color.argb(255, 255, 255, 255));
     }
 
+    //https://pod.iliadis.com.gr
     private void loadJsonProducts() {
         final ArrayList<Products> products = new ArrayList<>();
         displayLoader(getString(R.string.downloadfileproduct));
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, "https://pod.iliadis.com.gr/getproducts.asp", null, new Response.Listener<JSONArray>() {
+                (Request.Method.GET, ipserverpref+"/getproducts.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
                         pDialog.dismiss();
@@ -317,7 +319,7 @@ public class MainActivity extends AppCompatActivity
         displayLoader(getString(R.string.downloadfilecustomer));
         final ArrayList<Customers> customers = new ArrayList<>();
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, "https://pod.iliadis.com.gr/getcustomersx.asp", null, new Response.Listener<JSONArray>() {
+                (Request.Method.GET, ipserverpref+"/getcustomersx.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
                         pDialog.dismiss();
@@ -375,7 +377,7 @@ public class MainActivity extends AppCompatActivity
 
         final ArrayList<SecCustomers> secCustomers = new ArrayList<>();
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, "https://pod.iliadis.com.gr/getseccustomers.asp", null, new Response.Listener<JSONArray>() {
+                (Request.Method.GET, ipserverpref+"/getseccustomers.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
                         pDialog.dismiss();
@@ -423,7 +425,7 @@ public class MainActivity extends AppCompatActivity
 
         final ArrayList<Catalog> catalogs = new ArrayList<>();
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, "https://pod.iliadis.com.gr/getcatalogues.asp", null, new Response.Listener<JSONArray>() {
+                (Request.Method.GET, ipserverpref+"/getcatalogues.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
                         pDialog.dismiss();
@@ -483,7 +485,7 @@ public class MainActivity extends AppCompatActivity
 
         final ArrayList<FPA> fpa = new ArrayList<>();
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, "https://pod.iliadis.com.gr/getvats.asp", null, new Response.Listener<JSONArray>() {
+                (Request.Method.GET, ipserverpref+"/getvats.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
                         pDialog.dismiss();
@@ -530,7 +532,7 @@ public class MainActivity extends AppCompatActivity
         final ArrayList<Country> countries = new ArrayList<>();
 
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, "https://pod.iliadis.com.gr/getcountries.asp", null, new Response.Listener<JSONArray>() {
+                (Request.Method.GET, ipserverpref+"/getcountries.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
                         pDialog.dismiss();

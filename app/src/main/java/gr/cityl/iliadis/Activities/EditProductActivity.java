@@ -98,6 +98,7 @@ public class EditProductActivity extends AppCompatActivity {
 
         descriptionText.setText(localeChange(iliadisDatabase.daoAccess().getProductByRealCode(cart.getRealcode()).getProdescriptionEn(),iliadisDatabase.daoAccess().getProductByRealCode(cart.getRealcode()).getProdescription()));
         editQuantity.setText(""+cart.getQuantity());
+        editQuantity.setSelection(editQuantity.getText().length());
         catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,cart.getDiscountid());
         totalprice = cart.getQuantity() * myutlis.getProductPrice(Double.parseDouble(cart.getPriceid().replace(",",".")),catalog.getDiscount1());
         priceText.setText(getString(R.string.price)+":"+new DecimalFormat("##.####").format(totalprice));

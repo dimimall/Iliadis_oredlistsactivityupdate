@@ -1,11 +1,13 @@
 package gr.cityl.iliadis.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ProgressBar;
 
+import gr.cityl.iliadis.Manager.utils;
 import gr.cityl.iliadis.R;
 
 public class SplashScreen extends AppCompatActivity {
@@ -13,6 +15,8 @@ public class SplashScreen extends AppCompatActivity {
     ProgressBar progressBar;
     int progressStatus = 0;
     Handler handler = new Handler();
+    utils myutils;
+    String ipserverpref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +24,8 @@ public class SplashScreen extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         progressBar=(ProgressBar)findViewById(R.id.progressBar1);
+
+        myutils = new utils();
 
         new Thread(new Runnable() {
             public void run() {
@@ -44,8 +50,17 @@ public class SplashScreen extends AppCompatActivity {
                 }
                 if (progressStatus==100)
                 {
-                   Intent intent = new Intent(SplashScreen.this,MainActivity.class);
-                   startActivity(intent);
+                    myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
+                    ipserverpref = myutils.sharedpreferences.getString("ipserver", "");
+                    if (ipserverpref.equals(""))
+                    {
+                        Intent intent = new Intent(SplashScreen.this,SettingsActivity.class);
+                        startActivity(intent);
+                    }
+                    else {
+                        Intent intent = new Intent(SplashScreen.this,MainActivity.class);
+                        startActivity(intent);
+                    }
                 }
             }
         }).start();
