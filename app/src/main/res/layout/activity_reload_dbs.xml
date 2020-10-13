@@ -11,69 +11,70 @@
         android:id="@+id/button3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textColor="#ffffff"
-        android:layout_marginRight="90dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
         android:background="@color/colorGreen"
-        android:text="@string/databaseproduct" />
+        android:text="@string/databaseproduct"
+        android:textColor="#ffffff" />
 
     <Button
         android:id="@+id/button4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/button3"
         android:layout_below="@+id/button3"
+        android:layout_alignStart="@+id/button3"
         android:layout_marginTop="20dp"
-        android:textColor="#ffffff"
-        android:layout_marginRight="90dp"
+        android:layout_marginEnd="40dp"
         android:background="@color/colorGreen"
-        android:text="@string/databasecustomer" />
+        android:text="@string/databasecustomer"
+        android:textColor="#ffffff" />
 
     <Button
         android:id="@+id/button5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/button4"
         android:layout_below="@+id/button4"
+        android:layout_alignStart="@+id/button4"
         android:layout_marginTop="20dp"
-        android:layout_marginRight="90dp"
-        android:textColor="#ffffff"
+        android:layout_marginEnd="40dp"
         android:background="@color/colorGreen"
-        android:text="@string/databaseshops" />
+        android:text="@string/databaseshops"
+        android:textColor="#ffffff" />
 
     <Button
         android:id="@+id/button6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/button5"
         android:layout_below="@+id/button5"
+        android:layout_alignStart="@+id/button5"
         android:layout_marginTop="20dp"
-        android:layout_marginRight="90dp"
-        android:textColor="#ffffff"
+        android:layout_marginEnd="40dp"
         android:background="@color/colorGreen"
-        android:text="@string/databasecatalogue" />
+        android:text="@string/databasecatalogue"
+        android:textColor="#ffffff" />
 
     <Button
         android:id="@+id/button7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/button6"
         android:layout_below="@+id/button6"
+        android:layout_alignStart="@+id/button6"
         android:layout_marginTop="20dp"
-        android:layout_marginRight="90dp"
-        android:textColor="#ffffff"
+        android:layout_marginEnd="40dp"
         android:background="@color/colorGreen"
-        android:text="@string/databasevat" />
+        android:text="@string/databasevat"
+        android:textColor="#ffffff" />
 
     <Button
         android:id="@+id/button9"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/button7"
         android:layout_below="@+id/button7"
+        android:layout_alignStart="@+id/button7"
         android:layout_marginTop="20dp"
-        android:layout_marginRight="90dp"
-        android:textColor="#ffffff"
+        android:layout_marginEnd="40dp"
         android:background="@color/colorGreen"
-        android:text="@string/databasecountry" />
+        android:text="@string/databasecountry"
+        android:textColor="#ffffff" />
 </RelativeLayout>

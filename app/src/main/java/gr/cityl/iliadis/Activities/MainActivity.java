@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity
             loadDatabase();
         }
         else {
-            Toast.makeText(MainActivity.this,"Disconnected netowrk",Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this,"Disconnected netwοrk",Toast.LENGTH_LONG).show();
         }
 
         buttonLayout.setOnClickListener(new View.OnClickListener() {
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity
                             String result = calls.sendCsvFiles(files[j],directory);
                             if (result.equals("success"))
                             {
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss ");
+                                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd-MMM-yyyy hh-mm-ss a");
                                 String currentDateandTime = sdf.format(new Date());
                                 Order order = new Order();
                                 order.setOrderid(orders.get(i).getOrderid());
@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity
                                 product.setMinimumstep(response.getString("minimumstep"));
                                 product.setMinquantity(response.getString("minquantity"));
                                 products.add(product);
-                                Log.d("Dimitra",product.getProdescription());
+                             //   Log.d("Dimitra",product.getProdescription());
 
                             }
                             iliadisDatabase.daoAccess().insertTaskProducts(products);
@@ -346,7 +346,7 @@ public class MainActivity extends AppCompatActivity
                                 customer.setCustvatid(response.getString("custvatid"));
                                 customer.setCustomerid(response.getString("customerid"));
                                 customers.add(customer);
-                                Log.d("Dimitra",customer.getCompanyName());
+                             //   Log.d("Dimitra",customer.getCompanyName());
 
                                 //iliadisDatabase.daoAccess().insertTask(customer);
                             }
@@ -394,7 +394,7 @@ public class MainActivity extends AppCompatActivity
                                 secCustomer.setPhone(response.getString("phone"));
                                 secCustomers.add(secCustomer);
 
-                                Log.d("Dimitra",secCustomer.getCompanyName());
+                             //   Log.d("Dimitra",secCustomer.getCompanyName());
 
                                 //iliadisDatabase.daoAccess().insertTask(secCustomer);
                             }
@@ -453,7 +453,7 @@ public class MainActivity extends AppCompatActivity
                                 catalog.setDiscount4(response.getInt("discount4"));
                                 catalog.setDiscount5(response.getInt("discount5"));
                                 catalogs.add(catalog);
-                                Log.d("Dimitra","catalog id "+catalog.getCatid());
+                              //  Log.d("Dimitra","catalog id "+catalog.getCatid());
 
                                 //iliadisDatabase.daoAccess().insertTask(catalog);
                             }
@@ -501,7 +501,7 @@ public class MainActivity extends AppCompatActivity
                                     fpa1.setCustvatid(response.getString("custvatid"));
                                 }
                                 fpa.add(fpa1);
-                                Log.d("Dimitra","fpa id "+fpa1.getVatid());
+                              //  Log.d("Dimitra","fpa id "+fpa1.getVatid());
                                 //iliadisDatabase.daoAccess().insertTask(fpa1);
                             }
                             iliadisDatabase.daoAccess().insertTaskFpa(fpa);
@@ -545,7 +545,7 @@ public class MainActivity extends AppCompatActivity
                                 country.setCountryid(response.getString("countryid"));
                                 country.setCountry(response.getString("country"));
                                 countries.add(country);
-                                Log.d("Dimitra",country.getCountry());
+                              //  Log.d("Dimitra",country.getCountry());
                             }
                             iliadisDatabase.daoAccess().insertTaskCountry(countries);
                             //loadJsonCatalog();

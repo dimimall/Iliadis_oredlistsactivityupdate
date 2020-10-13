@@ -5,12 +5,14 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 /**
  * Created by dimitra on 21/07/2019.
  */
 
 @Entity(tableName = "customers")
-public class Customers {
+public class Customers implements Serializable {
 
     @ColumnInfo(name = "address")
     String address;

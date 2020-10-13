@@ -87,13 +87,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textInputLayout5"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="25dp"
         android:background="@color/colorGreen"
+        android:gravity="center"
+        android:minWidth="250dp"
+        android:padding="10dp"
+        android:text="@string/updatecart"
         android:textColor="#fff"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="@string/updatecart" />
+        android:textStyle="bold" />
 
 </RelativeLayout>

@@ -42,9 +42,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageView2"
-        android:layout_marginTop="40dp"
-        android:layout_toStartOf="@+id/spinner"
+        android:layout_marginTop="45dp"
         android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@+id/spinner"
+        android:ems="7"
         android:text="@string/print"
         android:textColor="#000"
         android:textSize="16sp"
@@ -54,47 +55,52 @@
         android:id="@+id/editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_below="@+id/imageView2"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="29dp"
-        android:ems="10"
+        android:layout_marginEnd="15dp"
         android:backgroundTint="@color/colorGreen"
+        android:ems="11"
+        android:text=""
         android:inputType="textPersonName" />
 
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView4"
         android:layout_below="@+id/editText"
-        android:layout_marginTop="26dp"
+        android:layout_alignStart="@+id/textView4"
+        android:layout_marginTop="30dp"
+        android:ems="7"
+        android:text="@string/numsales"
         android:textColor="#000"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:text="@string/numsales" />
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/editText2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_below="@+id/editText"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="14dp"
-        android:ems="10"
+        android:layout_marginEnd="15dp"
         android:backgroundTint="@color/colorGreen"
+        android:ems="11"
         android:inputType="textPersonName" />
 
     <TextView
         android:id="@+id/textView16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView5"
         android:layout_below="@+id/editText2"
-        android:layout_marginTop="19dp"
+        android:layout_alignStart="@+id/textView5"
+        android:layout_marginTop="36dp"
+        android:ems="7"
+        android:text="IP    Server"
         android:textColor="#000"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:text="IP    Server" />
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/editText3"
@@ -102,9 +108,11 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/editText2"
         android:layout_alignTop="@+id/textView16"
-        android:layout_marginStart="6dp"
-        android:ems="10"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="-12dp"
+        android:layout_marginEnd="15dp"
         android:backgroundTint="@color/colorGreen"
+        android:ems="11"
         android:inputType="textPersonName"
         android:text="" />
 </RelativeLayout>

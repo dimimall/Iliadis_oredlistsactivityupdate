@@ -91,11 +91,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="0dp"
         android:background="@color/colorGreen"
-        android:gravity="center|right"
+        android:gravity="center|right|center_vertical|end"
+        android:paddingEnd="20dp"
+        android:text="@string/next"
         android:textColor="#ffffff"
-        android:text="@string/next" />
+        android:textSize="18sp"
+        tools:layout_height="90dp" />
 
 
 </RelativeLayout>

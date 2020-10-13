@@ -15,7 +15,7 @@ public class ParamOrders {
     String shopid;
     int orderid;
 
-    public ParamOrders(String custid,String afm,String companyname, String dateorder, String shopid,int orderid)
+    public ParamOrders(String custid, String afm, String companyname, String dateorder, String shopid,int orderid)
     {
         this.custid = custid;
         this.afm = afm;

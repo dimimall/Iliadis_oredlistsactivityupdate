@@ -22,13 +22,15 @@ import java.util.List;
 import gr.cityl.iliadis.Activities.MainActivity;
 import gr.cityl.iliadis.Activities.ProductActivity;
 import gr.cityl.iliadis.Manager.MySingleton;
+import gr.cityl.iliadis.Manager.utils;
 import gr.cityl.iliadis.Models.IliadisDatabase;
 import gr.cityl.iliadis.Models.Products;
 
 public class UpdateProductDbReceiver extends BroadcastReceiver {
 
     IliadisDatabase iliadisDatabase ;
-
+    utils myutils;
+    String ipserverpref;
     @Override
     public void onReceive(Context context, Intent intent) {
         // TODO: This method is called when the BroadcastReceiver is receiving
@@ -44,12 +46,17 @@ public class UpdateProductDbReceiver extends BroadcastReceiver {
     }
 
     public void updateNewProductsDb(final Context context) {
+        myutils = new utils();
+
+        myutils.sharedpreferences = context.getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
+        ipserverpref = myutils.sharedpreferences.getString("ipserver", "");
+
         iliadisDatabase = IliadisDatabase.getInstance(context);
         final List<Products> products = iliadisDatabase.daoAccess().getProductsList();
         Log.d("Dimitra", "products size "+products.size());
         final List<Products> products1 = new ArrayList<>();
         JsonArrayRequest jsArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, "https://pod.iliadis.com.gr/getproductsupdate.asp", null, new Response.Listener<JSONArray>() {
+                (Request.Method.GET, ipserverpref+"/getproductsupdate.asp", null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray responseArray) {
                         try {

@@ -63,7 +63,7 @@ public class AddToCartActivity extends AppCompatActivity {
         final String shopid = getIntent().getExtras().getString("shopid");
         final int custcatid = getIntent().getExtras().getInt("catalogueid");
         final int orderid = getIntent().getExtras().getInt("orderid");
-        Log.d("Dimitra","orderid "+orderid);
+       // Log.d("Dimitra","orderid "+orderid);
 
         products = (Products) getIntent().getExtras().getSerializable("prodcode");
 
@@ -81,11 +81,11 @@ public class AddToCartActivity extends AppCompatActivity {
         basket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                carts = shopDatabase.daoShop().getCartList(orderid);
+                //carts = shopDatabase.daoShop().getCartList(orderid);
                 Intent intent = new Intent(AddToCartActivity.this,CartActivity.class);
                 intent.putExtra("custvatid",custvatid);
                 intent.putExtra("custid",custid);
-                intent.putExtra("cart", (Serializable) carts);
+                //intent.putExtra("cart", (Serializable) carts);
                 intent.putExtra("shopid",shopid);
                 intent.putExtra("catalogueid",custcatid);
                 intent.putExtra("orderid",orderid);
@@ -120,6 +120,7 @@ public class AddToCartActivity extends AppCompatActivity {
                 if (!charSequence.toString().equals(""))
                 {
                     if (Integer.parseInt(charSequence.toString()) > Integer.parseInt(products.getQuantityav()))
+
                     {
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                                 AddToCartActivity.this);
@@ -173,32 +174,38 @@ public class AddToCartActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Cart cart = new Cart(orderid,products.getRealcode(),products.getProdcode(),String.valueOf(totalprice),comment,products.getProdescription(),Integer.parseInt(editQuantity.getText().toString()),products.getVatcode(),products.getPrice(),products.getPriceid());
-                shopDatabase.daoShop().insertTask(cart);
-                Intent intent = new Intent(AddToCartActivity.this,ProductActivity.class);
-                intent.putExtra("custid",custid);
-                intent.putExtra("custvatid",custvatid);
-                intent.putExtra("orderid",orderid);
-                intent.putExtra("catalogueid",custcatid);
-                intent.putExtra("shopid",shopid);
-                startActivity(intent);
+                if ( !(editQuantity.getText().toString().equals(""))){
+
+                    Cart cart = new Cart(orderid, products.getRealcode(), products.getProdcode(), String.valueOf(totalprice), comment, products.getProdescription(), Integer.parseInt(editQuantity.getText().toString()), products.getVatcode(), products.getPrice(), products.getPriceid());
+                    shopDatabase.daoShop().insertTask(cart);
+                    Intent intent = new Intent(AddToCartActivity.this, ProductActivity.class);
+                    intent.putExtra("custid", custid);
+                    intent.putExtra("custvatid", custvatid);
+                    intent.putExtra("orderid", orderid);
+                    intent.putExtra("catalogueid", custcatid);
+                    intent.putExtra("shopid", shopid);
+                    startActivity(intent);
+                }
+
             }
         });
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Cart cart = new Cart(orderid,products.getRealcode(),products.getProdcode(),String.valueOf(totalprice),comment,products.getProdescription(),Integer.parseInt(editQuantity.getText().toString()),products.getVatcode(),products.getPrice(),products.getPriceid());
-                shopDatabase.daoShop().insertTask(cart);
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(),0);
-                Intent intent = new Intent(AddToCartActivity.this,ProductActivity.class);
-                intent.putExtra("custid",custid);
-                intent.putExtra("custvatid",custvatid);
-                intent.putExtra("orderid",orderid);
-                intent.putExtra("catalogueid",custcatid);
-                intent.putExtra("shopid",shopid);
-                startActivity(intent);
+                if ( !(editQuantity.getText().toString().equals(""))) {
+                    Cart cart = new Cart(orderid, products.getRealcode(), products.getProdcode(), String.valueOf(totalprice), comment, products.getProdescription(), Integer.parseInt(editQuantity.getText().toString()), products.getVatcode(), products.getPrice(), products.getPriceid());
+                    shopDatabase.daoShop().insertTask(cart);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    Intent intent = new Intent(AddToCartActivity.this, ProductActivity.class);
+                    intent.putExtra("custid", custid);
+                    intent.putExtra("custvatid", custvatid);
+                    intent.putExtra("orderid", orderid);
+                    intent.putExtra("catalogueid", custcatid);
+                    intent.putExtra("shopid", shopid);
+                    startActivity(intent);
+                }
             }
         });
 

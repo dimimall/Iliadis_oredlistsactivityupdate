@@ -170,16 +170,21 @@ public class EditProductActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Cart updatecart = new Cart(cart.getCartid(), cart.getOrderid(),cart.getRealcode(),cart.getProdcode(),String.valueOf(totalprice),comment,cart.getDescription(),Integer.parseInt(editQuantity.getText().toString()),cart.getVatcode(),cart.getPriceid(),cart.getDiscountid());
-                shopDatabase.daoShop().updateCart(updatecart);
 
-                Intent intent = new Intent(EditProductActivity.this,ProductActivity.class);
-                intent.putExtra("custid",custid);
-                intent.putExtra("custvatid",custvatid);
-                intent.putExtra("orderid",orderid);
-                intent.putExtra("catalogueid",custcatid);
-                intent.putExtra("shopid",shopid);
-                startActivity(intent);
+                if ( !(editQuantity.getText().toString().equals(""))) {
+
+                    Cart updatecart = new Cart(cart.getCartid(), cart.getOrderid(), cart.getRealcode(), cart.getProdcode(), String.valueOf(totalprice), comment, cart.getDescription(), Integer.parseInt(editQuantity.getText().toString()), cart.getVatcode(), cart.getPriceid(), cart.getDiscountid());
+                    shopDatabase.daoShop().updateCart(updatecart);
+
+                    Intent intent = new Intent(EditProductActivity.this, ProductActivity.class);
+                    intent.putExtra("custid", custid);
+                    intent.putExtra("custvatid", custvatid);
+                    intent.putExtra("orderid", orderid);
+                    intent.putExtra("catalogueid", custcatid);
+                    intent.putExtra("shopid", shopid);
+                    startActivity(intent);
+
+                }
             }
         });
     }

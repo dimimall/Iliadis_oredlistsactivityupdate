@@ -1,5 +1,6 @@
 package gr.cityl.iliadis.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.icu.text.LocaleDisplayNames;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,8 +66,11 @@ public class OrderListsActivity extends AppCompatActivity {
         for (int i=0; i<orderList.size(); i++)
         {
             Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(orderList.get(i).getCustid());
-            ParamOrders paramOrder = new ParamOrders(orderList.get(i).getCustid(),customer.getAfm(),customer.getCompanyName(),orderList.get(i).getDateparsed(),shopid,orderList.get(i).getOrderid());
-            paramOrders.add(paramOrder);
+            if (customer != null)
+            {
+                ParamOrders paramOrder = new ParamOrders(orderList.get(i).getCustid(),customer.getAfm(),customer.getCompanyName(),orderList.get(i).getDateparsed(),shopid,orderList.get(i).getOrderid());
+                paramOrders.add(paramOrder);
+            }
         }
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerlist);
@@ -124,11 +129,11 @@ public class OrderListsActivity extends AppCompatActivity {
 
         // Replace the contents of a view (invoked by the layout manager)
         @Override
-        public void onBindViewHolder(final MyAdapter.MyViewHolder holder, final int position) {
+        public void onBindViewHolder(final MyAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
 
-            holder.afmtext.setText(paramOrdersList.get(position).getCustid()+" "+paramOrdersList.get(position).getAfm());
+            holder.afmtext.setText("("+paramOrdersList.get(position).getOrderid()+") "+paramOrdersList.get(position).getCustid()+" "+paramOrdersList.get(position).getAfm());
             holder.cnametext.setText(paramOrdersList.get(position).getCompanyname());
             holder.datetext.setText(paramOrdersList.get(position).getDateorder());
 
@@ -155,15 +160,15 @@ public class OrderListsActivity extends AppCompatActivity {
                                 case R.id.menu2:
                                     //handle menu2 click
                                     Customers customers = iliadisDatabase.daoAccess().getCustomerByCustid(shopDatabase.daoShop().getCastidOrder(paramOrders.get(position).getOrderid()));
-                                    Log.d("Dimitra","customer custid: "+customers.getCustid());
-                                    Log.d("Dimitra","customer custvatid: "+customers.getCustvatid());
-                                    Log.d("Dimitra","customer catalogue: "+customers.getCatalogueid());
+                                  //  Log.d("Dimitra","customer custid: "+customers.getCustid());
+                                    //Log.d("Dimitra","customer custvatid: "+customers.getCustvatid());
+                                   // Log.d("Dimitra","customer catalogue: "+customers.getCatalogueid());
 
                                     Intent intent = new Intent(OrderListsActivity.this,ProductActivity.class);
                                     intent.putExtra("custid",customers.getCustid());
                                     intent.putExtra("custvatid",customers.getCustvatid());
                                     intent.putExtra("orderid",paramOrdersList.get(position).getOrderid());
-                                    Log.d("Dimitra","orderid "+paramOrdersList.get(position).getOrderid());
+                                   // Log.d("Dimitra","orderid "+paramOrdersList.get(position).getOrderid());
                                     intent.putExtra("catalogueid",customers.getCatalogueid());
                                     intent.putExtra("shopid",paramOrders.get(position).getShopid());
                                     startActivity(intent);

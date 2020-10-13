@@ -47,6 +47,7 @@ public class ProductActivity extends AppCompatActivity {
     String realcodecart="";
     String prodcart="";
     boolean lang ;
+    String res="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,23 +75,21 @@ public class ProductActivity extends AppCompatActivity {
         final String shopid = getIntent().getStringExtra("shopid");
         final int custcatid = getIntent().getIntExtra("catalogueid",0);
         final int orderid = getIntent().getExtras().getInt("orderid");
-        Log.d("Dimitra","orderid "+orderid);
 
+        carts = shopDatabase.daoShop().getCartList(orderid);
 
         myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
         lang = myutils.sharedpreferences.getBoolean("language",false);
-        Log.d("Dimitra","language: "+lang);
+        //Log.d("Dimitra","language: "+lang);
 
         cartbutton = (ImageView) toolbar.findViewById(R.id.basket);
         cartbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                carts = shopDatabase.daoShop().getCartList(orderid);
                 Intent intent = new Intent(ProductActivity.this,CartActivity.class);
                 intent.putExtra("custvatid",custvatid);
                 intent.putExtra("custid",custid);
                 intent.putExtra("shopid",shopid);
-                intent.putExtra("cart", (Serializable) carts);
                 intent.putExtra("catalogueid",custcatid);
                 intent.putExtra("orderid",orderid);
                 startActivity(intent);
@@ -118,7 +117,7 @@ public class ProductActivity extends AppCompatActivity {
                             }
                             if (!prodcart.equals(product.getProdcode()) || !realcodecart.equals(product.getRealcode()))
                             {
-                                Log.d("Dimitra","text: "+localeChange(product.getProdescriptionEn(),product.getProdescription()));
+                               // Log.d("Dimitra","text: "+localeChange(product.getProdescriptionEn(),product.getProdescription()));
                                 desctext.setText(localeChange(product.getProdescriptionEn(),product.getProdescription()));
                                 realcode.setText(getString(R.string.realcode)+":"+product.getRealcode());
                                 Catalog catalog = iliadisDatabase.daoAccess().getCatalogueDiscount(custcatid,product.getPriceid());
@@ -186,6 +185,8 @@ public class ProductActivity extends AppCompatActivity {
                 }
             }
         });
+
+
     }
 
     @Override
@@ -235,12 +236,13 @@ public class ProductActivity extends AppCompatActivity {
 
         if (lang == true ){
             str = producten;
-            Log.d("Dimitra","locale1 "+lang+" "+str);
+            //Log.d("Dimitra","locale1 "+lang+" "+str);
         }
         else if (lang == false){
            str = productgr;
-            Log.d("Dimitra","locale2 "+lang+" "+str);
+            //Log.d("Dimitra","locale2 "+lang+" "+str);
         }
         return str;
     }
+
 }

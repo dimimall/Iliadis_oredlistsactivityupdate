@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Iliadis_oredlistsactivityupdate.iml" filepath="$PROJECT_DIR$/Iliadis_oredlistsactivityupdate.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Iliadis_oredlistsactivityupdate.iml" filepath="$PROJECT_DIR$/Iliadis_oredlistsactivityupdate.iml" group="Iliadis_oredlistsactivityupdate" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="Iliadis_oredlistsactivityupdate/app" />
     </modules>
   </component>
 </project>

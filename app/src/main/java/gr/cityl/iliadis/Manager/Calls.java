@@ -2,6 +2,7 @@ package gr.cityl.iliadis.Manager;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
@@ -31,24 +32,33 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
+import gr.cityl.iliadis.Models.IliadisDatabase;
+
 /**
  * Created by dimitra on 08/09/2019.
  */
 
 public class Calls {
 
-    utils myutils = new utils();
+    IliadisDatabase iliadisDatabase ;
+    utils myutils;
+    String ipserverpref;
+
 
     public void makePostUsingVolley(final Context context, final String custid, final String salesid, final String orderid)
     {
+        myutils = new utils();
+
+        myutils.sharedpreferences = context.getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
+        ipserverpref = myutils.sharedpreferences.getString("ipserver", "");
         String tag_json_obj = "json_obj_req";
-        String url = "https://pod.iliadis.com.gr/iamhere.asp";
+        String url = ipserverpref; //"https://pod.iliadis.com.gr/iamhere.asp";
 
         final ProgressDialog pDialog = new ProgressDialog(context);
         pDialog.setMessage("Loading...");
         pDialog.show();
 
-        StringRequest req = new StringRequest(Request.Method.POST,url,
+        StringRequest req = new StringRequest(Request.Method.POST,url+"/iamhere.asp",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -95,17 +105,19 @@ public class Calls {
 
     public String sendCsvFiles(File file,File fileDir){
 
+
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
         String success="";
+        String url = "https://pod.iliadis.com.gr" ; //ipserverpref;  //"/UploadFile.php";
 
-        String url = "https://pod.iliadis.com.gr/UploadFile.php";
+
         File filecsv = new File(fileDir,file.getName());
         if(filecsv.exists()) {
             try {
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpPost httppost = new HttpPost(url);
+                HttpPost httppost = new HttpPost(url+"/UploadFile.php");  //+"/UploadFile.php"
 
                 try {
                     FileBody bin = new FileBody(filecsv);

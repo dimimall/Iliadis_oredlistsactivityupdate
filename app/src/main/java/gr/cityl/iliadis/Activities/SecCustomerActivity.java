@@ -61,7 +61,7 @@ public class SecCustomerActivity extends AppCompatActivity {
 
         myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
         number = myutils.sharedpreferences.getString("numsale", "");
-        Log.d("Dimitra"," number "+number);
+        //Log.d("Dimitra"," number "+number);
 
         final String custid = getIntent().getStringExtra("custid");
         final List<SecCustomers> shops = (List<SecCustomers>) getIntent().getSerializableExtra("shops");
@@ -107,7 +107,7 @@ public class SecCustomerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (orders.size() <= 0){
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss ");
+                    SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd-MMM-yyyy hh-mm-ss a");
                     String currentDateandTime = sdf.format(new Date());
                     Intent intent = new Intent(SecCustomerActivity.this, ProductActivity.class);
                     Order order1 = new Order();

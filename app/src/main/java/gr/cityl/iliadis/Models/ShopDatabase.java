@@ -27,4 +27,6 @@ public abstract class ShopDatabase extends RoomDatabase {
 
 
     public abstract DaoShop daoShop();
+
+
 }

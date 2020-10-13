@@ -1,5 +1,6 @@
 package gr.cityl.iliadis.Interfaces;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -74,4 +75,6 @@ public interface DaoShop {
 
     @Query("Select o1.shopid from `order` as o1 where o1.orderid=:orderid")
     String getShopidOrder(int orderid);
+
+
 }

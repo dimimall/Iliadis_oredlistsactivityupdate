@@ -44,6 +44,8 @@ public class SettingsActivity extends AppCompatActivity {
         myutils= new utils();
 
         myutils.sharedpreferences = getSharedPreferences(myutils.MyPREFERENCES, Context.MODE_PRIVATE);
+
+
         String number = myutils.sharedpreferences.getString("numsale", "");
         String ipprintpref = myutils.sharedpreferences.getString("ipprint", "");
         String ipserverpref = myutils.sharedpreferences.getString("ipserver", "");

@@ -183,7 +183,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
                                 product.setProdcode(response.getString("prodcode"));
                                 product.setRealcode(response.getString("realcode"));
                                 product.setProdescription(response.getString("prodescription"));
-                                Log.d("Dimitra","desc: "+response.getString("prodescription"));
+                               // Log.d("Dimitra","desc: "+response.getString("prodescription"));
                                 product.setProdescriptionEn(response.getString("prodescriptionen"));
                                 product.setVatcode(response.getString("vatcode"));
                                 product.setPriceid(response.getString("pricesid"));
@@ -253,7 +253,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
                                 customer.setPhone(response.getString("phone"));
                                 customer.setFax(response.getString("fax"));
                                 customer.setAfm(response.getString("afm"));
-                                Log.d("Dimitra","desc: "+response.getString("afm"));
+                               // Log.d("Dimitra","desc: "+response.getString("afm"));
                                 customer.setEmail(response.getString("email"));
                                 customer.setCatalogueid(response.getInt("catalogueid"));
                                 customer.setPostalCode(response.getString("postalCode"));
@@ -307,7 +307,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
                                 Catalog catalog = new Catalog();
                                 catalog.setCatid(response.getString("catid"));
                                 catalog.setCustcatid(response.getString("custcatid"));
-                                Log.d("Dimitra","desc: "+response.getString("custcatid"));
+                               // Log.d("Dimitra","desc: "+response.getString("custcatid"));
                                 catalog.setDiscountqstart1(response.getInt("discountqstart1"));
                                 catalog.setDiscountqstart2(response.getInt("discountqstart2"));
                                 catalog.setDiscountqstart3(response.getInt("discountqstart3"));
@@ -370,14 +370,14 @@ public class ReloadDbsActivity extends AppCompatActivity {
                                 FPA fpa1 = new FPA();
                                 fpa1.setVatid(response.getString("vatid"));
                                 fpa1.setVat(response.getDouble("vat"));
-                                Log.d("Dimitra ","vat: "+response.getString("vat"));
+                               // Log.d("Dimitra ","vat: "+response.getString("vat"));
                                 if (response.has("custvatid")){
                                     fpa1.setCustvatid(response.getString("custvatid"));
                                 }
 
                                 fpa.add(fpa1);
                             }
-
+                            iliadisDatabase.daoAccess().insertTaskFpa(fpa); //added by George
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -420,7 +420,7 @@ public class ReloadDbsActivity extends AppCompatActivity {
                                 Country country = new Country();
                                 country.setCountryid(response.getString("countryid"));
                                 country.setCountry(response.getString("country"));
-                                Log.d("Dimitra","country: "+response.getString("country"));
+                               // Log.d("Dimitra","country: "+response.getString("country"));
 
                                 countries.add(country);
                             }

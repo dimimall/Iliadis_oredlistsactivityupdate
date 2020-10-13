@@ -165,7 +165,7 @@ public class NewOrderActivity extends AppCompatActivity {
                                 desc_textinput.getEditText().setText("");
                                 afm_textinput.getEditText().setText("");
                                 code_textinput.getEditText().setText("");
-                                myutils.createDialog("Δε υπάρχει αυτός ο πελάτης",NewOrderActivity.this);
+                                myutils.createDialog("Δεν υπάρχει αυτός ο πελάτης",NewOrderActivity.this);
                             }
                             dialog.cancel();
                         }

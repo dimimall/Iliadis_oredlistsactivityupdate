@@ -1,5 +1,6 @@
 package gr.cityl.iliadis.Activities;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -50,6 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import gr.cityl.iliadis.Interfaces.AlertDialogCallback;
 import gr.cityl.iliadis.Manager.utils;
@@ -78,6 +80,8 @@ public class ReprintListsActivity extends AppCompatActivity{
     public ProgressDialog progressDialog;
     public Handler handler = new Handler();
     public int progressStatus;
+    String printed="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,8 +106,11 @@ public class ReprintListsActivity extends AppCompatActivity{
         for (int i=0; i<orderList.size(); i++)
         {
             Customers customer = iliadisDatabase.daoAccess().getCustomerByCustid(orderList.get(i).getCustid());
-            ParamOrders paramOrder = new ParamOrders(orderList.get(i).getCustid(),customer.getAfm(),customer.getCompanyName(),orderList.get(i).getDateparsed(),shopid,orderList.get(i).getOrderid());
-            paramOrders.add(paramOrder);
+            if (customer != null)
+            {
+                ParamOrders paramOrder = new ParamOrders(orderList.get(i).getCustid(),customer.getAfm(),customer.getCompanyName(),orderList.get(i).getDateparsed(),shopid,orderList.get(i).getOrderid());
+                paramOrders.add(paramOrder);
+            }
         }
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerlist);
@@ -153,7 +160,7 @@ public class ReprintListsActivity extends AppCompatActivity{
         // Create new views (invoked by the layout manager)
         @Override
         public MyAdapter.MyViewHolder onCreateViewHolder(final ViewGroup parent,
-                                                                            int viewType) {
+                                                         int viewType) {
             // create a new view
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.orderrecyclerview, parent, false);
@@ -168,11 +175,11 @@ public class ReprintListsActivity extends AppCompatActivity{
 
         // Replace the contents of a view (invoked by the layout manager)
         @Override
-        public void onBindViewHolder(final MyAdapter.MyViewHolder holder, final int position) {
+        public void onBindViewHolder(final MyAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
 
-            holder.afmtext.setText(paramOrdersList.get(position).getCustid()+" "+paramOrdersList.get(position).getAfm());
+            holder.afmtext.setText("("+paramOrdersList.get(position).getOrderid()+") "+paramOrdersList.get(position).getCustid()+" "+paramOrdersList.get(position).getAfm());
             holder.cnametext.setText(paramOrdersList.get(position).getCompanyname());
             holder.datetext.setText(paramOrdersList.get(position).getDateorder());
 
@@ -226,7 +233,7 @@ public class ReprintListsActivity extends AppCompatActivity{
         this.alertDialogCallback = callback;
         final String[] text = {""," "," "};
         text[0]=String.valueOf(position);
-        Log.d("Dimitra","message: "+text[0]);
+        //Log.d("Dimitra","message: "+text[0]);
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 ReprintListsActivity.this);
         final LayoutInflater inflater = (LayoutInflater) ReprintListsActivity.this
@@ -249,7 +256,7 @@ public class ReprintListsActivity extends AppCompatActivity{
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 text[1] = adapterView.getItemAtPosition(i).toString();
-                Log.d("Dimitra","message: "+text[1]);
+                //Log.d("Dimitra","message: "+text[1]);
             }
 
             @Override
@@ -272,7 +279,7 @@ public class ReprintListsActivity extends AppCompatActivity{
             @Override
             public void afterTextChanged(Editable editable) {
                 text[2] = editable.toString();
-                Log.d("Dimitra","message: "+text[2]);
+                //Log.d("Dimitra","message: "+text[2]);
             }
         });
         ok.setOnClickListener(new View.OnClickListener() {
@@ -285,117 +292,28 @@ public class ReprintListsActivity extends AppCompatActivity{
                 dialog.dismiss();
                 if (text[1].equals("Ελληνικά"))
                 {
-                    //create and print pdf in greek
-                    try {
-                        myutils.createPdfFileGr(cartsList,shopDatabase.daoShop().getCastidOrder(paramOrders.get(Integer.parseInt(text[0])).getOrderid()),customers.getCustvatid(),number,shopDatabase.daoShop().getShopidOrder(paramOrders.get(Integer.parseInt(text[0])).getOrderid()),ipprintpref,iliadisDatabase,ReprintListsActivity.this);
-                        for (int i=0; i<2; i++)
-                        {
-                            final ProgressDialog pd = new ProgressDialog(ReprintListsActivity.this);
-                            // Set progress dialog style spinner
-                            pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                            // Set the progress dialog title and message
-                            pd.setTitle("Title of progress dialog.");
-                            pd.setMessage("Loading.........");
-                            pd.setIndeterminate(false);
-                            // Finally, show the progress dialog
-                            pd.show();
-                            // Set the progress status zero on each button click
-                            progressStatus = 0;
-
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    utils.printPdf(ipprintpref,ReprintListsActivity.this);
-                                    while(progressStatus < 100){
-                                        // Update the progress status
-                                        progressStatus +=1;
-
-                                        // Try to sleep the thread for 20 milliseconds
-                                        try{
-                                            Thread.sleep(20);
-                                        }catch(InterruptedException e){
-                                            e.printStackTrace();
-                                        }
-
-                                        // Update the progress bar
-                                        handler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                // Update the progress status
-                                                pd.setProgress(progressStatus);
-                                                // If task execution completed
-                                                if(progressStatus == 100){
-                                                    // Dismiss/hide the progress dialog
-                                                    pd.dismiss();
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-                            }).start();
+                    File root =new File(Environment.getExternalStorageDirectory(),"Pdf file");
+                    File pdffile = new File(root,"order.pdf");
+                    if (pdffile.exists()) {
+                        for (int i=0; i < 2; i++){
+                            printed = utils.printPdf(ipprintpref,ReprintListsActivity.this);
+                            Log.d("Dimitra",printed);
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (DocumentException e) {
-                        e.printStackTrace();
                     }
                     Intent intent = new Intent(ReprintListsActivity.this,MainActivity.class);
                     startActivity(intent);
                 }
                 else if (text[1].equals("English"))
                 {
-                    //create and print pdf in english
-                    try {
-                        myutils.createPdfFileEn(cartsList,shopDatabase.daoShop().getCastidOrder(paramOrders.get(Integer.parseInt(text[0])).getOrderid()),customers.getCustvatid(),number,shopDatabase.daoShop().getShopidOrder(paramOrders.get(Integer.parseInt(text[0])).getOrderid()),ipprintpref,iliadisDatabase,ReprintListsActivity.this);
-                        for (int i=0; i<2; i++)
-                        {
-                            final ProgressDialog pd = new ProgressDialog(ReprintListsActivity.this);
-                            // Set progress dialog style spinner
-                            pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                            // Set the progress dialog title and message
-                            pd.setMessage("Loading.........");
-                            pd.setIndeterminate(false);
-                            // Finally, show the progress dialog
-                            pd.show();
-                            // Set the progress status zero on each button click
-                            progressStatus = 0;
-
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    utils.printPdf(ipprintpref,ReprintListsActivity.this);
-                                    while(progressStatus < 100){
-                                        // Update the progress status
-                                        progressStatus +=1;
-                                        // Try to sleep the thread for 20 milliseconds
-                                        try{
-                                            Thread.sleep(20);
-                                        }catch(InterruptedException e){
-                                            e.printStackTrace();
-                                        }
-
-                                        // Update the progress bar
-                                        handler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                // Update the progress status
-                                                pd.setProgress(progressStatus);
-                                                // If task execution completed
-                                                if(progressStatus == 100){
-                                                    // Dismiss/hide the progress dialog
-                                                    pd.dismiss();
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-                            }).start();
+                    File root =new File(Environment.getExternalStorageDirectory(),"Pdf file");
+                    File pdffile = new File(root,"order.pdf");
+                    if (pdffile.exists()) {
+                        for (int i=0; i<2; i++){
+                            printed = utils.printPdf(ipprintpref,ReprintListsActivity.this);
+                            Log.d("Dimitra",printed);
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (DocumentException e) {
-                        e.printStackTrace();
                     }
+
                     Intent intent = new Intent(ReprintListsActivity.this,MainActivity.class);
                     startActivity(intent);
                 }

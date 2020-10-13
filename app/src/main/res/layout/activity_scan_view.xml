@@ -119,12 +119,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="20dp"
-        android:textColor="#ffffff"
-        android:textStyle="bold"
-        android:gravity="center|right"
-        android:background="@color/colorGreen"
+        android:layout_marginStart="0dp"
         android:layout_marginBottom="2dp"
-        android:text="@string/newscan" />
+        android:background="@color/colorGreen"
+        android:gravity="center|right"
+        android:paddingRight="15dp"
+        android:text="@string/newscan"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>
